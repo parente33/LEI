@@ -1,0 +1,5 @@
+clear all
+x = [-2 1 2]
+y = [-8 1 8]
+s = spline(x,[12 y 20], -1)
+ppval(s,-1)
