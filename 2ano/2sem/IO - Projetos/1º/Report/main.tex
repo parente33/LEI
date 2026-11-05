@@ -1,0 +1,620 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[utf8]{inputenc}       % Codificação
+\usepackage[T1]{fontenc}          % Saida de caracteres em portugues
+\usepackage[portuguese]{babel}    % Idioma
+\usepackage{amsmath,amssymb,amsfonts} % Pacotes matemáticos
+\usepackage{lscape}               % se precisar de páginas em paisagem
+\usepackage{graphicx}             % se precisar de inserir figuras
+\usepackage{geometry}             % para ajustar margens
+\usepackage{booktabs}             % para tabelas mais bonitas
+\usepackage{array}                % para colunas customizadas em tabelas
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{xcolor, colortbl}
+\usepackage{textcomp}
+\usepackage{float}
+\usetikzlibrary{arrows}
+
+\lstset{
+    basicstyle=\ttfamily\footnotesize,   % Fonte monoespaçada pequena
+    breaklines=true,                      % Quebra de linha automática
+    frame=single,                          % Adiciona uma caixa em volta
+    backgroundcolor=\color{gray!10},       % Fundo levemente cinza
+    keywordstyle=\color{blue},             % Palavras-chave em azul
+    commentstyle=\color{green!50!black},   % Comentários em verde escuro
+    rulecolor=\color{black},               % Cor da moldura
+}
+\geometry{a4paper,margin=2.5cm}
+
+\title{
+    Investigação Operacional\protect\\
+}
+\author{André Santos - a106854
+    \and Daniel Parente - a107363
+    \and Pedro Ferreira - a107292
+}
+
+\date{Ano Letivo 2024/2025}
+
+\begin{document}
+\vspace*{\fill} % Espaço antes para centralizar verticalmente
+
+\begin{minipage}{0.9\linewidth}
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/logo.jpg}\par
+    \vspace{1cm}
+
+    {\scshape\LARGE Universidade do Minho} \par
+    \vspace{0.6cm}
+
+    {\scshape\Large Licenciatura em Engenharia Informática} \par
+    \maketitle
+    \vspace{1cm}
+\end{minipage}
+
+\vspace*{\fill}
+
+\pagebreak
+\section*{0. Valores a trabalhar}
+
+De acordo com a informação do enunciado, o valor de $xABCDE$ a trabalhar neste projeto será $107363$. Daqui, podemos tirar que $x = 1$, $A = 0$, $B = 7$, $C = 3$, $D = 6$ e $E = 3$.
+Seguindo as regras definidas no enunciado, foi necessário calcular o número de contentores e de itens para utilizar. Esses resultados podem ser observados nos pontos a seguir:
+\subsection*{Conteúdo dos contentores}
+\begin{itemize}
+  \item Comprimento $11$: disponibilidade ilimitada;
+  \item Comprimento $10$: quantidade disponível = $B + 1 = 7 + 1 = 8$;
+  \item Comprimento $7$: quantidade disponível = $D + 1 = 6 + 1 = 7$.
+\end{itemize}
+
+A qual podemos sumarizar na Tabela 1:~\ref{tab:contentores}
+
+\begin{table}[h!]
+\centering
+\label{tab:contentores}
+\begin{tabular}{@{}c c@{}}
+\toprule
+\textbf{Comprimento} & \textbf{Quantidade disponível} \\
+\midrule
+$11$ & ilimitada \\
+$10$ & $8$        \\
+$7$  & $7$        \\
+\bottomrule
+\end{tabular}
+\caption{Lista de contentores.}
+\end{table}
+
+\subsection*{Itens a empacotar}
+
+\begin{itemize}
+  \item Para itens de comprimento 1, como $B$ é ímpar, temos uma quantidade disponível de $k_1 = 2$ itens;
+  \item Para itens de comprimento 2, como $C$ é ímpar, temos uma quantidade disponível de $k_2 = 11$ itens;
+  \item Para itens de comprimento 3, como $D$ é par, temos uma quantidade disponível de $k_3 = 0$ itens;
+  \item Para itens de comprimento 4, como $E$ é ímpar, temos uma quantidade disponível de $k_4 = 11$ itens;
+  \item Existem sempre 5 itens de comprimento 5.
+\end{itemize}
+
+Esta informação encontra-se sumarizada na Tabela 2:~\ref{tab:contentores}
+
+\begin{table}[H]
+\centering
+\label{tab:itens}
+\begin{tabular}{@{}c c@{}}
+\toprule
+\textbf{Comprimento} & \textbf{Quantidade} \\
+\midrule
+$1$ & $2$ \\
+$2$ & $11$\\
+$3$ & $0$ \\
+$4$ & $11$\\
+$5$ & $5$ \\
+\bottomrule
+\end{tabular}
+\caption{Lista de itens a empacotar.}
+\end{table}
+
+\subsection*{Soma dos comprimentos dos itens}
+
+A soma do comprimento total de todos os itens é calculada como:
+\[
+\underbrace{1 \times 2}_{\text{(item 1)}} \;+\;
+\underbrace{2 \times 11}_{\text{(item 2)}} \;+\;
+\underbrace{3 \times 0}_{\text{(item 3)}} \;+\;
+\underbrace{4 \times 11}_{\text{(item 4)}} \;+\;
+\underbrace{5 \times 5}_{\text{(item 5)}} 
+= 2 + 22 + 0 + 44 + 25 
+= 93.
+\]
+Portanto, o total de comprimento de itens a empacotar é $\mathbf{93}$.
+
+
+\section*{1. Formulação do Problema}
+
+O problema abordado é um \textbf{empacotamento unidimensional} (\emph{bin packing problem}), consiste em empacotar um conjunto de itens de diferentes comprimentos em contentores de diferentes capacidades. Cada contentor possui um comprimento máximo que não pode ser excedido pela soma dos comprimentos dos itens nele contidos. O objetivo é minimizar a soma dos comprimentos dos contentores utilizados, ou seja, utilizar os contentores de forma eficiente.
+
+\subsection*{1.1 Descrição do Problema}
+Temos:
+\begin{itemize}
+  \item Uma lista de itens, onde cada item pertence a uma \emph{classe} específica: \textbf{todos os itens da mesma classe têm o mesmo comprimento};
+  \item Um conjunto de classes de contentores (por exemplo, comprimentos $11$, $10$ e $7$), sendo que algumas classes têm uma \emph{disponibilidade limitada}, enquanto outras são \emph{ilimitadas};
+  \item Cada contentor \textbf{não pode} exceder a sua capacidade ao acomodar os itens;
+  \item \textbf{Todos} os itens têm de ser empacotados, e nenhum pode ser alocado para mais do que um contentor.
+\end{itemize}
+
+A \emph{medida de eficiência} adotada é a \textbf{soma dos comprimentos dos contentores} efetivamente usados (que têm itens no interior). Assim, se um contentor de comprimento $W_c$ for utilizado, contribui em $W_c$ para o custo total.
+
+\subsection*{1.2 Objetivo}
+O objetivo é \textbf{minimizar} a soma dos comprimentos dos contentores, ou seja, usar a menor quantidade possível de contentores, não ultrapassando nunca a capacidade de nenhum deles.
+
+\subsection*{1.3 Variáveis de Decisão}
+Para uma \emph{formulação em fluxos em arcos} (\emph{arc-flow}), escolhemos as seguintes variáveis:
+\begin{itemize}
+    \item \textbf{Variáveis de fluxo} $x_{c,i,j}$: representando a quantidade de itens que percorrem o \emph{arco} $i \to j$ no grafo associado à classe de contentor $c$ (arc-flow);
+    \item \textbf{Variáveis \emph{bin}} $y_c$: representando o número de contentores da classe $c$ efetivamente utilizados.
+\end{itemize}
+Essas variáveis codificam:
+\begin{quote}
+    ``Se $x_{c,i,j} > 0$, significa que um certo número de itens (da classe associada ao arco $a$) está a transitar naquele ``espaço'' no contentor $c$. Já $y_c$ indica quantos contentores do tipo $c$ foram abertos/estão a ser usados.''
+\end{quote}
+
+\subsection*{1.4 Coerência Global do Modelo}
+\begin{itemize}
+    \item A \textbf{conservação de fluxo} em cada nó do grafo garante que, ao ``ocupar'' uma parte da capacidade do contentor, deve-se seguir consistentemente até ao preenchimento completo;
+    \item As \textbf{restrições de disponibilidade de contentores} garantem que não usamos mais contentores do que o permitido para cada classe;
+    \item A \textbf{cobertura de itens} impõe que todos os itens sejam empacotados, sem faltar nem sobrar;
+    \item A \textbf{função objetivo linear} minimiza a soma $W_c \times y_c$ em cada classe de contentor, refletindo a soma total de comprimentos dos contentores usados.
+\end{itemize}
+
+\subsection*{1.5 Justificativa Teórica}
+A formulação \emph{arc-flow} é um modelo amplamente estudado para problemas de corte e empacotamento, nomeadamente nos trabalhos do docente da cadeira, Valério de Carvalho (1999, 2002). Trata-se de construir um grafo de estados para cada tipo de bin, com nós representando estados de ocupação e arcos representando a inserção de um item. O uso de um modelo arc-flow abrange todas as possíveis combinações de itens que podem caber num contentor, sem explicitamente enumerar cada um de forma individual.
+
+\section*{2. Modelo de Programação Linear}
+
+\subsection*{2.1 Parâmetros e Conjuntos}
+
+\begin{itemize}
+  \item Conjunto de classes de \textbf{itens} $I = \{1,\dots,n\}$. Para cada $i \in I$:
+  \begin{itemize}
+    \item $q_i$: quantidade de itens da classe $i$ (número inteiro não negativo).
+    \item $l_i$: comprimento do item da classe $i$ (valor inteiro positivo até $W_c$, conforme o problema).
+  \end{itemize}
+
+  \item Conjunto de classes de \textbf{contentores} $C = \{1,\dots,m\}$. Para cada $c \in C$:
+  \begin{itemize}
+    \item $W_c$: capacidade (comprimento máximo) do contentor classe $c$ (valor inteiro positivo).
+    \item $M_c$: quantidade máxima (inteira) de contentores da classe $c$ disponível 
+    (pode ser $\infty$ ou suficientemente grande, se for ilimitado).
+  \end{itemize}
+
+  \item Para cada $c \in C$, definimos um \emph{grafo} $G_c = (V_c, A_c)$ de estados de ocupação:
+  \begin{itemize}
+    \item $V_c = \{0,1,\dots, W_c\}$ são nós que representam o “estado” de ocupação (de \emph{vazio} (0) até \emph{cheio} ($W_c$)).
+    \item $A_c$ é o conjunto de arcos $(u\to v)$ sempre que $v-u = l_i$ para algum item $i \in I$ 
+    e $0 \leq u < v \leq W_c$. 
+    Assim, o arco $(u \to u+l_i)$ significa “colocar um item da classe $i$” 
+    e ocupar mais $l_i$ unidades de comprimento.
+  \end{itemize}
+\end{itemize}
+
+\subsection*{2.2 Variáveis de Decisão}
+
+\paragraph{Variáveis de fluxo} $x_{c,i,j}$
+
+\[
+x_{c,i,j} \;\in\; \mathbb{Z}_{\ge 0}
+\quad
+\forall\, c \in C, \; \forall\,(i,j) \in A_c.
+\]
+
+\noindent
+Significado:
+\begin{itemize}
+  \item $x_{c,i,j}$ indica \emph{quantos itens} fluem pelo arco $a$ no grafo do tipo de contentor $c$. 
+  \item Cada arco $a=(u \to u + l_i)$ corresponde a inserir um item de comprimento $l_i$. 
+  \item Se $x_{c,i,j} > 0$, quer dizer que \emph{$x_{c,i,j}$} itens daquele tipo foram “colocados” nessa “transição” de espaço ocupado.
+\end{itemize}
+
+\paragraph{Variáveis de contentores} $y_c$
+
+\[
+y_c \;\in\; \mathbb{Z}_{\ge 0}
+\quad
+\forall\, c \in C.
+\]
+
+\noindent
+Significado:
+\begin{itemize}
+  \item $y_c$ representa \emph{o número total de contentores do tipo $c$} efetivamente usados na solução.
+  \item Se $y_c=0$, não se usa nenhum bin do tipo $c$; se $y_c=3$, então usamos 3 contentores desse tipo, etc.
+\end{itemize}
+
+\subsection*{2.3 Função Objectivo (Linear)}
+
+\[
+\min \quad \sum_{c \in C} \bigl(W_c \cdot y_c\bigr).
+\]
+
+\noindent
+Explicação:
+\begin{itemize}
+  \item Cada bin do tipo $c$, se usado, tem um “custo” igual à sua capacidade $W_c$. 
+  \item Portanto, usar $y_c$ contentores do tipo $c$ acrescenta $W_c \times y_c$ ao total de “comprimento de contentores” usado.
+  \item O objetivo é \emph{minimizar} a soma desses comprimentos para todos os tipos de contentores.
+\end{itemize}
+
+\subsection*{2.4 Restrições Lineares}
+
+\paragraph{(1) Conservação de fluxo em nós internos.}
+Para cada $c \in C$ e cada nó $u \in V_c$ tal que $0 < u < W_c$:
+\[
+\sum_{\substack{a=(v\to u) \in A_c}} x_{c,a}
+\;=\;
+\sum_{\substack{a=(u\to w) \in A_c}} x_{c,a}.
+\]
+\noindent
+\textbf{Interpretação}:
+\begin{itemize}
+  \item O fluxo total que “entra” no estado $u$ tem de ser igual ao que “sai” de $u$;
+  \item Assegura que não há “perda” nem “acumulação” de itens a meio do grafo: qualquer item que chegou ao estado $u$ \emph{prossegue} até outro estado $w$.
+\end{itemize}
+
+\paragraph{(2) Fluxo em $0$ e em $W_c$.}
+Para cada $c \in C$:
+\[
+\sum_{\substack{a=(0 \to w)\in A_c}} x_{c,a} \;=\; y_c
+\quad\text{e}\quad
+\sum_{\substack{a=(v \to W_c)\in A_c}} x_{c,a} \;=\; y_c.
+\]
+\noindent
+\textbf{Interpretação}:
+\begin{itemize}
+  \item No nó inicial $0$, iniciamos $y_c$ unidades de fluxo, pois queremos abrir $y_c$ contentores do tipo $c$;
+  \item No nó final $W_c$, chegam exatamente $y_c$ unidades de fluxo, correspondendo à ocupação de todos esses contentores (cada bin sai “completo” do grafo).
+\end{itemize}
+
+\paragraph{(3) Limite de contentores.}
+Para cada $c \in C$:
+\[
+y_c \;\le\; M_c,
+\]
+caso $M_c$ seja finito. Se o tipo $c$ for ilimitado, esta restrição pode ser omitida ou escrita como $y_c \le \text{(valor grande)}$.
+
+\paragraph{(4) Satisfação de todas as quantidades de itens.}
+Para cada tipo de item $i \in I$:
+\[
+\sum_{c \in C}\sum_{\substack{(u\to u + l_i) \in A_c}} x_{c,(u\to u+l_i)} 
+\;=\;
+q_i.
+\]
+\noindent
+\textbf{Interpretação}:
+\begin{itemize}
+  \item Cada arco $(u\to u + l_i)$ representa inserir um item de tipo $i$ (comprimento $l_i$) num contentor do tipo $c$;
+  \item Precisamos embalar \emph{exatamente} $q_i$ itens do tipo $i$, somando em todos os contentores de todos os tipos.
+\end{itemize}
+
+\paragraph{(5) Inteiridade e não-negatividade.}
+\[
+x_{c,a} \;\in\; \mathbb{Z}_{\ge 0}, 
+\quad
+y_c \;\in\; \mathbb{Z}_{\ge 0}.
+\]
+\noindent
+\textbf{Interpretação}:
+\begin{itemize}
+    \item Inteiridade: As variáveis devem ser números inteiros não-negativos. Isso é necessário, pois estamos a lidar com quantidades discretas (itens e contentores);
+    \item Não-negatividade: Nenhuma variável pode ter valores negativos, mantendo consistência com o contexto do problema (não podemos usar um número negativo de contentores, nem alocar uma quantidade negativa de itens).
+\end{itemize}
+
+\subsection*{2.5 Coerência Global do Modelo}
+
+\begin{itemize}
+  \item \textbf{Linearidade}: Todas as equações acima são lineares em termos das variáveis $x_{c,a}$ e $y_c$. A função objetivo também é linear, $\sum_c W_c\,y_c$. Isto garante-nos que o modelo é solúvel de forma eficiente.
+  \item \textbf{Regras de funcionamento do sistema}: 
+    \begin{itemize}
+      \item As restrições de fluxo garantem que os contentores não ultrapassam a capacidade (pois não existem arcos que excedam $W_c$) e que cada bin, se aberto, corresponde a um caminho completo no grafo.
+      \item A limitação $y_c \le M_c$ assegura que não usamos mais contentores do que o fornecido.
+      \item A restrição de cobertura de itens garante que todos os itens sejam \emph{colocados} (empacotados), através da soma dos fluxos dos arcos correspondentes aos itens de cada tipo.
+    \end{itemize}
+  \item \textbf{Função objetivo como medida de eficiência}: A função objetivo visa minimizar o \emph{comprimento total} dos contentores usados. Ou seja, minimiza a quantidade total de espaço usado, o que reflete a medida de eficiência especificada anteriormente.
+\end{itemize}
+
+\section*{3 Ficheiro de \textit{input}}
+\begin{lstlisting}
+min: 11*y_11 + 10*y_10 + 7*y_7;
+
+r11_0: x11_0_1 + x11_0_2 + x_11_0_3 + x11_0_4 + x11_0_5 = y_11;
+r11_1: x11_0_1 = x11_1_2 + x11_1_3 + x11_1_4 + x11_1_5 + x11_1_6;
+r11_2: x11_0_2 + x11_1_2 = x11_2_3 + x11_2_4 + x11_2_5 + x11_2_6 + x11_2_7;
+r11_3: x11_0_3 + x11_1_3 + x11_2_3 = x11_3_4 + x11_3_5 + x11_3_6 + x11_3_7 + x11_3_8;
+r11_4: x11_0_4 + x11_1_4 + x11_2_4 + x11_3_4 = x11_4_5 + x11_4_6 + x11_4_7 + x11_4_8 + x11_4_9;
+r11_5: x11_0_5 + x11_1_5 + x11_2_5 + x11_3_5 + x11_4_5 = x11_5_6 + x11_5_7 + x11_5_8 + x11_5_9 + x11_5_10;
+r11_6: x11_1_6 + x11_2_6 + x11_3_6 + x11_4_6 + x11_5_6 = x11_6_7 + x11_6_8 + x11_6_9 + x11_6_10 + x11_6_11;
+r11_7: x11_2_7 + x11_3_7 + x11_4_7 + x11_5_7 + x11_6_7 = x11_7_8 + x11_7_9 + x11_7_10 + x11_7_11;
+r11_8: x11_3_8 + x11_4_8 + x11_5_8 + x11_6_8 + x11_7_8 = x11_8_9 + x11_8_10 + x11_8_11;
+r11_9: x11_4_9 + x11_5_9 + x11_6_9 + x11_7_9 + x11_8_9 = x11_9_10 + x11_9_11;
+r11_10: x11_5_10 + x11_6_10 + x11_7_10 + x11_8_10 + x11_9_10 = x11_10_11;
+r11_11: x11_6_11 + x11_7_11 + x11_8_11 + x11_9_11 + x11_10_11 = y_11;
+
+r10_0: x10_0_1 + x10_0_2 + x10_0_3 + x10_0_4 + x10_0_5 = y_10;
+r10_1: x10_0_1 = x10_1_2 + x10_1_3 + x10_1_4 + x10_1_5 + x10_1_6;
+r10_2: x10_0_2 + x10_1_2 = x10_2_3 + x10_2_4 + x10_2_5 + x10_2_6 + x10_2_7;
+r10_3: x10_0_3 + x10_1_3 + x10_2_3 = x10_3_4 + x10_3_5 + x10_3_6 + x10_3_7 + x10_3_8;
+r10_4: x10_0_4 + x10_1_4 + x10_2_4 + x10_3_4 = x10_4_5 + x10_4_6 + x10_4_7 + x10_4_8 + x10_4_9;
+r10_5: x10_0_5 + x10_1_5 + x10_2_5 + x10_3_5 + x10_4_5 = x10_5_6 + x10_5_7 + x10_5_8 + x10_5_9 + x10_5_10;
+r10_6: x10_1_6 + x10_2_6 + x10_3_6 + x10_4_6 + x10_5_6 = x10_6_7 + x10_6_8 + x10_6_9 + x10_6_10;
+r10_7: x10_2_7 + x10_3_7 + x10_4_7 + x10_5_7 + x10_6_7 = x10_7_8 + x10_7_9 + x10_7_10;
+r10_8: x10_3_8 + x10_4_8 + x10_5_8 + x10_6_8 + x10_7_8 = x10_8_9 + x10_8_10;
+r10_9: x10_4_9 + x10_5_9 + x10_6_9 + x10_7_9 + x10_8_9 = x10_9_10;
+r10_10: x10_5_10 + x10_6_10 + x10_7_10 + x10_8_10 + x10_9_10 = y_10;
+
+r7_0: x7_0_1 + x7_0_2 + x7_0_3 + x7_0_4 + x7_0_5 = y_7;
+r7_1: x7_0_1 = x7_1_2 + x7_1_3 + x7_1_4 + x7_1_5 + x7_1_6;
+r7_2: x7_0_2 + x7_1_2 = x7_2_3 + x7_2_4 + x7_2_5 + x7_2_6 + x7_2_7;
+r7_3: x7_0_3 + x7_1_3 + x7_2_3 = x7_3_4 + x7_3_5 + x7_3_6 + x7_3_7;
+r7_4: x7_0_4 + x7_1_4 + x7_2_4 + x7_3_4 = x7_4_5 + x7_4_6 + x7_4_7;
+r7_5: x7_0_5 + x7_1_5 + x7_2_5 + x7_3_5 + x7_4_5 = x7_5_6 + x7_5_7;
+r7_6: x7_1_6 + x7_2_6 + x7_3_6 + x7_4_6 + x7_5_6 = x7_6_7;
+r7_7: x7_2_7 + x7_3_7 + x7_4_7 + x7_5_7 + x7_6_7 = y_7;
+
+r_item1:
+  x11_0_1 + x11_1_2 + x11_2_3 + x11_3_4 + x11_4_5 + x11_5_6 + x11_6_7 + x11_7_8 + x11_8_9 + x11_9_10 + x11_10_11 +
+  x10_0_1 + x10_1_2 + x10_2_3 + x10_3_4 + x10_4_5 + x10_5_6 + x10_6_7 + x10_7_8 + x10_8_9 + x10_9_10 +
+  x7_0_1  + x7_1_2  + x7_2_3  + x7_3_4  + x7_4_5  + x7_5_6  + x7_6_7
+  = 2;
+
+r_item2:
+  x11_0_2 + x11_1_3 + x11_2_4 + x11_3_5 + x11_4_6 + x11_5_7 + x11_6_8 + x11_7_9 + x11_8_10 + x11_9_11 +
+  x10_0_2 + x10_1_3 + x10_2_4 + x10_3_5 + x10_4_6 + x10_5_7 + x10_6_8 + x10_7_9 + x10_8_10 +
+  x7_0_2  + x7_1_3  + x7_2_4  + x7_3_5  + x7_4_6  + x7_5_7
+  = 11;
+
+r_item3:
+  x11_0_3 + x11_1_4 + x11_2_5 + x11_3_6 + x11_4_7 + x11_5_8 + x11_6_9 + x11_7_10 + x11_8_11 +
+  x10_0_3 + x10_1_4 + x10_2_5 + x10_3_6 + x10_4_7 + x10_5_8 + x10_6_9 + x10_7_10 +
+  x7_0_3 + x7_1_4 + x7_2_5 + x7_3_6 + x7_4_7
+  = 0;
+
+r_item4:
+  x11_0_4 + x11_1_5 + x11_2_6 + x11_3_7 + x11_4_8 + x11_5_9 + x11_6_10 + x11_7_11 +
+  x10_0_4 + x10_1_5 + x10_2_6 + x10_3_7 + x10_4_8 + x10_5_9 + x10_6_10 +
+  x7_0_4  + x7_1_5  + x7_2_6  + x7_3_7
+  = 11;
+
+r_item5:
+  x11_0_5 + x11_1_6 + x11_2_7 + x11_3_8 + x11_4_9 + x11_5_10 + x11_6_11 +
+  x10_0_5 + x10_1_6 + x10_2_7 + x10_3_8 + x10_4_9 + x10_5_10 +
+  x7_0_5  + x7_1_6  + x7_2_7
+  = 5;
+
+r_lim10: y_10 <= 8;
+r_lim7:  y_7 <= 7;
+
+int y_11, y_10, y_7;
+
+int
+  x11_0_1, x11_0_2, x11_0_3, x11_0_4, x11_0_5,
+  x11_1_2, x11_1_3, x11_1_4, x11_1_5, x11_1_6,
+  x11_2_3, x11_2_4, x11_2_5, x11_2_6, x11_2_7,
+  x11_3_4, x11_3_5, x11_3_6, x11_3_7, x11_3_8,
+  x11_4_5, x11_4_6, x11_4_7, x11_4_8, x11_4_9,
+  x11_5_6, x11_5_7, x11_5_8, x11_5_9, x11_5_10,
+  x11_6_7, x11_6_8, x11_6_9, x11_6_10, x11_6_11,
+  x11_7_8, x11_7_9, x11_7_10, x11_7_11,
+  x11_8_9, x11_8_10, x11_8_11,
+  x11_9_10, x11_9_11,
+  x11_10_11;
+
+int
+  x10_0_1, x10_0_2, x10_0_3, x10_0_4, x10_0_5,
+  x10_1_2, x10_1_3, x10_1_4, x10_1_5, x10_1_6,
+  x10_2_3, x10_2_4, x10_2_5, x10_2_6, x10_2_7,
+  x10_3_4, x10_3_5, x10_3_6, x10_3_7, x10_3_8,
+  x10_4_5, x10_4_6, x10_4_7, x10_4_8, x10_4_9,
+  x10_5_6, x10_5_7, x10_5_8, x10_5_9, x10_5_10,
+  x10_6_7, x10_6_8, x10_6_9, x10_6_10,
+  x10_7_8, x10_7_9, x10_7_10,
+  x10_8_9, x10_8_10,
+  x10_9_10;
+
+int
+  x7_0_1, x7_0_2, x7_0_3, x7_0_4, x7_0_5,
+  x7_1_2, x7_1_3, x7_1_4, x7_1_5, x7_1_6,
+  x7_2_3, x7_2_4, x7_2_5, x7_2_6, x7_2_7,
+  x7_3_4, x7_3_5, x7_3_6, x7_3_7,
+  x7_4_5, x7_4_6, x7_4_7,
+  x7_5_6, x7_5_7,
+  x7_6_7;
+\end{lstlisting}
+
+\section*{4 Ficheiro de \textit{output}}
+
+\begin{lstlisting}
+Value of objective function: 93.00000000
+
+Actual values of the variables:
+y_11                            6
+y_10                            2
+y_7                             1
+x11_0_1                         0
+x11_0_2                         6
+x_11_0_3                        0
+x11_0_4                         0
+x11_0_5                         0
+x11_1_2                         0
+x11_1_3                         0
+x11_1_4                         0
+x11_1_5                         0
+x11_1_6                         0
+x11_2_3                         2
+x11_2_4                         1
+x11_2_5                         0
+x11_2_6                         0
+x11_2_7                         3
+x11_0_3                         0
+x11_3_4                         0
+x11_3_5                         0
+x11_3_6                         0
+x11_3_7                         2
+x11_3_8                         0
+x11_4_5                         0
+x11_4_6                         0
+x11_4_7                         0
+x11_4_8                         0
+x11_4_9                         1
+x11_5_6                         0
+x11_5_7                         0
+x11_5_8                         0
+x11_5_9                         0
+x11_5_10                        0
+x11_6_7                         0
+x11_6_8                         0
+x11_6_9                         0
+x11_6_10                        0
+x11_6_11                        0
+x11_7_8                         0
+x11_7_9                         0
+x11_7_10                        0
+x11_7_11                        5
+x11_8_9                         0
+x11_8_10                        0
+x11_8_11                        0
+x11_9_10                        0
+x11_9_11                        1
+x11_10_11                       0
+x10_0_1                         0
+x10_0_2                         2
+x10_0_3                         0
+x10_0_4                         0
+x10_0_5                         0
+x10_1_2                         0
+x10_1_3                         0
+x10_1_4                         0
+x10_1_5                         0
+x10_1_6                         0
+x10_2_3                         0
+x10_2_4                         0
+x10_2_5                         0
+x10_2_6                         2
+x10_2_7                         0
+x10_3_4                         0
+x10_3_5                         0
+x10_3_6                         0
+x10_3_7                         0
+x10_3_8                         0
+x10_4_5                         0
+x10_4_6                         0
+x10_4_7                         0
+x10_4_8                         0
+x10_4_9                         0
+x10_5_6                         0
+x10_5_7                         0
+x10_5_8                         0
+x10_5_9                         0
+x10_5_10                        0
+x10_6_7                         0
+x10_6_8                         0
+x10_6_9                         0
+x10_6_10                        2
+x10_7_8                         0
+x10_7_9                         0
+x10_7_10                        0
+x10_8_9                         0
+x10_8_10                        0
+x10_9_10                        0
+x7_0_1                          0
+x7_0_2                          0
+x7_0_3                          0
+x7_0_4                          0
+x7_0_5                          1
+x7_1_2                          0
+x7_1_3                          0
+x7_1_4                          0
+x7_1_5                          0
+x7_1_6                          0
+x7_2_3                          0
+x7_2_4                          0
+x7_2_5                          0
+x7_2_6                          0
+x7_2_7                          0
+x7_3_4                          0
+x7_3_5                          0
+x7_3_6                          0
+x7_3_7                          0
+x7_4_5                          0
+x7_4_6                          0
+x7_4_7                          0
+x7_5_6                          0
+x7_5_7                          1
+x7_6_7                          0
+\end{lstlisting}
+
+\section*{5 Solução}
+\subsection*{Valor da Solução Ótima}
+A solução ótima encontrada pelo solver apresenta um valor de função objetivo de:
+\begin{equation}
+\text{Valor Ótimo} = 93
+\end{equation}
+Isso significa que a soma dos comprimentos dos contentores utilizados na solução ótima é de 93 unidades, o que corresponde ao comprimento total de itens a empacotar, não havendo, por isso, espaços desperdiçados nos bins.
+
+\subsection*{Grafo Subjacente ao Modelo de Fluxo em Arcos}
+A figura abaixo representa o grafo do modelo de fluxo em arcos, indicando os fluxos não nulos na solução ótima.
+
+% Grafo 
+\begin{center}
+    \begin{tikzpicture}[
+        ->, >=stealth, scale=1.2, node distance=1.3cm,
+        every node/.style={draw, circle, fill=black, inner sep=1pt, minimum size=4pt}
+    ]
+    
+    % Nós do grafo (0 a 11)
+    \foreach \x in {0,1,2,3,4,5,6,7,8,9,10,11} {
+        \node (\x) at (\x, 0) [label=below:{\x}] {};
+    }
+    
+    % Arestas com fluxos não nulos
+    \draw (0)[thick, red] to[out=60, in=120] (2);
+    \draw (2)[thick, red] to[out=60, in=120] (3);
+    \draw (2)[thick, red] to[out=60, in=120] (4);
+    \draw (2)[thick, red] to[out=60, in=120] (7);
+    \draw (3)[thick, red] to[out=60, in=120] (7);
+    \draw (4)[thick, red] to[out=60, in=120] (9);
+    \draw (7)[thick, red] to[out=60, in=120] (11);
+    \draw (9)[thick, red] to[out=60, in=120] (11);
+    
+    \draw (0)[thick, green] to[out=-60, in=-120] (2);
+    \draw (2)[thick, green] to[out=-60, in=-120] (6);
+    \draw (6)[thick, green] to[out=-60, in=-120] (10);
+    
+    \draw (0)[thick, blue] to[out=-60, in=-120] (5);
+    \draw (5)[thick, blue] to[out=60, in=120] (7);
+    
+    \end{tikzpicture}
+\end{center}
+
+Os nós representam os diferentes estados dos itens e contentores no processo de empacotamento, e as setas indicam os caminhos seguidos pelo fluxo de itens.
+Os arcos a vermelho representam os itens alocados em contentores de tamanho 11, os a verde representam os itens alocados em contentores de tamanho 10, e os azuis os alocados em contentores de tamanho 7.
+
+\subsection*{Plano de Empacotamento}
+Abaixo, apresentamos um plano visual dos contentores utilizados e os itens alocados em cada um deles.
+Cada contentor é representado por uma barra com o seu comprimento total, e os itens são ilustrados dentro do respectivo contentor.
+
+\begin{center}
+\includegraphics[width=0.4\textwidth]{images/empacotamento.png}
+\end{center}
+
+Contentores idênticos foram agregados para evitar redundância na apresentação.
+
+\section*{6 Validação do Modelo}
+Para garantir que o modelo e a solução obtida são corretos, foram seguidos os seguintes procedimentos:
+
+\begin{itemize}
+\item \textbf{Verificação das Restrições:} Conferimos se todas as restrições do modelo foram respeitadas na solução fornecida pelo solver.
+\item \textbf{Comparação com Casos Simples:} Foram testados pequenos exemplos cuja solução ótima é conhecida para validar a coerência do modelo.
+\item \textbf{Análise da Estrutura do Fluxo:} O fluxo dos itens foi conferido manualmente no grafo gerado, garantindo que a solução reflete corretamente as regras do problema.
+\end{itemize}
+
+A partir dessas verificações, e tendo também em conta de que a soma dos comprimentos dos contentores usados iguala a soma dos itens a alocar, e que não é possível obter essa soma usando menos contentores, foi possível concluir que a solução fornecida pelo solver é a melhor solução admissível e representa corretamente uma decisão ótima para o problema proposto.
+
+\end{document}

@@ -1,0 +1,593 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[utf8]{inputenc}       % Codificação
+\usepackage[T1]{fontenc}          % Saida de caracteres em portugues
+\usepackage[portuguese]{babel}    % Idioma
+\usepackage{amsmath,amssymb,amsfonts} % Pacotes matemáticos
+\usepackage{lscape}               % se precisar de páginas em paisagem
+\usepackage{graphicx}             % se precisar de inserir figuras
+\usepackage{geometry}             % para ajustar margens
+\usepackage{booktabs}             % para tabelas mais bonitas
+\usepackage{array}                % para colunas customizadas em tabelas
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{xcolor, colortbl}
+\usepackage{textcomp}
+\usepackage{float}
+\usetikzlibrary{arrows}
+
+\lstset{
+    basicstyle=\ttfamily\footnotesize,   % Fonte monoespaçada pequena
+    breaklines=true,                      % Quebra de linha automática
+    frame=single,                          % Adiciona uma caixa em volta
+    backgroundcolor=\color{gray!10},       % Fundo levemente cinza
+    keywordstyle=\color{blue},             % Palavras-chave em azul
+    commentstyle=\color{green!50!black},   % Comentários em verde escuro
+    rulecolor=\color{black},               % Cor da moldura
+}
+\geometry{a4paper,margin=2.5cm}
+
+\title{
+    Investigação Operacional\protect\\
+}
+\author{André Santos - a106854
+    \and Daniel Parente - a107363
+    \and Pedro Ferreira - a107292
+}
+
+\date{Ano Letivo 2024/2025}
+
+\setlength{\parindent}{0pt}
+\begin{document}
+\vspace*{\fill} % Espaço antes para centralizar verticalmente
+
+\begin{minipage}{0.9\linewidth}
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/logo.jpg}\par
+    \vspace{1cm}
+
+    {\scshape\LARGE Universidade do Minho} \par
+    \vspace{0.6cm}
+
+    {\scshape\Large Licenciatura em Engenharia Informática} \par
+    \maketitle
+    \vspace{1cm}
+\end{minipage}
+
+\vspace*{\fill}
+\pagebreak
+
+\section*{0. Valores a trabalhar}
+De acordo com os dados do enunciado, e tal como já tinha sido o caso no primeiro projeto, o valor de $xABCDE$ a trabalhar será $107363$, o maior número de inscrição dos membros do grupo. Podemos obviamente concluir que: $x = 1$, $A = 0$, $B = 7$, $C = 3$, $D = 6$ e $E = 3$.
+
+\vspace{0.5em}
+
+Vamos calcular o valor de $k$, sabendo que equivale ao resto da divisão de $DE$ por $7$. Ou seja, o número natural tal que $63 = x * 7 + k$. Daqui tiramos que $63 = 9 * 7 + 0$. Como $k = 0$, os vértices origem $O$ e destino $D$ são, pela tabela no enunciado, $1$ e $4$, respetivamente.
+
+\vspace{0.5em}
+
+As capacidades dos outros vértices foram também calculadas. Essa informação encontra-se calculada a seguir:
+
+\subsection*{Capacidade dos vértices}
+\begin{itemize}
+    \item Vértice $1$: $+\infty$ \textit{(exceção mencionada no enunciado)};
+    \item Vértice $2$: $10 \times (B + D + 1) = 10 \times (7 + 6 + 1) = 10 \times 14 = 140$;
+    \item Vértice $3$: $10 \times (C + 1) = 10 \times (3 + 1) = 10 \times 4 = 40$;
+    \item Vértice $4$: $+\infty$ \textit{(exceção mencionada no enunciado)};
+    \item Vértice $5$: $10 \times (E + 1) = 10 \times (3 + 1) = 10 \times 4 = 40$;
+    \item Vértice $6$: $10 \times (D + E + 1) = 10 \times (6 + 3 + 1) = 10 \times 10 = 100$;
+\end{itemize}
+
+A qual se pode sumarizar na Tabela 1:~\ref{tab:capacidades}
+
+\begin{table}[h!]
+\centering
+\label{tab:capacidades}
+\begin{tabular}{@{}c c@{}}
+\toprule
+\textbf{Vértice} & \textbf{Capacidade} \\
+\midrule
+$1$ & $+\infty$ \\
+$2$ & $140$       \\
+$3$ & $40$       \\
+$4$ & $+\infty$       \\
+$5$ & $40$       \\
+$6$ & $100$       \\
+\bottomrule
+\end{tabular}
+\caption{Capacidade dos vértices.}
+\end{table}
+
+Com essa informação disponível, o grafo a usar para o problema está representado a seguir, onde $O$ e $D$ são os vértices \textit{origem} e \textit{destino}, respetivamente, e o número por cima de cada vértice representa a sua capacidade:
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1, every node/.style={draw, circle, minimum size=7mm, inner sep=0pt}]
+        \node (O) at (0,1) {O};
+        \node (2) at (2,2) {2};
+        \node (3) at (2,0) {3};
+        \node (D) at (4,2) {D};
+        \node (5) at (4,0) {5};
+        \node (6) at (6,1) {6};
+
+        \node[above=5pt, draw=none] at (O) {\small $+\infty$};
+        \node[above=5pt, draw=none] at (2) {\small $140$};
+        \node[above=14pt, right=-1pt, draw=none] at (3) {\small $40$};
+        \node[above=5pt, draw=none] at (D) {\small $+\infty$};
+        \node[above=14pt, right=-1pt, draw=none] at (5) {\small $40$};
+        \node[above=5pt, draw=none] at (6) {\small $100$};
+
+        \draw (O) -- (2);
+        \draw (O) -- (3);
+        \draw (2) -- (D);
+        \draw (2) -- (3);
+        \draw (3) -- (5);
+        \draw (D) -- (5);
+        \draw (D) -- (6);
+        \draw (5) -- (6);
+    \end{tikzpicture}
+    \caption{Grafo representativo da rede de fluxos}
+    \label{fig:network-graph}
+\end{figure}
+
+\section*{1. Formulação do Problema}
+\subsection*{1.1 Descrição do problema}
+O problema apresentado neste trabalho prático traduz-se num problema de otimização de fluxos em redes, onde se pretende determinar o fluxo máximo que pode ser transportado de um vértice de origem (aqui denominado $O$), para um vértice de destino ($D$), respeitando as restrições impostas pelas capacidades dos vértices intermediários.
+
+\vspace{0.5em}
+
+Ao contrário do tradicional problema de fluxo máximo em que as restrições são normalmente colocadas sobre as arestas, aqui o foco recai sobre as quantidades internas dos vértices, que representam limites na quantidade de fluxo que pode passar por cada um.
+
+\subsection*{1.2 Objetivo}
+O objetivo central deste problema é determinar o valor máximo de fluxo que pode ser enviado do vértice origem $O$ para o vértice destino $D$, sem exceder as capacidades de processamento dos vértices intermediários (vertíces 2, 3, 5 e 6). Para isso, é necessário encontrar a melhor forma de distribuir o fluxo ao longo da rede de forma eficiente, utilizando os vários caminhos disponíveis, enquanto se respeitam todas as restrições impostas.
+
+\subsection*{1.3 Composição da rede}
+A rede é, assim, composta por:
+\begin{itemize}
+    \item Vértices: Representam pontos de decisão ou nós de um sistema de fluxo.
+    \begin{itemize}
+        \item O vértice O é o ponto de origem do fluxo
+        \item O vértice D é o ponto de destino do fluxo
+        \item Os vértices 2,3,5 e 6 são vértices intermediários com capacidades limitadas.
+    \end{itemize}
+    \item Arestas: Representam as conexões entre os vértices. Cada aresta tem uma capacidade virtualmente infinita. São também bidirecionais.
+\end{itemize}
+
+Capacidade dos vértices:
+\begin{itemize}
+    \item Os vértices 2, 3, 5 e 6 têm capacidades definidas:
+        \begin{itemize}
+            \item Vértice 2: Capacidade de 140 unidades de fluxo;
+            \item Vértice 3: Capacidade de 40 unidades de fluxo;
+            \item Vértice 5: Capacidade de 40 unidades de fluxo;
+            \item Vértice 6: Capacidade de 100 unidades de fluxo.
+        \end{itemize}
+    \item Os vértices 1 e 4 (O e D, respetivamente) têm capacidades infinitas.
+\end{itemize}
+
+\subsection*{1.4 Relação com um sistema real}
+Este tipo de problema é particularmente relevante em contextos reais onde o congestionamento ou a capacidade de processamento num ponto específico da rede (e não do caminho) impõe o verdadeiro limite ao fluxo total - por exemplo, em redes logísticas, redes de dados, ou sistemas de transportes urbanos.
+
+\subsection*{1.5 Explicação dos valores das capacidades}
+Os valores das capacidades dos vértices foram definidos com base no maior número de inscrição nos membros do grupo - neste caso, $xABCDE = 107363$. A correspondência entre os dígitos do número de inscrição e os parâmetros das fórmulas é a seguinte:
+\begin{itemize}
+    \item $x = 1$
+    \item $A = 0$
+    \item $B = 7$
+    \item $C = 3$
+    \item $D = 6$
+    \item $E = 3$
+\end{itemize}
+As capacidades dos vértices intermediários foram calculados com base nas informações especificadas no enunciado. Estas foram:
+\begin{itemize}
+    \item Vértice 2: $10 \times (B + D + 1) = 10 \times (7  6 + 1) = 140$
+    \item Vértice 3: $10 \times (C + 1) = 10 \times (3 + 1) = 40$
+    \item Vértice 5: $10 \times (E + 1) = 10 \times (3 + 1) = 40$
+    \item Vértice 6: $10 \times (D + E + 1) = 10 \times (6 + 3 + 1) = 100$
+\end{itemize}
+Já os vértices $0$ (1) e $D$ (4) foram definidos como tendo capacidade infinita, pois representam os extremos da rede.
+
+\subsection*{1.6 Explicação dos valores dos consumos}
+Apesar de o enunciado não referir diretamente consumos em termos clássicos (como perdas ou custos por vérice), podemos interpretar este tópico em dois sentidos complementares:
+\begin{enumerate}
+    \item Consumo da capacidade dos vértices: Cada vértice com capacidade limitada "consome" parte do fluxo à medida que este o atravessa. Assim, o consumo corresponde ao fluxo que efetivamente passa por esse vértice, o qual nunca pode ultrapassar o limite máximo atribuído. Por exemplo:
+    \begin{itemize}
+        \item Se o vértice 2 tem capacidade 140, e o fluxo que o atravessa for 120, então o consumo é de 120, e ainda há margem para mais 20 unidades de fluxo.
+        \item Caso o fluxo seja superior a 140, então esse vértice torna-se um "gargalo", limitando a passagem.
+    \end{itemize}
+    \item Interpretação do fluxo como consumo de recursos: Em problemas reais (logística, comunicações, etc.), o fluxo pode representar bens, energia ou dados. O seu trajeto pela rede representa o consumo de recursos - por exemplo, tempo de processamento, largura de banda, ou energia. Assim, as capacidades funcionam como restrições ao consumo máximo que cada vértice pode suportar.
+\end{enumerate}
+Portanto, neste modelo, o termo "consumo" pode ser entendido como a utilização da capacidade disponível em cada vértice. O modelo assume que não há perdas de fluxo (rede conservativa), ou seja, o que entra num vértice (menos o que sai) corresponde exatamente ao fluxo que ali passa, excetuando-se origem e destino.
+
+\subsection*{1.7 Apresentação da coerência global do modelo}
+O modelo proposto apresenta uma estrutura coerente e logicamente bem fundamentada, com os seguintes pontos fortes:
+\begin{itemize}
+    \item Personalização e variabilidade: O uso de um número de inscrição como base para determinar parâmetros garante que cada grupo trabalhe com um caso único, reduzindo a probabilidade de duplicações.
+    \item Consistência matemática: As fórmulas utilizadas para calcular as capacidades são simples, mas eficazes, garantindo valores realistas que não são nem demasiado elevados (o que tornaria o problema trivial), nem demasiado baixos (o que poderia torná-lo insolúvel ou desproporcional).
+    \item Topologia da rede bem definida: A estrutura do grafo permite múltiplos caminhos do vértice de origem para o de destino, o que possibilita o estudo de como o fluxo se redistribui na presença de restrições. A inclusão de ciclos ou ligações cruzadas (como de $3 \rightarrow 5$ e $D \rightarrow 5$) torna o problema mais interessante do ponto de vista algorítmico.
+\end{itemize}
+Em resumo, o modelo é coerente, aplicável, suficientemente desafiante e adequado para ilustrar técnicas avançadas de otimização de redes.
+
+\section*{2. Formulação do modelo}
+Neste trabalho, será efetuada a construção de dois modelos distintos para o problema de fluxo máximo apresentado: um utilizando o Relax4, e outro recorrendo ao LP Solver. A escolha de desenvolver ambos os modelos prende-se com razões de validação e complementaridade: o modelo implementado no Relax4 é o principal, dado que este solver é otimizado especificamente para problemas de fluxo em redes e oferece elevada eficiência computacional.
+
+\vspace{0.5em}
+
+No entanto, o LP Solver será utilizado como ferramenta auxiliar para validar a correção estrutural e lógica do modelo, já que permite uma formulação explícita do problema em termos de programação linear, facilitando a leitura e análise detalhada das restrições e variáveis. Esta abordagem dual garante maior robustez à solução final, promovendo simultaneamente a compreensão teórica e prática da modelação do problema.
+
+\subsection*{2.1 Modelo no solver Relax4}
+Para utilizar o Relax-4 num problema de fluxo máximo com capacidade nos vértices, aplica-se a seguinte conversão clássica:
+
+\begin{itemize}
+    \item Divisão de vértices: Cada vértice original $v$ é dividido em dois nós, $v_{in}$ e $v_{out}$, ligados por um arco com capacidade:
+    \begin{equation*}
+        u_{v_{in}, v_{out}} = \text{capacidade}(v)
+    \end{equation*}
+
+    \item Arestas originais: Se existia uma aresta original $u \rightarrow v$, cria-se o arco $u_{out} \rightarrow v_{in}$ com capacidade infinita (por exemplo, $10^6$) e custo zero.
+
+    \item Arco com custo -1: Acrescenta-se o arco:
+    \begin{equation*}
+         D_{out} \rightarrow O_{in} \quad \text{com custo} = -1, \quad \text{capacidade infinita}
+    \end{equation*}
+
+    \item Ofertas/procuras: Todos os nós têm balanço 0 (fluxo circula em ciclos fechados).
+\end{itemize}
+
+O valor ótimo devolvido será algo como:
+
+\begin{equation*}
+    \text{(arco -1)} \quad F^*, \quad \text{OPTIMAL COST} = -F^*
+\end{equation*}
+
+\vspace{0.5em}
+
+E, assim, o grafo transformado seria assim:
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1, every node/.style={draw, circle, minimum size=7mm, inner sep=0pt}]
+
+    % Vértices
+    \node (0) at (0,3.5) {1}; % O
+    \node (1) at (0,2.5) {2}; % O
+    \node (2) at (2,4.5) {3}; % 2
+    \node (3) at (3,4.5) {4}; % 2
+    \node (4) at (2,1.5) {5}; % 3
+    \node (5) at (3,1.5) {6}; % 3
+    \node (6) at (5,4.5) {7}; % D
+    \node (7) at (6,4.5) {8}; % D
+    \node (8) at (5,1.5) {9}; % 5
+    \node (9) at (6,1.5) {10}; % 5
+    \node (10) at (8,3.5) {11}; % 6
+    \node (11) at (8,2.5) {12}; % 6
+
+    % Capacidades    
+    %\node[above=5pt, draw=none] at (0) {\small $+\infty$};
+    %\node[below=5pt, draw=none] at (1) {\small $+\infty$};
+    %\node[above=5pt, draw=none] at (2) {\small $140$};
+    %\node[above=5pt, draw=none] at (3) {\small $140$};
+    %\node[below=5pt, draw=none] at (4) {\small $40$};
+    %\node[below=5pt, draw=none] at (5) {\small $40$};
+    %\node[above=5pt, draw=none] at (6) {\small $+\infty$};
+    %\node[above=5pt, draw=none] at (7) {\small $+\infty$};
+    %\node[below=5pt, draw=none] at (8) {\small $40$};
+    %\node[below=5pt, draw=none] at (9) {\small $40$};
+    %\node[above=5pt, draw=none] at (10) {\small $100$};
+    %\node[below=5pt, draw=none] at (11) {\small $100$};
+
+    % Arestas externas
+    \draw[->][thick] (0) -- (1);
+    \draw[->][thick] (2) -- (3);
+    \draw[->][thick] (4) -- (5);
+    \draw[->][thick] (6) -- (7);
+    \draw[->][thick] (8) -- (9);
+    \draw[->][thick] (10) -- (11);
+    \draw[->][thick] (1) -- (2);
+    \draw[->][thick] (1) -- (4);
+    \draw[->][thick] (3) -- (6);
+    \draw[->][thick] (3) -- (4);
+    \draw[->][thick] (5) -- (2);
+    \draw[->][thick] (5) -- (8);
+    \draw[->][thick] (9) to[out=-60, in=-120] (4);
+    \draw[->][thick] (9) -- (6);
+    \draw[->][thick] (11) -- (6);
+    \draw[->][thick] (9) -- (10);
+    \draw[->][thick] (11) to[out=-60, in=-120] (8);
+    \draw[->][thick] (7) to[out=60, in=120] (0);
+
+    % Arestas internas (capacidades dos vértices)
+    \draw[->, thick] (2) -- (3);
+    \draw[->, thick] (4) -- (5);
+    \draw[->, thick] (8) -- (9);
+    \draw[->, thick] (10) -- (11);
+
+    \end{tikzpicture}
+    \caption{Grafo transformado}
+    \label{fig:grafo-transformado}
+\end{figure}
+
+\subsection*{2.2 Modelo no LPSolver}
+Para a implementação no LP Solver, o problema é formulado como um modelo de programação linear (PL), com o objetivo de maximizar o fluxo total de origem para destino, sujeito às restrições de capacidade e de conservação de fluxo.
+
+\vspace{0.5em}
+
+Neste caso, não é necessário dividir os vértices, uma vez que a linguagem do LP Solver permite introduzir explicitamente restrições internas em vértices, o que facilita a modelação direta com base na estrutura original do grafo.
+
+\vspace{0.5em}
+
+Como o foco do trabalho não recai sobre a justificação deste modelo, a formulação deste não será explicada em grande detalhe, mas inclui:
+
+\subsubsection*{2.2.1 Variáveis de decisão e parâmetros}
+\begin{itemize}
+    \item $x_{ij}$: representam o fluxo que passa pelo arco $(i,j)$
+\end{itemize}
+
+\subsubsection*{2.2.2 Restrições}
+\begin{itemize}
+    \item Restrição de conservação do fluxo: Para todos os vértices intermédios \( v \in \{2, 3, 5, 6\} \), impõe-se a igualdade entre o total de fluxo que entra e o total de fluxo que sai:
+
+\[
+\sum_{j \in V} x_{jv} = \sum_{j \in V} x_{vj} \quad \forall v \in V \setminus \{O, D\}
+\]
+
+    De forma expandida, para os vértices do grafo:
+        \begin{align*}
+            &x_{O2} + x_{32} - x_{23} - x_{2D} = 0 && \text{(vértice 2)} \\
+            &x_{O3} + x_{23} + x_{53} - x_{32} - x_{35} = 0 && \text{(vértice 3)} \\
+            &x_{35} + x_{65} - x_{53} - x_{56} - x_{5D} = 0 && \text{(vértice 5)} \\
+            &x_{56} - x_{6D} = 0 && \text{(vértice 6)} \\
+            &x_{O2} + x_{O3} - x_{2D} - x_{5D} - x_{6D} = 0; && \text{(fluxo geral)}
+        \end{align*}
+    \item Restrição da capacidade dos vértices: 
+\[
+\sum_{i : (i,v) \in A} x_{iv} \leq c_v
+\]em que $c_{v}$ representa a capacidade do vértice $v$.
+
+    Para os vértices do grafo:
+        \begin{align*}
+            &x_{02} + x_{32} \leq 140 \\
+            &x_{03} + x_{23} + x_{53} \leq 40 \\
+            &x_{56} \leq 100
+        \end{align*}
+\end{itemize}
+
+\subsubsection*{2.2.3 Função objetivo}
+Maximizar o somatório dos fluxos que saem do vértice de origem ($O$), ou que chegam ao destino ($D$).
+\begin{itemize}
+    \item max: $\sum_{j : (j, D) \in A} \quad x_{jD}$, com $A = \{2,5,6\}$
+\end{itemize}
+
+\section*{3. Ficheiro de \textit{input}}
+Como foram elaborados dois modelos, a testar em plataformas diferentes, foram naturalmente criados dois ficheiros de \textit{input} diferentes, os quais se apresentam a seguir.
+
+\subsection*{3.1 Relax4}
+\begin{figure}[H]
+\begin{lstlisting}
+12
+18
+1   2     0 1000000
+3   4     0     140
+5   6     0      40
+7   8     0 1000000
+9  10     0      40
+11 12     0     100
+2   3     0 1000000
+2   5     0 1000000
+4   7     0 1000000
+4   5     0 1000000
+6   3     0 1000000
+6   9     0 1000000
+10  5     0 1000000
+10  7     0 1000000
+12  7     0 1000000
+10 11     0 1000000
+12  9     0 1000000
+8   1    -1 1000000
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+\end{lstlisting}
+\end{figure}
+
+\subsection*{3.2 LPSolver}
+\begin{figure}[H]
+\begin{lstlisting}
+max : x5D + x2D + x6D;
+
+xO2 + x32 - x23 - x2D = 0;
+xO3 + x23 + x53 - x32 - x35 = 0;
+x35 + x65 - x53 - x56 - x5D = 0;
+x56 - x6D = 0;
+xO2 + xO3 - x2D - x5D - x6D = 0;
+
+xO2 >= 0; x2D >= 0;
+xO3 >= 0; x42 >= 0;
+x23 >= 0; x5D >= 0;
+x32 >= 0; x56 >= 0;
+x35 >= 0; x65 >= 0;
+x53 >= 0; x6D >= 0;
+
+xO2 + x32 <= 140;
+xO3 + x23 + x53 <=40;
+x56 <= 100;
+\end{lstlisting}
+\end{figure}
+
+\section*{4. Ficheiro de \textit{output}}
+
+\subsection*{4.1 Relax4}
+\begin{figure}[H]
+\begin{lstlisting}
+ END OF READING
+ NUMBER OF NODES = 12, NUMBER OF ARCS = 18
+ CONSTRUCT LINKED LISTS FOR THE PROBLEM
+ CALLING RELAX4 TO SOLVE THE PROBLEM
+ ***********************************
+ TOTAL SOLUTION TIME =  0. SECS.
+ TIME IN INITIALIZATION =  0. SECS.
+   1 2  180.
+   3 4  140.
+   5 6  40.
+   7 8  180.
+   9 10  40.
+   2 3  140.
+   2 5  40.
+   4 7  140.
+   6 9  40.
+   10 7  40.
+   8 1  180.
+ OPTIMAL COST =  -180.
+ NUMBER OF AUCTION/SHORTEST PATH ITERATIONS = 11
+ NUMBER OF ITERATIONS =  8
+ NUMBER OF MULTINODE ITERATIONS =  2
+ NUMBER OF MULTINODE ASCENT STEPS =  1
+ NUMBER OF REGULAR AUGMENTATIONS =  2
+ ***********************************
+\end{lstlisting}
+\end{figure}
+
+\subsection*{4.2 LPSolver}
+\begin{figure}[H]
+\begin{lstlisting}
+Value of objective function: 180.00000000
+
+Actual values of the variables:
+x5D                             40
+x2D                             140
+x6D                             0
+xO2                             140
+x32                             0
+x23                             0
+xO3                             40
+x53                             0
+x35                             40
+x65                             0
+x56                             0
+x42                             0
+\end{lstlisting}
+\end{figure}
+
+\section*{5. Interpertação dos resultados obtidos}
+O resultado obtido pelos dois modelos implementados (Relax4 e LP Solver) indica que o fluxo máximo possível entre o vértice de origem $O = 1$ e o vértice de destino $D = 4$ é de 180 unidades. Esta conclusão é suportada tanto pelo custo ótimo devolvido pelo Relax4 (com valor $-180$, indicando fluxo de 180 unidades), como pelo valor da função objetivo do LP Solver (180).
+
+\vspace{0.5em}
+
+Ao analisar os fluxos individuais pelas arestas (conforme apresentado no output, na secção 4.), podemos decompor o fluxo ótimo da seguinte forma:
+\begin{itemize}
+    \item Caminho 1 → 2 → 4: Neste caminho passam 140 unidades de fluxo, que correspondem exatamente à capacidade do vértice 2. Este fluxo segue diretamente da origem para o destino, com um único vértice intermédio.
+    
+    \item Caminho 1 → 3 → 5 → 4: Este caminho transporta as restantes 40 unidades de fluxo, explorando o outro ramo da rede. O vértice 3 está limitado a 40 unidades, que são todas utilizadas. O fluxo passa depois por 5 (também com capacidade de 40), e segue para o destino final.
+\end{itemize}
+
+Deste modo, o fluxo total de 180 unidades é obtido pela soma dos dois caminhos anteriores:
+\[
+140 \text{ (via 2)} + 40 \text{ (via 3 e 5)} = 180
+\]
+
+Este resultado confirma que:
+\begin{itemize}
+    \item Os vértices 2, 3 e 5 estão a operar no seu limite de capacidade (que segue de acordo com as restrições de capacidade dos vértices, estabelecidas anteriormente);
+    \item O vértice 6 não é utilizado na solução ótima, uma vez que os caminhos que o incluem não são vantajosos sob as restrições das capacidades disponíveis;
+    \item A rede original permite redundância de caminhos, o que é essencial para atingir o fluxo máximo respeitando todas as limitações.
+\end{itemize}
+
+Graficamente, se anotarmos o fluxo sobre o grafo $G$, temos:
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.1, every node/.style={draw, circle, minimum size=7mm, inner sep=0pt}]
+    % Nós
+    \node (O) at (0,1) {1};
+    \node (A) at (2,2) {2};
+    \node (B) at (2,0) {3};
+    \node (D) at (4,2) {4};
+    \node (C) at (4,0) {5};
+    \node (F) at (6,1) {6};
+
+    % Capacidades
+    \node[above=4pt, draw=none] at (O) {\small $+\infty$};
+    \node[above=4pt, draw=none] at (A) {\small $140$};
+    \node[below=10pt, draw=none] at (B) {\small $40$};
+    \node[above=4pt, draw=none] at (D) {\small $+\infty$};
+    \node[below=10pt, draw=none] at (C) {\small $40$};
+    \node[above=4pt, draw=none] at (F) {\small $100$};
+
+    % Arestas com fluxo
+    \draw[->, thick] (O) -- (A) node[midway, above left=-2pt] {\footnotesize \textbf{140}};
+    \draw[->, thick] (A) -- (D) node[midway, above] {\footnotesize \textbf{140}};
+    \draw[->, thick] (O) -- (B) node[midway, below left=-2pt] {\footnotesize \textbf{40}};
+    \draw[->, thick] (B) -- (C) node[midway, below] {\footnotesize \textbf{40}};
+    \draw[->, thick] (C) -- (D) node[midway, below right=-2pt] {\footnotesize \textbf{40}};
+
+    % Arestas restantes com cor cinzenta clara e traço fino (sem fluxo)
+    \draw[->, draw=gray!50] (A) -- (B);
+    \draw[->, draw=gray!50] (D) -- (C);
+    \draw[->, draw=gray!50] (D) -- (F);
+    \draw[->, draw=gray!50] (C) -- (F);
+\end{tikzpicture}
+\caption{Grafo original com fluxo ótimo anotado}
+\label{fig:grafo-original-fluxo}
+\end{figure}
+
+
+Esta representação gráfica e quantitativa confirma a consistência do modelo implementado e a coerência dos resultados fornecidos pelos dois métodos computacionais utilizados. O grafo original é respeitado na sua estrutura e restrições, e a solução obtida é admissível, exata e ótima para o problema proposto.
+
+\section*{6. Identificação do corte mínimo}
+
+O conjunto de vértices { 2, 3 } (na notação original, antes do \textit{node-splitting}) separa completamente a origem O do destino D e tem capacidade total
+
+\[
+    c(2)+c(3)=140+40=180
+\]
+
+\begin{itemize}
+    \item Se cortar o vértice 2 (cap 140) toda a rota direta O→2→D fica bloqueada.
+    \item Se cortar o vértice 3 (cap 40) toda a rota alternativa O→3→5→D fica igualmente bloqueada.
+    \item Qualquer outro corte que isole O de D exige pelo menos esses dois vértices ou soma uma capacidade maior (ex.: incluir 5 ou 6 acrescentaria mais 40 ou 100).
+\end{itemize}
+
+No grafo transformado, o corte mínimo corresponde aos dois arcos internos:
+
+\[
+    \text{3 → 4   (cap 140)}
+\]
+\[
+\text{5 → 6  (cap  40)}
+\]
+
+A soma 140 + 40 = 180 coincide com:
+
+\begin{itemize}
+    \item o valor do fluxo máximo devolvido pelo Relax4, e
+    \item o custo ótimo -180 (valor absoluto) no modelo com o arco de custo –1.
+\end{itemize}
+
+Portanto, { 2 e 3 } é a identificação do corte mínimo da rede.
+
+\section*{7. Validação do modelo}
+Validar o modelo foi uma parte essencial do trabalho, para garantir que tudo estava bem estruturado e que os resultados obtidos faziam realmente sentido. Ao longo do processo, foram aplicadas várias formas de verificação que nos deram confiança na correção do que foi desenvolvido.
+
+\vspace{0.5em}
+
+Começámos por rever manualmente os valores das capacidades dos vértices, para ter a certeza de que estavam de acordo com o número de inscrição escolhido. Confirmámos que todos os cálculos estavam corretos e que os valores obtidos foram bem aplicados nas restrições do modelo.
+
+\vspace{0.5em}
+
+Depois, verificamos a transformação do grafo original para o formato necessário ao Relax4, seguindo a abordagem necessária para acomodar as características da plataforma. Tivemos o cuidado de rever cada ligação para garantir que a estrutura da rede original era mantida e que só os arcos internos é que impunham limites ao fluxo.
+
+\vspace{0.5em}
+
+Para garantir ainda mais robustez, tal como foi explicado, implementámos o modelo também no LP Solver, formulando o problema como um modelo de programação linear. Esta abordagem alternativa permitiu-nos comparar os dois resultados e confirmar que ambos os modelos — apesar de estarem escritos de formas diferentes — deram exatamente o mesmo valor de fluxo máximo: 180 unidades. Esta coincidência não só validou a lógica da modelação como também confirmou que os ficheiros de input estavam bem construídos.
+
+\vspace{0.5em}
+
+No final, ao representar o fluxo ótimo sobre o grafo original, pudemos verificar visualmente que o modelo respeita as capacidades dos vértices e conserva corretamente o fluxo. Com isto, ficámos confiantes de que a solução obtida é válida, eficiente e está de acordo com o problema proposto. Torna-se óbvio que a solução respeita todas as regras do modelo de fluxos em redes com restrições nos vértices, mantendo a coerência com a topologia da rede original e maximizando o fluxo de forma eficiente. Este processo iterativo de validação confere confiança à robustez da solução apresentada.
+\end{document}
