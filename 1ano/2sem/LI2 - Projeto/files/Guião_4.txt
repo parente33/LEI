@@ -1,0 +1,439 @@
+Guião 4
+
+A tarefa
+
+Dada a última combinação jogada e as cartas da mão, apresentar todas as combinações possíveis que se pode jogar nessa posição ou PASSO. Neste guião pretende-se apresentar todas as combinações melhores do que a última combinação jogada. Deve-se entrar em conta com as excepções possíveis.
+Input
+
+O seu programa lê uma linha com o número de testes T e, para cada teste, lê duas linhas:
+
+    A última combinação jogada
+    A sua mão
+
+Cuidado que a sua mão pode conter mais do que 14 cartas! No limite, entre a última combinação jogada e a sua mão podem estar todas as cartas do baralho!
+Output
+
+O seu programa deve imprimir o resultado dos T testes. Para cada teste deve ser impressa:
+
+    uma linha com Teste seguida do número do teste
+    por cada teste deve imprimir:
+        a palavra PASSO ou
+        todas as combinações melhores que tenhamos na mão
+        as combinações devem ser impressas uma por linha
+        a ordem usada deve ser a lexicográfica
+        as cartas de cada combinação devem ser ordenadas
+        as combinações devem ser ordenadas pela ordem lexicográfica das cartas
+        caso hajam sequências de excepção, que podem aparecer a seguir a Reis, estas devem aparecer depois das sequências normais
+        nesses casos devem aparecer primeiro os conjuntos e só depois as sequências duplas
+
+Exemplo
+Input 1
+
+5
+🂺
+🃚🃝🃇🂮🂪🂼🂢🃊
+🃃🃓🂣
+🃆🃄🂢🃓🂵🂶🃅🃔🃖🂦🂴🂥🃒🂤🃕🃂
+🂶🂤🃕
+🂵🃘🃖🂦🃄🂥🂷🂧🂩🃆🂺
+🂴🂳🂢🂲🂤🂣
+🂶🃖🂦🃄🃕🂷🃔🂥🃇🃅🂵
+🂪🂺🃚
+🃊🂣🂴🂳🃂🂲🂤🃄🃃🂼🃔🃓🂢🂬
+
+Output 1
+
+Teste 1
+🃊
+🃚
+🂼
+🃝
+🂮
+Teste 2
+🂤 🂴 🃄
+🂤 🂴 🃔
+🂤 🃄 🃔
+🂴 🃄 🃔
+🂥 🂵 🃅
+🂥 🂵 🃕
+🂥 🃅 🃕
+🂵 🃅 🃕
+🂦 🂶 🃆
+🂦 🂶 🃖
+🂦 🃆 🃖
+🂶 🃆 🃖
+Teste 3
+🃄 🂥 🃆
+🃄 🂥 🃖
+🃄 🂵 🃆
+🃄 🂵 🃖
+🂥 🂦 🂧
+🂥 🂦 🂷
+🂥 🃆 🂧
+🂥 🃆 🂷
+🂥 🃖 🂧
+🂥 🃖 🂷
+🂵 🂦 🂧
+🂵 🂦 🂷
+🂵 🃆 🂧
+🂵 🃆 🂷
+🂵 🃖 🂧
+🂵 🃖 🂷
+🂦 🂧 🃘
+🂦 🂷 🃘
+🃆 🂧 🃘
+🃆 🂷 🃘
+🃖 🂧 🃘
+🃖 🂷 🃘
+🂧 🃘 🂩
+🂷 🃘 🂩
+🃘 🂩 🂺
+Teste 4
+🃄 🃔 🂥 🂵 🂦 🂶
+🃄 🃔 🂥 🂵 🂦 🃖
+🃄 🃔 🂥 🂵 🂶 🃖
+🃄 🃔 🂥 🃅 🂦 🂶
+🃄 🃔 🂥 🃅 🂦 🃖
+🃄 🃔 🂥 🃅 🂶 🃖
+🃄 🃔 🂥 🃕 🂦 🂶
+🃄 🃔 🂥 🃕 🂦 🃖
+🃄 🃔 🂥 🃕 🂶 🃖
+🃄 🃔 🂵 🃅 🂦 🂶
+🃄 🃔 🂵 🃅 🂦 🃖
+🃄 🃔 🂵 🃅 🂶 🃖
+🃄 🃔 🂵 🃕 🂦 🂶
+🃄 🃔 🂵 🃕 🂦 🃖
+🃄 🃔 🂵 🃕 🂶 🃖
+🃄 🃔 🃅 🃕 🂦 🂶
+🃄 🃔 🃅 🃕 🂦 🃖
+🃄 🃔 🃅 🃕 🂶 🃖
+🂥 🂵 🂦 🂶 🂷 🃇
+🂥 🂵 🂦 🃖 🂷 🃇
+🂥 🂵 🂶 🃖 🂷 🃇
+🂥 🃅 🂦 🂶 🂷 🃇
+🂥 🃅 🂦 🃖 🂷 🃇
+🂥 🃅 🂶 🃖 🂷 🃇
+🂥 🃕 🂦 🂶 🂷 🃇
+🂥 🃕 🂦 🃖 🂷 🃇
+🂥 🃕 🂶 🃖 🂷 🃇
+🂵 🃅 🂦 🂶 🂷 🃇
+🂵 🃅 🂦 🃖 🂷 🃇
+🂵 🃅 🂶 🃖 🂷 🃇
+🂵 🃕 🂦 🂶 🂷 🃇
+🂵 🃕 🂦 🃖 🂷 🃇
+🂵 🃕 🂶 🃖 🂷 🃇
+🃅 🃕 🂦 🂶 🂷 🃇
+🃅 🃕 🂦 🃖 🂷 🃇
+🃅 🃕 🂶 🃖 🂷 🃇
+Teste 5
+PASSO
+
+Input 2
+
+4
+🃔🃆🂵
+🃕🂺🃄🃃🃗🃋🃅🂤🃙🂨🂷🃓🂧🂦🃇
+🃇🃉🂸
+🃆🃝🃛🂫🂶🂼🂭🃞🃜🃌🂽🃎🂦🂪🂬
+🂵🃆🂤
+🂢🂩🂪🂺🂷🃇🃓🂸🃉🃘🂧🂹🂴🃗🂨
+🃊🃘🃙
+🂥🃔🃖🂼🂩🂤🃜🂪🂳🃄🂬🃒🂻🃆🃅
+
+Output 2
+
+Teste 1
+🃅 🂦 🂧
+🃅 🂦 🂷
+🃅 🂦 🃇
+🃅 🂦 🃗
+🃕 🂦 🂧
+🃕 🂦 🂷
+🃕 🂦 🃇
+🃕 🂦 🃗
+🂦 🂧 🂨
+🂦 🂷 🂨
+🂦 🃇 🂨
+🂦 🃗 🂨
+🂧 🂨 🃙
+🂷 🂨 🃙
+🃇 🂨 🃙
+🃗 🂨 🃙
+🂨 🃙 🂺
+🃙 🂺 🃋
+Teste 2
+🂪 🂫 🂬
+🂪 🂫 🂼
+🂪 🂫 🃌
+🂪 🂫 🃜
+🂪 🃛 🂬
+🂪 🃛 🂼
+🂪 🃛 🃌
+🂪 🃛 🃜
+🂫 🂬 🂭
+🂫 🂬 🂽
+🂫 🂬 🃝
+🂫 🂼 🂭
+🂫 🂼 🂽
+🂫 🂼 🃝
+🂫 🃌 🂭
+🂫 🃌 🂽
+🂫 🃌 🃝
+🂫 🃜 🂭
+🂫 🃜 🂽
+🂫 🃜 🃝
+🃛 🂬 🂭
+🃛 🂬 🂽
+🃛 🂬 🃝
+🃛 🂼 🂭
+🃛 🂼 🂽
+🃛 🂼 🃝
+🃛 🃌 🂭
+🃛 🃌 🂽
+🃛 🃌 🃝
+🃛 🃜 🂭
+🃛 🃜 🂽
+🃛 🃜 🃝
+🂬 🂭 🃎
+🂬 🂭 🃞
+🂬 🂽 🃎
+🂬 🂽 🃞
+🂬 🃝 🃎
+🂬 🃝 🃞
+🂼 🂭 🃎
+🂼 🂭 🃞
+🂼 🂽 🃎
+🂼 🂽 🃞
+🂼 🃝 🃎
+🂼 🃝 🃞
+🃌 🂭 🃎
+🃌 🂭 🃞
+🃌 🂽 🃎
+🃌 🂽 🃞
+🃌 🃝 🃎
+🃌 🃝 🃞
+🃜 🂭 🃎
+🃜 🂭 🃞
+🃜 🂽 🃎
+🃜 🂽 🃞
+🃜 🃝 🃎
+🃜 🃝 🃞
+Teste 3
+🂧 🂨 🂩
+🂧 🂨 🂹
+🂧 🂨 🃉
+🂧 🂸 🂩
+🂧 🂸 🂹
+🂧 🂸 🃉
+🂧 🃘 🂩
+🂧 🃘 🂹
+🂧 🃘 🃉
+🂷 🂨 🂩
+🂷 🂨 🂹
+🂷 🂨 🃉
+🂷 🂸 🂩
+🂷 🂸 🂹
+🂷 🂸 🃉
+🂷 🃘 🂩
+🂷 🃘 🂹
+🂷 🃘 🃉
+🃇 🂨 🂩
+🃇 🂨 🂹
+🃇 🂨 🃉
+🃇 🂸 🂩
+🃇 🂸 🂹
+🃇 🂸 🃉
+🃇 🃘 🂩
+🃇 🃘 🂹
+🃇 🃘 🃉
+🃗 🂨 🂩
+🃗 🂨 🂹
+🃗 🂨 🃉
+🃗 🂸 🂩
+🃗 🂸 🂹
+🃗 🂸 🃉
+🃗 🃘 🂩
+🃗 🃘 🂹
+🃗 🃘 🃉
+🂨 🂩 🂪
+🂨 🂩 🂺
+🂨 🂹 🂪
+🂨 🂹 🂺
+🂨 🃉 🂪
+🂨 🃉 🂺
+🂸 🂩 🂪
+🂸 🂩 🂺
+🂸 🂹 🂪
+🂸 🂹 🂺
+🂸 🃉 🂪
+🂸 🃉 🂺
+🃘 🂩 🂪
+🃘 🂩 🂺
+🃘 🂹 🂪
+🃘 🂹 🂺
+🃘 🃉 🂪
+🃘 🃉 🂺
+Teste 4
+🂩 🂪 🂻
+🂪 🂻 🂬
+🂪 🂻 🂼
+🂪 🂻 🃜
+
+Input 3
+
+9
+🂼🃌
+🃞🂮🂽🃎🂬🃋🂭🃛🃍🃝🂺🂫🂾🂪🃜🂻🃚🃊
+🃌🃜🂼🂬
+🃊🂪🂽🃋🂻🂺🃎🃍🂮🃞🂭🂾🃚🃝🃛🂫
+🂮🂾🃞🃎
+🂬🂭🃛🃋🃚🂫🂼🃜🃍🃌🃊🂪🂺🃝🂽🂻
+🂼🃌
+🃞🃜🃍🃎🂬🂭🃛🂾🂪🃚🂮🂺🃊🃋🂽🂫🂻🃝
+🂬🃜🂼🃌
+🂪🃞🂮🃎🂭🃝🂻🂾🂽🃋🂫🂺🃚🃍🃊🃛
+🂮🂾🃞🃎
+🂬🂪🃊🃛🃚🂫🃜🂼🂽🃍🃋🂭🂻🃌🃝🂺
+🃞
+🃉🂪🃙🃋🂹🂺🂩🂻🃚🃊
+🂾🃎
+🂻🂺🃋🃉🃜🃊🂹🃚🂭🂪🃌🃍🂼
+🃎🂮🂾
+🃊🂺🃋🃜🃌🂻🂹🃉🃍🂼🂪🃚🂭
+
+Output 3
+
+Teste 1
+🂬 🃜
+🂭 🂽
+🂭 🃍
+🂭 🃝
+🂽 🃍
+🂽 🃝
+🃍 🃝
+🂮 🂾
+🂮 🃎
+🂮 🃞
+🂾 🃎
+🂾 🃞
+🃎 🃞
+Teste 2
+🂭 🂽 🃍 🃝
+🂮 🂾 🃎 🃞
+Teste 3
+PASSO
+Teste 4
+🂬 🃜
+🂭 🂽
+🂭 🃍
+🂭 🃝
+🂽 🃍
+🂽 🃝
+🃍 🃝
+🂮 🂾
+🂮 🃎
+🂮 🃞
+🂾 🃎
+🂾 🃞
+🃎 🃞
+Teste 5
+🂭 🂽 🃍 🃝
+🂮 🂾 🃎 🃞
+Teste 6
+PASSO
+Teste 7
+🂩 🂹 🃉 🃙
+🂪 🂺 🃊 🃚
+🂩 🂹 🂪 🂺 🂻 🃋
+🂩 🂹 🂪 🃊 🂻 🃋
+🂩 🂹 🂪 🃚 🂻 🃋
+🂩 🂹 🂺 🃊 🂻 🃋
+🂩 🂹 🂺 🃚 🂻 🃋
+🂩 🂹 🃊 🃚 🂻 🃋
+🂩 🃉 🂪 🂺 🂻 🃋
+🂩 🃉 🂪 🃊 🂻 🃋
+🂩 🃉 🂪 🃚 🂻 🃋
+🂩 🃉 🂺 🃊 🂻 🃋
+🂩 🃉 🂺 🃚 🂻 🃋
+🂩 🃉 🃊 🃚 🂻 🃋
+🂩 🃙 🂪 🂺 🂻 🃋
+🂩 🃙 🂪 🃊 🂻 🃋
+🂩 🃙 🂪 🃚 🂻 🃋
+🂩 🃙 🂺 🃊 🂻 🃋
+🂩 🃙 🂺 🃚 🂻 🃋
+🂩 🃙 🃊 🃚 🂻 🃋
+🂹 🃉 🂪 🂺 🂻 🃋
+🂹 🃉 🂪 🃊 🂻 🃋
+🂹 🃉 🂪 🃚 🂻 🃋
+🂹 🃉 🂺 🃊 🂻 🃋
+🂹 🃉 🂺 🃚 🂻 🃋
+🂹 🃉 🃊 🃚 🂻 🃋
+🂹 🃙 🂪 🂺 🂻 🃋
+🂹 🃙 🂪 🃊 🂻 🃋
+🂹 🃙 🂪 🃚 🂻 🃋
+🂹 🃙 🂺 🃊 🂻 🃋
+🂹 🃙 🂺 🃚 🂻 🃋
+🂹 🃙 🃊 🃚 🂻 🃋
+🃉 🃙 🂪 🂺 🂻 🃋
+🃉 🃙 🂪 🃊 🂻 🃋
+🃉 🃙 🂪 🃚 🂻 🃋
+🃉 🃙 🂺 🃊 🂻 🃋
+🃉 🃙 🂺 🃚 🂻 🃋
+🃉 🃙 🃊 🃚 🂻 🃋
+Teste 8
+🂹 🃉 🂪 🂺 🂻 🃋 🂼 🃌
+🂹 🃉 🂪 🂺 🂻 🃋 🂼 🃜
+🂹 🃉 🂪 🂺 🂻 🃋 🃌 🃜
+🂹 🃉 🂪 🃊 🂻 🃋 🂼 🃌
+🂹 🃉 🂪 🃊 🂻 🃋 🂼 🃜
+🂹 🃉 🂪 🃊 🂻 🃋 🃌 🃜
+🂹 🃉 🂪 🃚 🂻 🃋 🂼 🃌
+🂹 🃉 🂪 🃚 🂻 🃋 🂼 🃜
+🂹 🃉 🂪 🃚 🂻 🃋 🃌 🃜
+🂹 🃉 🂺 🃊 🂻 🃋 🂼 🃌
+🂹 🃉 🂺 🃊 🂻 🃋 🂼 🃜
+🂹 🃉 🂺 🃊 🂻 🃋 🃌 🃜
+🂹 🃉 🂺 🃚 🂻 🃋 🂼 🃌
+🂹 🃉 🂺 🃚 🂻 🃋 🂼 🃜
+🂹 🃉 🂺 🃚 🂻 🃋 🃌 🃜
+🂹 🃉 🃊 🃚 🂻 🃋 🂼 🃌
+🂹 🃉 🃊 🃚 🂻 🃋 🂼 🃜
+🂹 🃉 🃊 🃚 🂻 🃋 🃌 🃜
+🂪 🂺 🂻 🃋 🂼 🃌 🂭 🃍
+🂪 🂺 🂻 🃋 🂼 🃜 🂭 🃍
+🂪 🂺 🂻 🃋 🃌 🃜 🂭 🃍
+🂪 🃊 🂻 🃋 🂼 🃌 🂭 🃍
+🂪 🃊 🂻 🃋 🂼 🃜 🂭 🃍
+🂪 🃊 🂻 🃋 🃌 🃜 🂭 🃍
+🂪 🃚 🂻 🃋 🂼 🃌 🂭 🃍
+🂪 🃚 🂻 🃋 🂼 🃜 🂭 🃍
+🂪 🃚 🂻 🃋 🃌 🃜 🂭 🃍
+🂺 🃊 🂻 🃋 🂼 🃌 🂭 🃍
+🂺 🃊 🂻 🃋 🂼 🃜 🂭 🃍
+🂺 🃊 🂻 🃋 🃌 🃜 🂭 🃍
+🂺 🃚 🂻 🃋 🂼 🃌 🂭 🃍
+🂺 🃚 🂻 🃋 🂼 🃜 🂭 🃍
+🂺 🃚 🂻 🃋 🃌 🃜 🂭 🃍
+🃊 🃚 🂻 🃋 🂼 🃌 🂭 🃍
+🃊 🃚 🂻 🃋 🂼 🃜 🂭 🃍
+🃊 🃚 🂻 🃋 🃌 🃜 🂭 🃍
+Teste 9
+🂹 🃉 🂪 🂺 🂻 🃋 🂼 🃌 🂭 🃍
+🂹 🃉 🂪 🂺 🂻 🃋 🂼 🃜 🂭 🃍
+🂹 🃉 🂪 🂺 🂻 🃋 🃌 🃜 🂭 🃍
+🂹 🃉 🂪 🃊 🂻 🃋 🂼 🃌 🂭 🃍
+🂹 🃉 🂪 🃊 🂻 🃋 🂼 🃜 🂭 🃍
+🂹 🃉 🂪 🃊 🂻 🃋 🃌 🃜 🂭 🃍
+🂹 🃉 🂪 🃚 🂻 🃋 🂼 🃌 🂭 🃍
+🂹 🃉 🂪 🃚 🂻 🃋 🂼 🃜 🂭 🃍
+🂹 🃉 🂪 🃚 🂻 🃋 🃌 🃜 🂭 🃍
+🂹 🃉 🂺 🃊 🂻 🃋 🂼 🃌 🂭 🃍
+🂹 🃉 🂺 🃊 🂻 🃋 🂼 🃜 🂭 🃍
+🂹 🃉 🂺 🃊 🂻 🃋 🃌 🃜 🂭 🃍
+🂹 🃉 🂺 🃚 🂻 🃋 🂼 🃌 🂭 🃍
+🂹 🃉 🂺 🃚 🂻 🃋 🂼 🃜 🂭 🃍
+🂹 🃉 🂺 🃚 🂻 🃋 🃌 🃜 🂭 🃍
+🂹 🃉 🃊 🃚 🂻 🃋 🂼 🃌 🂭 🃍
+🂹 🃉 🃊 🃚 🂻 🃋 🂼 🃜 🂭 🃍
+🂹 🃉 🃊 🃚 🂻 🃋 🃌 🃜 🂭 🃍
+

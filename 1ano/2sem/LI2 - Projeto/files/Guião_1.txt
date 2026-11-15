@@ -1,0 +1,59 @@
+Guião 1
+
+A tarefa
+
+Dado um conjunto de cartas, imprimir qual é o tipo de combinação que este conjunto de cartas representa e qual é a carta mais alta dessa combinação.
+
+Nota: é necessário usar todas as cartas dadas.
+
+As combinações possíveis são:
+
+    conjunto com N cartas iguais (todas com o mesmo valor);
+    sequência com N cartas consecutivas (não necessáriamente todas com o mesmo naipe);
+    dupla sequência com N cartas consecutivas (não necessáriamente todas com o mesmo naipe);
+    Nenhuma das anteriores.
+
+Eis um exemplo de cada tipo:
+
+    🂣🃃🃓
+    🂡 🃂 🃓 🂴 🃕
+    🃇 🃗 🂨 🂸 🃉 🃙
+    🂡 🃂 🃓 🂴 🂶
+
+Input
+
+O seu programa lê uma linha com o número de testes T seguida de uma linha por teste, cada uma com um conjunto de cartas.
+Output
+
+O seu programa deve imprimir T linhas, uma por cada teste. O seu programa deve imprimir uma das seguintes linhas conforme o caso:
+
+    conjunto com N cartas onde a carta mais alta é C
+    sequência com N cartas onde a carta mais alta é C
+    dupla sequência com N cartas onde a carta mais alta é C
+    Nada!
+
+Exemplo
+Input
+
+9
+🃁🃓🂲
+🂶🃁🂳🂥🃄🂢
+🃊🂮🃍🂼
+🃁🃂🃔🂳🃃🂤🂲🂱
+🃊🂺🂪
+🃊🂺🂪🃚
+🃁🂱
+🃌
+🃊🂼🃍🂮🃛
+
+Output
+
+sequência com 3 cartas onde a carta mais alta é 🃓
+sequência com 6 cartas onde a carta mais alta é 🂶
+Nada!
+dupla sequência com 4 cartas onde a carta mais alta é 🃔
+conjunto com 3 cartas onde a carta mais alta é 🃊
+conjunto com 4 cartas onde a carta mais alta é 🃚
+conjunto com 2 cartas onde a carta mais alta é 🃁
+conjunto com 1 cartas onde a carta mais alta é 🃌
+sequência com 5 cartas onde a carta mais alta é 🂮

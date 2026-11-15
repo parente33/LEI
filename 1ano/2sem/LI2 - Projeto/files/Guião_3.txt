@@ -1,0 +1,428 @@
+Guião 3
+
+A tarefa
+
+Dada a informação apresentada ao jogador para o torneio (leia o enunciado do projeto para ver do que se fala) e a jogada que o jogador pretende fazer, imprimir a nova mão desse jogador. Deverá imprimir-se a mesma mão caso a jogada seja inválida.
+Input
+
+O seu programa lê uma linha com o número de testes T e, para cada teste, deve ler:
+
+    o número de jogadas N;
+    A mão do jogador;
+    N linhas, uma com cada uma das jogadas anteriores;
+    A jogada que o jogador pretende fazer.
+
+Output
+
+O seu programa deve imprimir o resultado dos T testes. Para cada teste deve ser impressa:
+
+    uma linha com Teste seguida do número do teste
+    por cada teste deve imprimir:
+        A mesma mão caso não seja possível jogar ou o jogador passou
+        A nova mão caso seja possível jogar
+    em ambos os casos, a mão deve ser impressa com as cartas ordenadas e separadas por espaços.
+
+Exemplos
+
+No primeiro input temos 5 testes:
+
+    O jogador é o primeiro a jogar e joga uma das cartas da mão, o 🂪
+    O jogador é o primeiro a jogar e joga uma das cartas que não possui, o 🂦
+    O jogador é o primeiro a jogar e joga uma combinação que usa todas as cartas que possui: 🂪 🃛 🃌
+    O jogador é o primeiro a jogar e joga uma combinação inválida
+    O jogador joga em segundo lugar, a seguir ao que jogou 🂦 e joga o 🂪
+
+Input 1
+
+5
+0
+🂪🃛🃌
+🂪
+0
+🂪🃛🃌
+🂦
+0
+🂪🃛🃌
+🂪🃛🃌
+0
+🂪🃛🃌
+🃛🃌
+1
+🃛🂪🃌
+🂦
+🂪
+
+Output 1
+
+Teste 1
+🃛 🃌
+Teste 2
+🂪 🃛 🃌
+Teste 3
+
+Teste 4
+🂪 🃛 🃌
+Teste 5
+🃛 🃌
+
+Input 2
+
+8
+15
+🂪🃛🃌
+🂦
+🃖
+🃈
+🃊
+🂼
+🂾
+🂣🂳🃃🃓
+🂧🂷🃇🃗
+PASSO
+PASSO
+PASSO
+🂴🃄🂥🂵🂶🃖
+PASSO
+PASSO
+PASSO
+🂪🃛🃌
+15
+🂪🃛🃌
+🂦
+🃖
+🃈
+🃊
+🂼
+🂾
+🂣🂳🃃🃓
+🂧🂷🃇🃗
+PASSO
+PASSO
+PASSO
+🂴🃄🂥🂵🂶🃖
+PASSO
+PASSO
+PASSO
+🃊🃋🂼
+15
+🂪🃛🃌
+🂦
+🃖
+🃈
+🃊
+🂼
+🂾
+🂣🂳🃃🃓
+🂧🂷🃇🃗
+PASSO
+PASSO
+PASSO
+🂴🃄🂥🂵🂶🃖
+PASSO
+PASSO
+PASSO
+🃌
+15
+🂪🃛🃌
+🂦
+🃖
+🃈
+🃊
+🂼
+🂾
+🂣🂳🃃🃓
+🂧🂷🃇🃗
+PASSO
+PASSO
+PASSO
+🂴🃄🂥🂵🂶🃖
+PASSO
+PASSO
+PASSO
+🂪
+15
+🂪🃛🃌
+🂦
+🃖
+🃈
+🃊
+🂼
+🂾
+🂣🂳🃃🃓
+🂧🂷🃇🃗
+PASSO
+PASSO
+PASSO
+🂴🃄🂥🂵🂶🃖
+PASSO
+PASSO
+PASSO
+🃛
+15
+🂪🃛🃌
+🂦
+🃖
+🃈
+🃊
+🂼
+🂾
+🂣🂳🃃🃓
+🂧🂷🃇🃗
+PASSO
+PASSO
+PASSO
+🂴🃄🂥🂵🂶🃖
+PASSO
+PASSO
+PASSO
+🂼
+15
+🃛🃌🂪
+🂦
+🃖
+🃈
+🃊
+🂼
+🂾
+🂣🂳🃃🃓
+🂧🂷🃇🃗
+PASSO
+PASSO
+PASSO
+🂴🃄🂥🂵🂶🃖
+PASSO
+PASSO
+PASSO
+PASSO
+0
+🃕🃒🂶🃔🃖🂴🂤🂢🃆🃂🂵🂥🃄🃅🂦
+🂥🂵
+
+Output 2
+
+Teste 1
+
+Teste 2
+🂪 🃛 🃌
+Teste 3
+🂪 🃛
+Teste 4
+🃛 🃌
+Teste 5
+🂪 🃌
+Teste 6
+🂪 🃛 🃌
+Teste 7
+🂪 🃛 🃌
+Teste 8
+🂢 🃂 🃒 🂤 🂴 🃄 🃔 🃅 🃕 🂦 🂶 🃆 🃖
+
+Input 3
+
+2
+13
+🂶🃆🂸🃈🂹🃙🂪🃚🂼🃜🂭🂽🃝
+🃔🃕🃖🂧🂨🂩🃊
+PASSO
+PASSO
+PASSO
+🂤
+🂷
+🃉
+🃌
+🃍
+PASSO
+🃞
+PASSO
+PASSO
+🂸🃈🂹🃙🂪🃚
+13
+🂶🃆🂸🃈🂹🃙🂪🃚🂼🃜🂭🂽
+🃔🃕🃖🂧🂨🂩🃊
+PASSO
+PASSO
+PASSO
+🂤
+🂷
+🃉
+🃌
+🃍
+PASSO
+🃝
+PASSO
+PASSO
+🂸🃈🂹🃙🂪🃚
+
+Output 3
+
+Teste 1
+🂶 🃆 🂼 🃜 🂭 🂽 🃝
+Teste 2
+🂶 🃆 🂸 🃈 🂹 🃙 🂪 🃚 🂼 🃜 🂭 🂽
+
+Input 4
+
+2
+13
+🃆🂭🃚🃈🂸🃜🃝🃙🂹🂼🂶🂽🂪
+🂨🃕🂩🃖🂧🃔🃊
+PASSO
+PASSO
+PASSO
+🂤
+🂷
+🃉
+🃌
+🃍
+PASSO
+🃞
+PASSO
+PASSO
+🂸🃚🃙🂪🂹🃈
+13
+🂽🂹🂪🂭🃈🃚🂶🃜🃙🃆🂸🂼
+🃕🂩🃖🃔🂨🃊🂧
+PASSO
+PASSO
+PASSO
+🂤
+🂷
+🃉
+🃌
+🃍
+PASSO
+🃝
+PASSO
+PASSO
+🃈🃙🃚🂹🂸🂪
+
+Output 4
+
+Teste 1
+🂶 🃆 🂼 🃜 🂭 🂽 🃝
+Teste 2
+🂶 🃆 🂸 🃈 🂹 🃙 🂪 🃚 🂼 🃜 🂭 🂽
+
+Input 5
+
+3
+18
+🃛🃙🃄🃖🂽🃇🃍🂸🃈🂱🂶🃆🃁🃅
+🃄🃅🃖🃇🃈🃙
+PASSO
+PASSO
+PASSO
+🂽🃍
+PASSO
+PASSO
+PASSO
+🂶🃆
+PASSO
+PASSO
+PASSO
+🂱🃁
+🂼🃌
+🃎🃞
+PASSO
+PASSO
+PASSO
+🃂🃓🂤🂵
+18
+🃚🃑🂩🂢🂼🃔🃋🂦🂫🃘🂪🂡🃌🂴
+🃄🃅🃖🃇🃈🃙
+PASSO
+PASSO
+PASSO
+🂽🃍
+PASSO
+PASSO
+PASSO
+🂶🃆
+PASSO
+PASSO
+PASSO
+🂱🃁
+🂼🃌
+🃎🃞
+PASSO
+PASSO
+PASSO
+🃂🃓🂤🂵
+18
+🂮🂵🂾🃉🂬🃜🂤🂭🃂🃃🃓🂳
+🃄🃅🃖🃇🃈🃙
+PASSO
+PASSO
+PASSO
+🂽🃍
+PASSO
+PASSO
+PASSO
+🂶🃆
+PASSO
+PASSO
+PASSO
+🂱🃁
+🂼🃌
+🃎🃞
+PASSO
+PASSO
+PASSO
+🃂🃓🂤🂵
+
+Output 5
+
+Teste 1
+🂱 🃁 🃄 🃅 🂶 🃆 🃖 🃇 🂸 🃈 🃙 🃛 🂽 🃍
+Teste 2
+🂡 🃑 🂢 🂴 🃔 🂦 🃘 🂩 🂪 🃚 🂫 🃋 🂼 🃌
+Teste 3
+🂳 🃃 🃉 🂬 🃜 🂭 🂮 🂾
+
+Input 6
+
+3
+11
+🃁🂢🂳🃄🃕🃆🂧🂡🂱🂶
+🃊🃛🃌🃍
+PASSO
+🂻🂼🂭🃞
+PASSO
+PASSO
+PASSO
+🂷🃘🂹🂪
+🂨🂩🃚🂫
+PASSO
+PASSO
+PASSO
+🃁🂢🂳🃄🃕🃆🂧
+7
+🃁🂢🂳🃄🃕🃆🂧🂡🂱🂶
+🃊🃛🃌🃍
+PASSO
+🂻🂼🂭🃞
+PASSO
+PASSO
+PASSO
+🂷🃘🂹🂪
+🂨🂩🃚🂫
+7
+🂺🃗🂦🂵🃖🂲🂨🂩🃋🃅🂥🃓🃚🂫
+🃊🃛🃌🃍
+PASSO
+🂻🂼🂭🃞
+PASSO
+PASSO
+PASSO
+🂷🃘🂹🂪
+🂨🂩🃚🂫
+
+Output 6
+
+Teste 1
+🂡 🂱 🂶
+Teste 2
+🂡 🂱 🃁 🂢 🂳 🃄 🃕 🂶 🃆 🂧
+Teste 3
+🂲 🃓 🂥 🂵 🃅 🂦 🃖 🃗 🂺 🃋
+

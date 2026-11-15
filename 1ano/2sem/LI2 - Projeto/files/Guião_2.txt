@@ -1,0 +1,50 @@
+Guião 2
+
+A tarefa
+
+Neste guião pretende-se comparar combinações do mesmo tipo e ordená-las. De notar que todas as combinações devem ter o mesmo tipo e número de cartas.
+Input
+
+O seu programa lê uma linha com o número de testes T e, para cada teste, o número de sequências seguido de uma linha por cada sequência.
+Output
+
+O seu programa deve imprimir o resultado dos T testes. Para cada teste deve ser impressa:
+
+    uma linha com Teste seguida do número do teste
+    Caso todas as sequências sejam do mesmo tipo e número de cartas:
+        uma linha por cada sequência, por ordem crescente
+        cada sequência deve estar ordenada por ordem crescente
+        as cartas devem ser separadas por espaços
+    Deverá ser impressa a frase Combinações não iguais! caso contrário
+
+Exemplo
+Input
+
+3
+2
+🃁🂲🂣
+🃑🂢🂳🃄
+3
+🃊🂪🃚
+🃋🂫🂻
+🂭🂽🃝
+4
+🂻🃜🃚🂭🃛🂼🂽🃊🂩🃙
+🃖🃗🂺🂹🃈🂪🃇🃆🃉🂸
+🃕🃘🂧🃔🂷🃅🂦🃄🂨🂶
+🂢🃒🂤🂵🂥🃓🃑🂳🂴🂱
+
+Output
+
+
+Teste 1
+Combinações não iguais!
+Teste 2
+🂪 🃊 🃚
+🂫 🂻 🃋
+🂭 🂽 🃝
+Teste 3
+🂱 🃑 🂢 🃒 🂳 🃓 🂤 🂴 🂥 🂵
+🃄 🃔 🃅 🃕 🂦 🂶 🂧 🂷 🂨 🃘
+🃆 🃖 🃇 🃗 🂸 🃈 🂹 🃉 🂪 🂺
+🂩 🃙 🃊 🃚 🂻 🃛 🂼 🃜 🂭 🂽
