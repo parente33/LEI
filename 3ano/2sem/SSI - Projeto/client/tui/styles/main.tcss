@@ -1,0 +1,97 @@
+/* client/tui/styles/main.tcss
+   Structural layout only.  Colors come from the ansi-dark theme.  */
+
+
+/* --- Login screen ------------------------------------------------------- */
+
+#login-container {
+    width: 52;
+    height: auto;
+    padding: 2 4;
+    align: center middle;
+}
+
+#login-title {
+    text-align: center;
+    text-style: bold;
+    width: 100%;
+    margin-bottom: 1;
+}
+
+#login-mode-label {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 1;
+}
+
+#login-container Input {
+    margin-bottom: 1;
+}
+
+#error-label {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 1;
+}
+
+#submit-button {
+    width: 100%;
+    margin-bottom: 1;
+}
+
+#toggle-button {
+    width: 100%;
+}
+
+
+/* --- Chat screen -------------------------------------------------------- */
+
+#chat-layout {
+    height: 100%;
+}
+
+#sidebar {
+    width: 24;
+    height: 100%;
+}
+
+#contacts-title {
+    padding: 1 2;
+    text-style: bold;
+    width: 100%;
+}
+
+#contacts-list {
+    height: 1fr;
+    padding: 0 1;
+}
+
+ListItem {
+    padding: 0 2;
+    margin-bottom: 1;
+}
+
+#add-contact-input {
+    margin: 0 1 1 1;
+}
+
+#main-panel {
+    width: 1fr;
+    height: 100%;
+}
+
+#chat-header {
+    padding: 1 2;
+    text-style: bold;
+    width: 100%;
+}
+
+#chat-log {
+    height: 1fr;
+    padding: 0 2;
+}
+
+#message-input {
+    dock: bottom;
+    margin: 1;
+}

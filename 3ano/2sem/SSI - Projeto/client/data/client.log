@@ -1,0 +1,12 @@
+15:17:15 [asyncio] DEBUG Using selector: EpollSelector
+15:17:15 [client.core.net_client] INFO TLS context loaded from /home/parente33/2526-G54/trabalho-pratico/certs/server.crt
+15:19:59 [asyncio] DEBUG Using selector: EpollSelector
+15:19:59 [client.core.net_client] INFO TLS context loaded from /home/parente33/2526-G54/trabalho-pratico/certs/server.crt
+15:32:41 [asyncio] DEBUG Using selector: EpollSelector
+15:32:41 [client.core.net_client] INFO TLS context loaded from /home/parente33/2526-G54/trabalho-pratico/certs/server.crt
+16:14:57 [asyncio] DEBUG Using selector: EpollSelector
+16:14:57 [client.core.net_client] INFO TLS context loaded from /home/parente33/2526-G54/trabalho-pratico/certs/server.crt
+10:52:15 [asyncio] DEBUG Using selector: EpollSelector
+10:52:15 [client.core.net_client] INFO TLS context loaded from /home/parente33/2526-G54/trabalho-pratico/certs/server.crt
+09:00:18 [asyncio] DEBUG Using selector: EpollSelector
+09:00:19 [client.core.net_client] INFO TLS context loaded from /home/parente33/2526-G54/trabalho-pratico/certs/server.crt

@@ -1,0 +1,30 @@
+# Server-only constants
+
+database:
+  filename: "chat.db"
+
+auth:
+  # Scrypt key-derivation parameters.
+  # Increasing N increases both security and CPU cost.
+  scrypt_n:  16384  # 2**14
+  scrypt_r:  8
+  scrypt_p:  1
+  salt_len:  32     # bytes  random per user
+  hash_len:  32     # bytes  derived key stored as pw_hash
+
+  # Username and password policy.
+  min_username_len: 1
+  max_username_len: 32
+  min_password_len: 8
+
+keys:
+  ed25519_pub_len: 32
+  x25519_pub_len:  32
+
+messaging:
+  min_conv_id_len: 8
+
+ssl:
+  ca_certfile: "ca.crt"
+  server_certfile: "server.crt"
+  keyfile: "server.key"
