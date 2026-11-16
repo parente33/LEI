@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Programando o cliente: exemplo7</title>
+    <meta charset=”UTF-8” />
+    <link rel="stylesheet" href="w3.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <div class="w3-card-4">
+
+        <header class="w3-container w3-blue">
+            <h1>Programando o cliente: exemplo7</h1>
+        </header>
+
+        <div class="w3-container">
+            <p id="p1">Sou um parágrafo <b>com algum texto a bold</b>.</p>
+            <button id="botao1">Mostra o texto</button>
+            <button id="botao2">Mostra o HTML</button>
+            <p class="w3-panel w3-pale-blue w3-leftbar w3-border-blue">
+                <strong>Resultado:</strong> 
+                <span id="output">Clica num botão...</span>
+            </p>
+        </div>
+
+        <footer class="w3-container w3-blue">
+            <h5>Gerado em EW2026, <span id="datahora"></span></h5>
+        </footer>
+    </div>
+    <script>
+        $(function() {
+            $("#datahora").html(document.lastModified);
+
+            $("#botao1").click(function() {
+                $("#output").text($("#p1").text()); // Exemplo 7
+                $("#p1").text("Hello World!");      // Exemplo 8
+            });
+
+            $("#botao2").click(function() {
+                $("#output").text($("#p1").html()); // Exemplo 7
+                $("#p1").html("<b>Hello World!</b>"); // Exemplo 8
+            });
+
+            $("#botao3").click(function() {
+                $("#campo").val("Braga");
+            });
+        });
+    </script>
+</body>
+
+</html>

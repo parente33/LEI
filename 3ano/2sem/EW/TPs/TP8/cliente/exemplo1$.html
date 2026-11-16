@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Programando o cliente: exemplo1</title>
+    <meta charset=”UTF-8” />
+    <link rel="stylesheet" href="w3.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <div class="w3-card-4">
+
+        <header class="w3-container w3-blue">
+            <h1>Programando o cliente: exemplo1</h1>
+        </header>
+
+        <div class="w3-container">
+            <p>Conteúdo da página</p>
+            <address>Alterado em: <span id="demo"></span>.</address>
+        </div>
+
+        <footer class="w3-container w3-blue">
+            <h5>Gerado em EW2026</h5>
+        </footer>
+    </div>
+    <script>
+    $(function() {
+        $("#demo").html(document.lastModified)
+    });
+    </script>
+</body>
+
+</html>

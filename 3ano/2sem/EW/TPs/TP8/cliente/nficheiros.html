@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Envio de vários ficheiros</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="w3.css" />
+  </head>
+  <body>
+    <form id="uploadForm">
+    <div id="fileContainer">
+      <div class="file-group">
+        <input type="file" name="files[]">
+          <button type="button" onclick="removeField(this)">Remover</button>
+      </div>
+    </div>
+
+    <button type="button" onclick="addField()">Adicionar ficheiro</button>
+    <br><br>
+    <button type="submit">Enviar</button>
+  </form>
+
+  <script>
+  function addField() {
+    const container = document.getElementById('fileContainer');
+
+    const div = document.createElement('div');
+    div.className = 'file-group';
+
+    div.innerHTML = `
+      <input type="file" name="files[]">
+      <button type="button" onclick="removeField(this)">Remover</button>
+    `;
+
+    container.appendChild(div);
+  }
+
+  function removeField(button) {
+    button.parentElement.remove();
+  }
+  </script>
+  </body>
+</html>

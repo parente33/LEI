@@ -1,0 +1,73 @@
+services:
+
+  # ==================================================================
+  # Exercício 1: Jogos de Tabuleiro
+  # ==================================================================
+
+  mongo_jogos:
+    build:
+      context: ./ex1
+      dockerfile: Dockerfile.mongo
+    container_name: mongoEW
+    ports:
+      - "27017:27017"
+    volumes:
+      - ewnormal2026_jogos:/data/db
+
+  api_jogos:
+    build:
+      context: ./ex1
+      dockerfile: Dockerfile
+    container_name: api_dados
+    ports:
+      - "17000:17000" # Porta pedida no enunciado do Ex 1.3
+    environment:
+      - MONGO_URL=mongodb://mongo_jogos:27017/jogostabuleiro
+      - PORT=17000
+    depends_on:
+      - mongo_jogos
+
+
+  # ==================================================================
+  # Exercício 2: A Minha Lista de Leituras (Engenharia Reversa)
+  # ==================================================================
+
+  mongo_leituras:
+    image: mongo:latest
+    container_name: mongoLeitura
+    volumes:
+      - ewnormal2026_leituras:/data/db
+      - ./ex2/livros.json:/docker-entrypoint-initdb.d/livros.json
+      - ./ex2/mongo-init/import.sh:/docker-entrypoint-initdb.d/import.sh
+    # Requisito: Não declaramos "ports" aqui. Fica oculto do exterior.
+
+  api_leituras:
+    build:
+      context: ./ex2
+      dockerfile: Dockerfile
+    container_name: apiLeitura
+    ports:
+      - "19020:19020" # Porta pedida pela interface Vue
+    environment:
+      - MONGO_URL=mongodb://mongo_leituras:27017/leituras
+      - PORT=19020
+    depends_on:
+      - mongo_leituras
+
+  nginx_frontend:
+    image: nginx:alpine
+    container_name: vueFrontend
+    ports:
+      - "19021:80" # Porta pedida para o Nginx servindo o index.html
+    volumes:
+      - ./ex2/index.html:/usr/share/nginx/html/index.html:ro
+    depends_on:
+      - api_leituras
+
+
+# ==================================================================
+# VOLUMES PERSISTENTES
+# ==================================================================
+volumes:
+  ewnormal2026_jogos:
+  ewnormal2026_leituras:

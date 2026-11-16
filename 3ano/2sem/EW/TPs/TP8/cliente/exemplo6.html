@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Programando o cliente: exemplo6</title>
+    <meta charset=”UTF-8” />
+    <link rel="stylesheet" href="w3.css" />
+</head>
+
+<body>
+
+    <div class="w3-card-4">
+
+        <header class="w3-container w3-blue">
+            <h1>Programando o cliente: exemplo6</h1>
+        </header>
+
+        <div class="w3-container">
+            <p>Clica no <a href="lista-exemplos.html">link</a> para saltar para o índice.</p>
+        </div>
+
+        <footer class="w3-container w3-blue">
+            <h5>Gerado em EW2026, <span id="datahora"></span></h5>
+        </footer>
+    </div>
+    <script>
+        document.getElementById("datahora").innerHTML = document.lastModified;
+
+        // Seleciona o link dentro do parágrafo
+        const link = document.querySelector("a");
+
+        // Adiciona o evento de clique
+        link.addEventListener("click", function(event) {
+            // 1. Impede o link de abrir a página "lista-exemplos.html"
+            event.preventDefault();
+    
+            // 2. Abre a janela com a mensagem (o alert)
+            alert("Intercetado! Em vez de saltar para o índice, vês esta mensagem.");
+        });
+    </script>
+</body>
+
+</html>

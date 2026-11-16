@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Programando o cliente: exemplo3</title>
+    <meta charset=”UTF-8” />
+    <link rel="stylesheet" href="w3.css" />
+</head>
+
+<body>
+
+    <div class="w3-card-4">
+
+        <header class="w3-container w3-blue">
+            <h1>Programando o cliente: exemplo3</h1>
+            <h2>Escondendo e mostrando elementos</h2>
+        </header>
+
+        <div class="w3-container">
+            <p>Se clicares no botão "Esconde", vou desaparecer.</p>
+            <p>Eu também...</p>
+            <p>E eu também!</p>
+            <button id="hide">Esconde</button>
+            <button id="show">Mostra</button>
+        </div>
+
+        <footer class="w3-container w3-blue">
+            <h5>Gerado em EW2026, <span id="datahora"></span></h5>
+        </footer>
+    </div>
+    <script>
+        document.getElementById("datahora").innerHTML = document.lastModified;
+
+        // Seleciona todos os elementos <p> da página
+        const paragrafos = document.querySelectorAll("p");
+
+        // Função para esconder
+        document.getElementById("hide").addEventListener("click", function() {
+            paragrafos.forEach(p => {
+                // p.style.display = "none"
+                p.style.visibility = "hidden"
+            });
+        });
+
+        // Função para mostrar
+        document.getElementById("show").addEventListener("click", function() {
+            paragrafos.forEach(p => {
+                // p.style.display = "block"
+                p.style.visibility = "visible"
+            });
+        });
+    </script>
+</body>
+
+</html>

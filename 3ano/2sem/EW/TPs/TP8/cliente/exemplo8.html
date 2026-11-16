@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Programando o cliente: exemplo8</title>
+    <meta charset=”UTF-8” />
+    <link rel="stylesheet" href="w3.css" />
+</head>
+
+<body>
+
+    <div class="w3-card-4">
+
+        <header class="w3-container w3-blue">
+            <h1>Programando o cliente: exemplo8</h1>
+        </header>
+
+        <div class="w3-container">
+            <p id="p1">Sou um parágrafo <b>com algum texto a bold</b>.</p>
+            <p>Campo de formulário: <input type="text" id="campo" value="Guimarães"/></p>
+            <button id="botao1">Muda o texto</button>
+            <button id="botao2">Muda o HTML</button>
+            <button id="botao3">Inicializa o campo</button>
+        </div>
+
+        <footer class="w3-container w3-blue">
+            <h5>Gerado em EW2026, <span id="datahora"></span></h5>
+        </footer>
+    </div>
+    <script>
+        document.getElementById("datahora").innerHTML = document.lastModified
+
+        const paragrafo = document.getElementById("p1");
+        const campoInput = document.getElementById("campo");
+
+        // Botão 1: Altera apenas o texto
+        document.getElementById("botao1").addEventListener("click", function() {
+            paragrafo.innerText = "Hello World!";
+        });
+
+        // Botão 2: Altera o HTML (permite usar tags como <b>)
+        document.getElementById("botao2").addEventListener("click", function() {
+            paragrafo.innerHTML = "<b>Hello World!</b>";
+        });
+
+        // Botão 3: Altera o valor de um campo de formulário (input)
+        document.getElementById("botao3").addEventListener("click", function() {
+            campoInput.value = "Braga";
+        });
+    </script>
+</body>
+
+</html>

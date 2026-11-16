@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Programando o cliente: exemplo9</title>
+    <meta charset=”UTF-8” />
+    <link rel="stylesheet" href="w3.css" />
+</head>
+
+<body>
+
+    <div class="w3-card-4">
+
+        <header class="w3-container w3-blue">
+            <h1>Programando o cliente: exemplo9</h1>
+        </header>
+
+        <div class="w3-container">
+            <ul class="w3-ul" id="l1">
+                <li id="e1">Elemento</li>
+                <li id="e2">Elemento</li>
+            </ul>
+            <button id="botao1">Acrescenta elemento</button>
+            <button id="botao2">Remove elemento</button>
+        </div>
+
+        <footer class="w3-container w3-blue">
+            <h5>Gerado em EW2026, <span id="datahora"></span></h5>
+        </footer>
+    </div>
+    <script>
+        document.getElementById("datahora").innerHTML = document.lastModified
+
+        const lista = document.getElementById("l1")
+
+        // Botão 1: Acrescenta elemento no fim
+        document.getElementById("botao1").addEventListener("click", function() {
+            // 1. Cria um novo elemento <li>
+            const novoItem = document.createElement("li");
+    
+            // 2. Define o texto do novo elemento
+            novoItem.innerText = "Elemento " + (lista.children.length + 1)
+    
+            // 3. Adiciona o elemento como último filho da lista <ul>
+            lista.appendChild(novoItem)
+        });
+
+        // Botão 2: Remove o último elemento
+        document.getElementById("botao2").addEventListener("click", function() {
+            // 1. Verifica se a lista tem elementos para remover
+            if (lista.lastElementChild) {
+                // 2. Remove o último filho da lista
+                lista.removeChild(lista.lastElementChild)
+            }
+        });
+    </script>
+</body>
+
+</html>

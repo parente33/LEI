@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Programando o cliente: exemplo3</title>
+    <meta charset=”UTF-8” />
+    <link rel="stylesheet" href="w3.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <div class="w3-card-4">
+
+        <header class="w3-container w3-blue">
+            <h1>Programando o cliente: exemplo3</h1>
+            <h2>Escondendo e mostrando elementos</h2>
+        </header>
+
+        <div class="w3-container">
+            <p>Se clicares no botão "Esconde", vou desaparecer.</p>
+            <p>Eu também...</p>
+            <p>E eu também!</p>
+            <button id="hide">Esconde</button>
+            <button id="show">Mostra</button>
+        </div>
+
+        <footer class="w3-container w3-blue">
+            <h5>Gerado em EW2026, <span id="datahora"></span></h5>
+        </footer>
+    </div>
+    <script>
+    $(document).ready(function() {
+        $("#datahora").html(document.lastModified);
+
+        $("#hide").click(function() {
+            $("p").css("visibility", "hidden"); // Mantém a lógica de visibilidade que pediste
+        });
+
+        $("#show").click(function() {
+            $("p").css("visibility", "visible");
+        });
+    });
+    </script>
+</body>
+
+</html>

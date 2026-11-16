@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Programando o cliente: exemplo10</title>
+    <meta charset=”UTF-8” />
+    <link rel="stylesheet" href="w3.css" />
+</head>
+
+<body>
+
+    <div class="w3-card-4">
+
+        <header class="w3-container w3-blue">
+            <h1>Programando o cliente: exemplo10</h1>
+            <h2>Validador de NIF</h2>
+        </header>
+
+        <div class="w3-container w3-padding">
+            <p>Introduza o NIF para validar:</p>
+            <input type="text" id="campoNIF" class="w3-input w3-border" placeholder="Ex: 123456789">
+            <br>
+            <button id="btnValidar" class="w3-button w3-blue">Validar NIF</button>
+    
+            <div id="mensagem" class="w3-panel w3-display-container w3-hide" style="margin-top:20px;">
+                <p id="textoMensagem"></p>
+            </div>
+        </div>
+
+        <footer class="w3-container w3-blue">
+            <h5>Gerado em EW2026, <span id="datahora"></span></h5>
+        </footer>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Atualiza a data de modificação
+            document.getElementById("datahora").innerHTML = document.lastModified;
+
+            const btn = document.getElementById("btnValidar");
+            const campo = document.getElementById("campoNIF");
+            const msgDiv = document.getElementById("mensagem");
+            const msgTexto = document.getElementById("textoMensagem");
+
+            btn.addEventListener("click", function() {
+                const nif = campo.value.trim();
+
+                // 1. Validação básica (9 dígitos)
+                if (!/^[0-9]{9}$/.test(nif)) 
+                    mostrarResultado("O NIF deve ter 9 dígitos.", false);
+                else{
+                    // 2. Algoritmo Módulo 11
+                    let soma = 0;
+                    for (let i = 0; i < 8; i++) {
+                        soma += parseInt(nif[i]) * (9 - i);
+                    }
+
+                    let resto = soma % 11;
+                    let digitoControlo = (resto === 0 || resto === 1) ? 0 : 11 - resto;
+
+                    // 3. Comparação com o último dígito
+                    if (digitoControlo === parseInt(nif[8])) {
+                        mostrarResultado("Sucesso: O NIF " + nif + " é válido!", true);
+                    } else {
+                        mostrarResultado("Erro: O NIF " + nif + " é inválido.", false);
+                    }
+                }
+            })
+
+            // Função auxiliar para gerir as classes W3.CSS
+            function mostrarResultado(texto, eValido) {
+                msgTexto.textContent = texto;
+                msgDiv.classList.remove("w3-hide", "w3-red", "w3-green");
+        
+                const corCorreta = eValido ? "w3-green" : "w3-red";
+                msgDiv.classList.add(corCorreta);
+                msgDiv.style.display = "block"; // Garante que fica visível
+            }
+
+            // Extra: Limpa a mensagem quando o utilizador volta a escrever
+            campo.addEventListener("input", function() {
+                msgDiv.classList.add("w3-hide");
+                msgDiv.style.display = "none";
+            });
+        });
+    </script>
+</body>
+
+</html>

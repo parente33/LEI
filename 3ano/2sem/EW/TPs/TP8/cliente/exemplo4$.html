@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Programando o cliente: exemplo4</title>
+    <meta charset=”UTF-8” />
+    <link rel="stylesheet" href="w3.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <div class="w3-card-4">
+
+        <header class="w3-container w3-blue">
+            <h1>Programando o cliente: exemplo4</h1>
+            <h2>Parágrafo camaleão</h2>
+        </header>
+
+        <div class="w3-container">
+            <p id="p1">Sou um parágrafo e mudo de cor quando me clicas com o rato.</p>
+        </div>
+
+        <footer class="w3-container w3-blue">
+            <h5>Gerado em EW2026, <span id="datahora"></span></h5>
+        </footer>
+    </div>
+    <script>
+        $(function() {
+            $("#datahora").html(document.lastModified);
+
+            $("#p1").click(function() {
+                const cores = ["red", "green", "blue", "orange", "purple", "magenta"];
+                const corAleatoria = cores[Math.floor(Math.random() * cores.length)];
+                $(this).css("color", corAleatoria);
+            }).mouseenter(function() {
+                $(this).css({"background-color": "yellow", "cursor": "pointer"});
+            }).mouseleave(function() {
+                $(this).css("background-color", "transparent");
+            });
+        });
+    </script>
+</body>
+
+</html>

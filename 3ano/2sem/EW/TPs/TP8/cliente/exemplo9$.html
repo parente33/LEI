@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Programando o cliente: exemplo9</title>
+    <meta charset=”UTF-8” />
+    <link rel="stylesheet" href="w3.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <div class="w3-card-4">
+
+        <header class="w3-container w3-blue">
+            <h1>Programando o cliente: exemplo9</h1>
+        </header>
+
+        <div class="w3-container">
+            <ul class="w3-ul" id="l1">
+                <li id="e1">Elemento</li>
+                <li id="e2">Elemento</li>
+            </ul>
+            <button id="botao1">Acrescenta elemento</button>
+            <button id="botao2">Remove elemento</button>
+        </div>
+
+        <footer class="w3-container w3-blue">
+            <h5>Gerado em EW2026, <span id="datahora"></span></h5>
+        </footer>
+    </div>
+    <script>
+        $(function() {
+            $("#datahora").html(document.lastModified);
+
+            $("#botao1").click(function() {
+                let num = $("#l1 li").length + 1;
+                $("#l1").append("<li>Elemento " + num + "</li>");
+            });
+
+            $("#botao2").click(function() {
+                $("#l1 li:last").remove();
+            });
+        });
+    </script>
+</body>
+
+</html>

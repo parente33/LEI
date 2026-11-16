@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercício: 2 butões</title>
+    <meta charset=”UTF-8” />
+    <link rel="stylesheet" href="w3.css" />
+  </head>
+  <body>
+      <div class="w3-container">
+        <button onclick="adiciona()">+</button>
+        <p id="numero">0</p>
+        <button onclick="remove()">-</button>
+      </div>
+    <script>
+      let valor = 0;
+      
+      function adiciona() {
+        valor++;
+        document.getElementById("numero").textContent = valor;
+      }
+
+      function remove() {
+        valor--;
+        document.getElementById("numero").textContent = valor;
+      }
+    </script>
+  </body>
+</html>

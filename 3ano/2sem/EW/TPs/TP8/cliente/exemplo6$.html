@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Programando o cliente: exemplo6</title>
+    <meta charset=”UTF-8” />
+    <link rel="stylesheet" href="w3.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <div class="w3-card-4">
+
+        <header class="w3-container w3-blue">
+            <h1>Programando o cliente: exemplo6</h1>
+        </header>
+
+        <div class="w3-container">
+            <p>Clica no <a href="lista-exemplos.html">link</a> para saltar para o índice.</p>
+        </div>
+
+        <footer class="w3-container w3-blue">
+            <h5>Gerado em EW2026, <span id="datahora"></span></h5>
+        </footer>
+    </div>
+    <script>
+        $(function() {
+            $("#datahora").html(document.lastModified);
+
+            $("a").click(function(event) {
+                event.preventDefault();
+                alert("Intercetado com jQuery!");
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Programando o cliente: exemplo7</title>
+    <meta charset=”UTF-8” />
+    <link rel="stylesheet" href="w3.css" />
+</head>
+
+<body>
+
+    <div class="w3-card-4">
+
+        <header class="w3-container w3-blue">
+            <h1>Programando o cliente: exemplo7</h1>
+        </header>
+
+        <div class="w3-container">
+            <p id="p1">Sou um parágrafo <b>com algum texto a bold</b>.</p>
+            <button id="botao1">Mostra o texto</button>
+            <button id="botao2">Mostra o HTML</button>
+            <p class="w3-panel w3-pale-blue w3-leftbar w3-border-blue">
+                <strong>Resultado:</strong> 
+                <span id="output">Clica num botão...</span>
+            </p>
+        </div>
+
+        <footer class="w3-container w3-blue">
+            <h5>Gerado em EW2026, <span id="datahora"></span></h5>
+        </footer>
+    </div>
+    <script>
+        document.getElementById("datahora").innerHTML = document.lastModified;
+
+        const paragrafo = document.getElementById("p1");
+        const output = document.getElementById("output");
+
+        // Botão 1: Mostra apenas o texto
+        document.getElementById("botao1").addEventListener("click", function() {
+            output.innerText = paragrafo.innerText;
+        });
+
+        // Botão 2: Mostra o HTML (as tags vão aparecer como texto)
+        document.getElementById("botao2").addEventListener("click", function() {
+            output.innerText = paragrafo.innerHTML;
+        });     
+    </script>
+</body>
+
+</html>

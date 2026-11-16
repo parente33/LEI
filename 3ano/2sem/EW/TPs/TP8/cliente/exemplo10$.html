@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Programando o cliente: exemplo10</title>
+    <meta charset=”UTF-8” />
+    <link rel="stylesheet" href="w3.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <div class="w3-card-4">
+
+        <header class="w3-container w3-blue">
+            <h1>Programando o cliente: exemplo10</h1>
+            <h2>Validador de NIF</h2>
+        </header>
+
+        <div class="w3-container w3-padding">
+            <p>Introduza o NIF para validar:</p>
+            <input type="text" id="campoNIF" class="w3-input w3-border" placeholder="Ex: 123456789">
+            <br>
+            <button id="btnValidar" class="w3-button w3-blue">Validar NIF</button>
+    
+            <div id="mensagem" class="w3-panel w3-display-container w3-hide" style="margin-top:20px;">
+                <p id="textoMensagem"></p>
+            </div>
+        </div>
+
+        <footer class="w3-container w3-blue">
+            <h5>Gerado em EW2026, <span id="datahora"></span></h5>
+        </footer>
+    </div>
+    <script>
+        $(function() {
+            // Atualiza a data de modificação 
+            $("#datahora").html(document.lastModified);
+
+            $("#btnValidar").click(function() {
+                const nif = $("#campoNIF").val().trim();
+                const $msgDiv = $("#mensagem");
+                const $msgTexto = $("#textoMensagem");
+
+                // 1. Validação básica de formato
+                if (!/^[0-9]{9}$/.test(nif)) 
+                    mostrarErro("O NIF deve ter exatamente 9 dígitos numéricos.");
+                else{
+                    // 2. Algoritmo de validação (Módulo 11)
+                    let soma = 0;
+                    for (let i = 0; i < 8; i++) {
+                        soma += parseInt(nif[i]) * (9 - i);
+                    }
+
+                    let resto = soma % 11;
+                    let digitoControlo = (resto === 0 || resto === 1) ? 0 : 11 - resto;
+
+                    // 3. Verificação final
+                    if (digitoControlo === parseInt(nif[8])) {
+                        $msgDiv.removeClass("w3-hide w3-red").addClass("w3-green").show();
+                        $msgTexto.text("Sucesso: O NIF " + nif + " é válido!");
+                    } else {
+                        mostrarErro("O NIF " + nif + " é inválido (erro no dígito de controlo).");
+                    }
+                }
+            });
+
+            function mostrarErro(texto) {
+                $("#mensagem").removeClass("w3-hide w3-green").addClass("w3-red").show();
+                $("#textoMensagem").text(texto);
+            }
+        });
+    </script>
+</body>
+
+</html>
