@@ -1,0 +1,400 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}       % Codificação
+\usepackage[T1]{fontenc}          % Saida de caracteres em portugues
+\usepackage[portuguese]{babel}    % Idioma
+\usepackage{amsmath,amssymb,amsfonts} % Pacotes matemáticos
+\usepackage{lscape}               % se precisar de páginas em paisagem
+\usepackage{graphicx}             % se precisar de inserir figuras
+\usepackage{geometry}             % para ajustar margens
+\usepackage{booktabs}             % para tabelas mais bonitas
+\usepackage{array}                % para colunas customizadas em tabelas
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{xcolor, colortbl}
+\usepackage{textcomp}
+\usepackage{float}
+\usepackage[colorlinks=true, urlcolor=blue, linkcolor=red]{hyperref}
+\usetikzlibrary{arrows.meta, positioning}
+\usepackage{fancyhdr}
+
+\geometry{top=3cm}
+\setlength{\headheight}{2.5cm}
+\pagestyle{fancy}
+\fancyhf{} % limpa header e footer
+
+\fancyhead[L]{%
+    \begin{minipage}[b]{1.1\textwidth}
+        \includegraphics[height=1.5cm]{logo.jpg} \\
+        \vspace{0.1cm} % espaçamento entre imagem e texto
+        \large Licenciatura em Engenharia Informática -- Universidade do Minho
+    \end{minipage}
+}
+
+\fancyfoot[C]{\thepage} % número da página ao centro
+
+\renewcommand{\headrulewidth}{0.4pt} % número da página ao centro
+
+
+\title{
+    \textbf{Inteligência Artificial -- Trabalho Prático}
+
+    \vspace{0.5cm}
+
+    \parbox{1\textwidth}{
+        \centering
+        \large Gestão de uma frota de táxis — Algoritmos de procura para otimização
+    }
+}
+\author{
+    \begin{tabular}{ll}
+        André Dinis Alves Santos & a106854 \\
+        Daniel Gonçalves Parente & a107363 \\
+        Pedro Francisco Ferreira & a107292 \\
+        Tiago Silva Martins & a106938
+    \end{tabular}
+}
+\date{Ano Letivo 2025/2026}
+
+\begin{document}
+
+\begin{titlepage}
+    \thispagestyle{empty}
+    \vfill
+    \maketitle
+    \vfill
+\end{titlepage}
+
+\pagebreak
+% Primeira página
+\section*{1. Avaliação por Pares}\
+\vspace*{\fill}
+\begin{center}
+
+    \begin{tabular}{lcl}
+        André Dinis Alves Santos & a106854 & DELTA = 0 \\
+        Daniel Gonçalves Parente & a107363 & DELTA = 0 \\
+        Pedro Francisco Ferreira & a107292 & DELTA = 0 \\
+        Tiago Silva Martins & a106938 & DELTA = 0
+    \end{tabular}
+\end{center}
+\vspace*{\fill}
+\pagebreak
+
+% Secção de introdução
+\section*{2. Introdução}
+
+\noindent O setor de mobilidade urbana tem passado por uma transformação significativa nos últimos anos, impulsionada pela necessidade de otimizar recursos e reduzir o impacto ambiental. As empresas de táxis, em particular, enfrentam desafios complexos na gestão das suas frotas, especialmente com a crescente introdução de veículos elétricos, que apresentam características distintas em relação aos tradicionais veículos a combustão. A combinação de diferentes tipos de veículos — com variabilidade em autonomia, custos operacionais e requisitos de manutenção — exige uma abordagem inteligente para garantir a eficiência operacional e a satisfação do cliente, ao mesmo tempo que respeita critérios ambientais e financeiros.
+
+\vspace{0.5cm}
+
+\noindent Este relatório descreve o desenvolvimento e a implementação de uma solução algorítmica para a gestão dinâmica da frota da TaxiGreen, uma empresa de táxis urbanos, começando por descrever as metodologias adotadas, os desafios enfrentados e passando pela análise dos resultados obtidos, com o intuito de avaliar a eficácia das soluções propostas para a gestão da frota e a sustentabilidade das operações.
+
+\pagebreak
+
+% Descrição do problema
+\section*{3. Descrição do Problema}
+
+\noindent A gestão eficiente de uma frota mista de táxis representa o principal desafio abordado neste projeto. O objetivo é otimizar a alocação de veículos em tempo real, levando em consideração as características específicas de cada tipo de veículo, como a autonomia, custo operacional e impacto ambiental. A frota deve ser capaz de atender aos pedidos de transporte de forma rápida e eficiente, enquanto respeita as limitações de cada tipo de veículo, como a necessidade de recarga dos veículos elétricos e os custos operacionais mais elevados dos veículos a combustão.
+
+\vspace{0.5cm}
+
+\noindent Os pedidos de transporte surgem de forma dinâmica em diferentes zonas da cidade (centro vs periferia), com variáveis como prioridade do cliente, número de passageiros, tempo máximo de espera e, em alguns casos, preferência por veículos sustentáveis. Esta dinâmica exige uma análise contínua das condições de trânsito, da proximidade aos postos de recarga, dos níveis de autonomia dos veículos e das capacidades de passageiros - relevante para grupos maiores ou clientes \textit{premium}.
+
+\vspace{0.5cm}
+
+\noindent O desafio adicional é a gestão das condições dinâmicas da operação, como a chegada imprevisível de novos pedidos, falhas em estações de recarga ou mudanças repentinas no trânsito. O objetivo final é, portanto, desenvolver algoritmos de procura capazes de alocar os veículos da frota de forma eficiente, equilibrando os custos operacionais, o tempo de resposta e os impactos ambientais, enquanto se garante que os pedidos dos clientes são atendidos de maneira oportuna e satisfatória.
+
+\pagebreak
+
+% Formulação do problema
+\section*{4. Formulação do Problema}
+
+% Tipo do problema
+\subsection*{4.1. Tipo}
+\noindent Este problema pode ser classificado como um problema de otimização multi-objetivo com restrições dinâmicas, que pode ser modelado como um problema de procura em grafos. Pode ser classificado da seguinte forma:
+
+\begin{itemize}
+    \item Quanto ao ambiente:
+        \begin{itemize}
+            \item Dinâmico $\rightarrow$ As condições operacionais mudam durante a procura da solução (ex: novos pedidos, alterações no trânsito, ocupação de estações de carga).
+            \item Não-determinístico $\rightarrow$ Os resultados das ações não são totalmente previsíveis (ex: tempo de viagem pode variar, probabilidade de falha numa estação).
+            \item Multi-agente $\rightarrow$ A frota é composta por múltiplos veículos (agentes) que atuam de forma coordenada ou competitiva pelos recursos (pedidos, postos de abastecimento).
+            \item Parcialmente observável $\rightarrow$ O sistema não tem conhecimento perfeito do futuro (ex: procura não conhecida, tempo exato de viagem).
+        \end{itemize}
+    \item Quanto à natureza da solução:
+        \begin{itemize}
+            \item Contingência $\rightarrow$ Não se sabe com certidão o resultado exato de uma ação, logo, deve-se gerar planos que incluam ações condicionais.
+            \item Otimização $\rightarrow$ Procura-se minimizar um conjunto de métricas conflituantes
+        \end{itemize}
+\end{itemize}
+
+% Estado do problema
+\subsection*{4.2. Representação do Estado}
+\noindent A eficácia da exploração do espaço de estados depende da forma como a informação é estruturada. Para este projeto, optou-se por uma representação híbrida que separa a componente mutável da componente persistente:
+
+\begin{itemize}
+    \item Componente Dinâmica (Estado): Representada por um tuplo imutável que captura o estado instantâneo do sistema. Esta estrutura mínima facilita a comparação de estados e a deteção de ciclos.
+    \item Componente Estática (Modelo do Mundo): Conjunto de estruturas de dados de acesso rápido (ex: \textit{hash maps}, grafos) armazenadas externamente. Contém toda a informação invariante: topologia da cidade, especificações dos veículos, detalhes dos pedidos, ou a localização e capacidade das estações de recarga.
+\end{itemize}
+
+\noindent Esta separação permite que, durante a execução dos algoritmos de procura, não haja replicação desnecessária de dados estáticos em cada nó da árvore de procura, otimizando o consumo de memória e a velocidade de processamento.
+
+\subsubsection*{4.2.1. Abstrações do Modelo}
+\noindent Para efeitos de modelação e eficiência computacional, assumiu-se a existência de \textbf{postos de abastecimento universais}, capazes de servir simultaneamente veículos elétricos e de combustão. Adicionalmente, unificaram-se as categorias de veículos a gasóleo, gasolina e outros combustíveis sob uma classificação única de '\textbf{Combustão}'.
+
+\noindent Esta abstração mantém o foco na gestão de filas e infraestrutura (recursos finitos), diferenciando os veículos essencialmente pela sua pegada energética e tempo de ocupação da vaga (significativamente superior nos elétricos), sem complexidade desnecessária.
+
+\vspace{0.5cm}
+
+% Notação matemática do estado
+\subsubsection*{4.2.1. Formalização do Estado}
+\noindent Formalmente, o estado \( E \) num determinado instante da procura é definido pelo seguinte tuplo:
+
+\[
+E = \langle T, V, P, B \rangle
+\]
+
+\noindent Onde:
+\begin{itemize}
+    \item \( T \in \mathbb{R}^+ \): Representa o tempo acumulado (ou custo temporal) desde o início da simulação.
+
+    \item \( V = \{ v_1, v_2, \dots, v_n \} \): Conjunto de estados dos veículos, onde cada \( v_i = \langle id, loc, aut, est, p\_id \rangle \).
+    \begin{itemize}
+        \item \( id \in \mathbb{N} \): Identificador único do veículo
+        \item \( loc \in V \): Localização atual no grafo.
+        \item \( aut \in [0, 100] \): Nível de autonomia/combustível restante, em percentagem.
+        \item \( est \): Estado operacional (ex: em trânsito, a carregar, disponível).
+        \item \( p\_id \): ID do pedido atualmente atribuído ao veículo (ou \( \emptyset \) se livre).
+    \end{itemize}
+
+    \item \( P = \{ pid_1, pid_2, \dots \} \): Conjunto de identificadores de pedidos pendentes que ainda aguardam atribuição.
+
+    \item \( B = \{ b_1, b_2, \dots, b_k \} \): Estado de ocupação dos postos de abastecimento/carga.
+\end{itemize}
+
+% Estado no momento inicial
+\subsection*{4.3. Estado Inicial}
+\noindent O estado inicial, denotado por \( E_0 \), representa a configuração do sistema no instante \( T = 0 \). Este estado é caracterizado pela posição de repouso da frota e pelo conjunto inicial de pedidos de transporte conhecidos no momento da ativação do sistema.
+
+% Notação matemática do estado inicial
+\subsubsection*{4.3.1. Formalização do Estado Inicial}
+\noindent Utilizando a notação definida anteriormente, o estado inicial é formulado como:
+\[
+E_0 = \langle 0, V_0, P_0, B_0 \rangle
+\]
+
+\noindent Onde as componentes assumem os seguintes valores:
+
+\begin{itemize}
+    \item \( T = 0 \): O cronómetro de operação é iniciado.
+
+    \item \( V_0 \): Todos os veículos \( v_i \) encontram-se nas suas localizações de origem (ex: centrais de táxi ou pontos de estacionamento estratégico), com autonomia máxima (\( \text{aut} = 100\% \)) e com disponibilidade. Além disso, o identificador do pedido atribuído a cada veículo é \( \emptyset \) (assume-se que quando a simulação começa, ainda não há viagens a efetuar).
+
+    \item \( P_0 \): Conjunto de IDs dos primeiros pedidos registados no sistema antes do início da operação. Se a simulação for estritamente dinâmica, este conjunto pode iniciar-se vazio (\( \emptyset \)).
+
+    \item \( B_0 \): Todos os postos de abastecimento são inicializados com a sua capacidade máxima de atendimento disponível (\( v_{\text{ocup}} = 0 \)).
+\end{itemize}
+
+% Funções teste-objetivo
+\subsection*{4.4. Teste Objetivo}
+\noindent O teste objetivo define as condições necessárias para que uma sequência de ações seja considerada uma solução válida. No contexto do problema, o objetivo é atingido quando todos os serviços de transporte solicitados foram processados com sucesso.
+
+\vspace{0.5cm}
+
+\noindent Para que o teste objetivo retorne um valor positivo, o estado deve satisfazer cumulativamente os seguintes critérios:
+
+\begin{itemize}
+    \item Inexistência de Pedidos Pendentes: A lista de pedidos que aguardam atribuição deve estar vazia.
+    \item Finalização de Trajetos em Curso: Todos os veículos da frota devem ter completado a entrega dos seus passageiros, encontrando-se num estado disponível ou em direção a um ponto de abastecimento/carga.
+\end{itemize}
+
+% Operadores de mudança de estados
+\subsection*{4.5. Operadores}
+
+% Atribuição de pedidos a veículos
+\subsubsection*{4.5.1. Atribuir Pedido a Veículo}
+\noindent Descrição: Atribui um pedido de transporte pendente a um veículo disponível e compatível.
+
+\vspace{0.5cm}
+
+\noindent Pré-Condições: O veículo está no estado "disponível"; O pedido deve constar no conjunto de pedidos pendentes; A capacidade máxima de passageiros do veículo deve ser igual ou superior ao número de passageiros especificado no pedido; A autonomia atual do veículo é suficiente para, pelo menos, deslocar-se desde a sua localização atual até ao ponto de recolha do passageiro, com um fator extra de segurança
+
+\vspace{0.5cm}
+
+\noindent Efeitos: O estado do veículo é alterado para "recolha de passageiro"; O identificador do pedido é associado ao veículo; O identificador do pedido é removido do conjunto de pedidos pendentes; O tempo de espera do cliente começa a ser contabilizado
+
+% Deslocação dos veículos até aos pontos de recolha dos passageiros
+\subsubsection*{4.5.2. Mover para Ponto de Recolha}
+\noindent Descrição: O veículo desloca-se desde a sua localização atual até ao local de recolha do passageiro.
+
+\vspace{0.5cm}
+
+\noindent Pré-Condição: O veículo deve estar no estado de recolha de passageiro; Deve existir um pedido atribuído ao veículo; A autonomia restante do veículo deve ser suficiente para percorrer a distância estimada entre a sua localização atual e o ponto de recolha
+
+\vspace{0.5cm}
+
+\noindent Efeitos: A localização do veículo é atualizada para o nó correspondente ao ponto de recolha do pedido; A autonomia do veículo é reduzida proporcionalmente à distância percorrida, ajustada para as características do veículo, número de passageiros esperados, e/ou clima; O tempo global aumenta conforme o tempo de viagem calculado; O tempo de espera do cliente continua a acumular até o veículo chegar ao ponto de recolha
+
+% Trasporte dos passageiros até ao local de destino
+\subsubsection*{4.5.3. Iniciar Transporte de Passageiros}
+\noindent Descrição: O veículo recolhe o(s) passageiro(s) no local combinado e inicia a viagem até ao destino.
+
+\vspace{0.5cm}
+
+\noindent Pré-Condição: O veículo deve estar no estado de recolha de passageiro; O veículo deve estar fisicamente no local de recolha; O horário atual deve estar dentro da janela de tempo aceitável para o pedido (ao considerar possíveis atrasos)
+
+\vspace{0.5cm}
+
+\noindent Efeitos: O estado do veículo é alterado para "com passageiro"; A capacidade restante do veículo é diminuída pelo número de passageiros que entraram; O tempo de espera do cliente termina; Inicia-se a contagem do tempo de viagem; A estimativa de chegada ao destino é atualizada com base nas condições atuais
+
+% Chegada ao local de destino, e ações consequentes
+\subsubsection*{4.5.4. Concluir Transporte}
+\noindent Descrição: O veículo chega ao destino final, os passageiros saem, e o veículo fica novamente disponível para novos serviços.
+
+\vspace{0.5cm}
+
+\noindent Pré-Condição: O veículo deve estar no estado "com passageiro"; O veículo deve estar fisicamente no local de destino
+
+\vspace{0.5cm}
+
+\noindent Efeitos: O estado do veículo é alterado para disponível; A associação entre o veículo e o pedido é removida; A capacidade restante do veículo é atualizada; A autonomia do veículo é reduzida proporcionalmente à distância percorrida com os passageiros; O pedido é marcado como concluído no sistema de registos; O sistema verifica se o veículo necessita de abastecimento (com base na autonomia restante)
+
+% Carro precisa de abastecimento
+\subsubsection*{4.5.5. Dirigir-se a posto de abastecimento}
+\noindent Descrição: Um veículo com autonomia baixa ou que se prevê necessitar de abastecimento para futuros serviços desloca-se até um posto de recarga.
+
+\vspace{0.5cm}
+
+\noindent Pré-Condição: O veículo deve estar no estado "disponível"; A autonomia atual deve estar abaixo de um limiar de segurança e/ou a análise dos pedidos pendentes indica que a autonomia será insuficiente para atender pedidos prováveis na área; Deve existir pelo menos um posto de abastecimento com capacidade disponível ou uma estimativa de disponibilidade aceitável; O posto selecionado deve ser acessível com a autonomia atual
+
+\vspace{0.5cm}
+
+\noindent Efeitos: O estado do veículo é alterado para "a carregar" ou "a abastecer" (dependendo do tipo do veículo); A localização do veículo é atualizada para o nó correspondente ao posto selecionado; A autonomia do veículo é reduzida conforme a distância percorrida até ao posto; O tempo global avança conforme o tempo de deslocação; A ocupação do posto de abastecimento é incrementada
+
+% Abastecer
+\subsubsection*{4.5.6. Efetuar Abastecimento/Recarga}
+\noindent Descrição: O veículo permanece no posto para repor a sua autonomia.
+
+\vspace{0.5cm}
+
+\noindent Pré-Condição: O veículo deve estar no estado "a carregar" ou "a abastecer"; O veículo deve estar fisicamente localizado num posto de abastecimento; O posto deve ter capacidade disponível para atender o veículo (verifica-se outra vez)
+
+\vspace{0.5cm}
+
+\noindent Efeitos: A autonomia do veículo é aumentada até ao máximo (ou até um nível pré-definido, no caso de carregamento parcial); O tempo global avança conforme o tempo de serviço (que depende do tipo de veículo); O estado do veículo é atualizado para "disponível"; A ocupação do posto é decrementada
+
+% Esperar
+\subsubsection*{4.5.7. Permanecer em Espera}
+\noindent Descrição: O veículo permanece na sua localização atual sem executar qualquer ação.
+
+\vspace{0.5cm}
+
+\noindent Pré-Condição: O veículo deve estar no estado "disponível"; não deve existir nenhuma ação mais urgente ou benéfica disponível para o veículo
+
+\vspace{0.5cm}
+
+\noindent Efeitos: O tempo global avança
+
+% Custo da solução
+\subsection*{4.6. Custo da Solução}
+\noindent O custo da solução num problema de otimização multi-objetivo é definido por uma função de agregação ponderada. No contexto da TaxiGreen, o custo \( C \) de um caminho ou plano é dado por:
+
+\[
+C = w_t \times T + w_m \times M + w_e \times E + w_p \times P
+\]
+
+\noindent Onde:
+
+\begin{itemize}
+    \item \( T \) $\rightarrow$ \textbf{Tempo}: Tempo total decorrido (em minutos). Influenciado pela distância e pelo trânsito (congestionamento).
+    \item \( M \) $\rightarrow$ \textbf{Custo Monetário}: Custo operacional da viagem (em €), derivado do consumo do veículo por km (eletricidade vs. combustível fóssil).
+    \item \( E \) $\rightarrow$ \textbf{Emissões}: Pegada ecológica (em gCO$_2$), penalizando veículos a combustão.
+    \item \( P \) $\rightarrow$ \textbf{Penalização}: Custo arbitrário elevado aplicado a pedidos falhados ou rejeitados, forçando o algoritmo a priorizar o atendimento de todos os clientes.
+    \item \( w_t, w_m, w_e, w_p \) $\rightarrow$ Pesos ajustáveis que definem o perfil da frota (ex: perfil "Ecológico" usaria um \( w_e \) superior).
+\end{itemize}
+
+% Parte do mapa
+% Parte do mapa
+\section*{5. Obtenção e Representação do Mapa}
+\noindent O mapa utilizado na simulação é obtido através da biblioteca \textbf{OSMnx}, que permite extrair dados reais da plataforma OpenStreetMap.
+O processo de obtenção e tratamento do grafo segue os seguintes passos:
+
+\begin{enumerate}
+    \item \textbf{Extração}: Obtêm-se os nós e arestas correspondentes à rede viária de uma localidade (ex: Braga), filtrando apenas vias transitáveis por veículos ("drive").
+    \item \textbf{Projeção}: O grafo é projetado para um sistema de coordenadas cartesiano (UTM) para permitir o cálculo preciso de distâncias em metros.
+    \item \textbf{Enriquecimento}:
+    \begin{itemize}
+        \item Adicionam-se atributos de velocidade máxima (\textit{speed\_kph}) e tempo de viagem (\textit{travel\_time}) a cada aresta.
+        \item Identificam-se pontos de interesse (POI) como Postos de Abastecimento e Praças de Táxis, associando-os aos nós mais próximos do grafo.
+    \end{itemize}
+    \item \textbf{Zonamento}: Implementou-se um algoritmo de \textit{clustering} radial que calcula o centroide do mapa e classifica os nós em duas zonas:
+    \begin{itemize}
+        \item \textbf{Centro}: Nós dentro de um raio de 30\% da extensão total do mapa. Esta zona tem maior probabilidade de congestionamento.
+        \item \textbf{Periferia}: Restantes nós, tipicamente com trânsito mais fluido.
+    \end{itemize}
+\end{enumerate}
+
+% Estruturação modular
+% Estruturação modular
+\section*{6. Estrutura do Projeto}
+\noindent A arquitetura do sistema foi desenhada seguindo princípios de modularidade e separação de responsabilidades. O código está organizado nas seguintes componentes principais:
+
+\begin{itemize}
+    \item \textbf{Core (Simulator)}: O motor da simulação. Responsável pelo ciclo de vida, gestão do tempo (\textit{ticks}), movimento físico dos veículos e verificação de eventos de chegada.
+    \item \textbf{Supervision (Supervisor)}: O "cérebro" estratégico. Periodicamente analisa o estado global e toma decisões de alto nível: atribuição de novos pedidos e envio de veículos para reabastecimento.
+    \item \textbf{Algorithms}: Implementação agnóstica dos algoritmos de procura (BFS, DFS, A*, Greedy), desacoplada da lógica de negócio.
+    \item \textbf{Structs \& State}: Definições de dados (Veículo, Pedido, Grafo) e gestão do estado imutável para garantir a integridade durante a procura.
+    \item \textbf{View}: Interface gráfica baseada em \textit{PyQt}, separada da lógica de simulação, permitindo visualizar o movimento da frota em tempo real.
+\end{itemize}
+
+
+
+
+% Explicação dos algoritmos desenvolvidos
+\section*{7. Algoritmos de procura}
+
+\subsection*{7.1. Procura Não Informada}
+
+\subsubsection*{7.1.1. Procura em Profundidade (DFS)}
+\noindent A Procura em Profundidade (DFS) explora o grafo percorrendo cada ramo até à sua extremidade antes de retroceder (\textit{backtracking}).
+\begin{itemize}
+    \item \textbf{Estratégia}: Utiliza uma estrutura LIFO (\textit{Stack}). Expande o nó mais profundo da fronteira.
+    \item \textbf{Análise}: No contexto rodoviário, é \textbf{inadequada}. Não garante, de forma alguma, o caminho mais curto. Um veículo pode percorrer toda a cidade num ziguezague ineficiente antes de encontrar um destino que estava a 100 metros.
+    \item \textbf{Utilidade}: Serve apenas como base de comparação académica; não tem aplicação prática na navegação ótima.
+\end{itemize}
+
+\subsubsection*{7.1.2. Procura em Largura (BFS)}
+\noindent A Procura em Largura (BFS) explora o grafo em camadas concêntricas a partir da origem.
+\begin{itemize}
+    \item \textbf{Estratégia}: Utiliza uma estrutura FIFO (\textit{Queue}). Visita todos os vizinhos à distância $k$ antes de visitar os nós à distância $k+1$.
+    \item \textbf{Análise}: Garante o caminho com o \textbf{menor número de arestas} (saltos). Contudo, num mapa real, as arestas têm comprimentos muito díspares (uma autoestrada vs. uma rua estreita). O BFS ignora o peso das arestas, podendo escolher um caminho com 5 saltos de 2km (10km) em vez de 6 saltos de 100m (600m).
+    \item \textbf{Limitação}: Elevado consumo de memória e tempo para grafos grandes.
+\end{itemize}
+
+\subsection*{7.2. Procura Informada}
+\noindent Os algoritmos informados utilizam conhecimento do domínio (heurística) para guiar a procura, estimando a proximidade ao objetivo.
+
+\subsubsection*{7.2.1. Heurísticas}
+\noindent Para este problema, utilizou-se a \textbf{Distância Euclidiana} como função heurística $h(n)$.
+\[ h(n) = \sqrt{(x_{destino} - x_n)^2 + (y_{destino} - y_n)^2} \]
+\noindent Esta heurística é \textbf{admissível}, pois a distância em linha reta é sempre menor ou igual à distância real na estrada. Isto garante que o algoritmo A* encontra a solução ótima sem sobrestimar o custo.
+
+\subsubsection*{7.2.2. A* (A-Star)}
+\noindent O algoritmo A* é a base da inteligência do sistema. Combina o custo real acumulado $g(n)$ com a estimativa heurística $h(n)$.
+\begin{itemize}
+    \item \textbf{Função de Custo}: $f(n) = g(n) + h(n)$.
+    \item \textbf{Custo Real ($g$)}: Calculado como uma soma ponderada de três fatores:
+    \[ g(n) = w_t \cdot \text{Tempo} + w_c \cdot \text{Custo€} + w_e \cdot \text{Emissões} \]
+    Isto permite que a frota se adapte a diferentes objetivos (ex: priorizar rapidez vs. economia).
+    \item \textbf{Vantagem}: Encontra sempre o caminho ótimo para a função de custo definida, evitando congestionamentos (que aumentam o fator Tempo) e otimizando o consumo da frota.
+\end{itemize}
+
+\subsubsection*{7.2.3. \textit{Greedy Best-First Search}}
+\noindent O algoritmo sôfrego escolhe sempre o nó que parece estar mais próximo do destino, minimizando apenas $h(n)$.
+\begin{itemize}
+    \item \textbf{Vantagem}: Extremamente rápido computacionalmente.
+    \item \textbf{Desvantagem}: Não garante a otimalidade. É suscetível a "armadilhas" locais (ex: ruas sem saída ou sentidos proibidos que obrigam a grandes desvios não previstos pela distância linear).
+    \item \textbf{Aplicação}: Útil quando a velocidade de decisão é crítica e a otimalidade não é prioritária.
+\end{itemize}
+\end{document}

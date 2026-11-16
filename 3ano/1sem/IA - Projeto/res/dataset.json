@@ -1,0 +1,35 @@
+{
+	"geography": [
+		"Gualtar, Braga, Portugal",
+		"São Vítor, Braga, Portugal",
+		"Tenões, Braga, Portugal",
+		"Nogueiró, Braga, Portugal",
+		"Lamaçães, Braga, Portugal"
+	],
+	"vehicles": [
+		{
+			"id": "T01",
+			"type": "eco"
+		},
+		{
+			"id": "T02",
+			"type": "ebus"
+		},
+		{
+			"id": "T03",
+			"type": "gasoline"
+		},
+		{
+			"id": "T04",
+			"type": "diesel"
+		},
+		{
+			"id": "T05",
+			"type": "eco"
+		},
+		{
+			"id": "T06",
+			"type": "gasoline"
+		}
+	]
+}

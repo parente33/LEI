@@ -1,0 +1,259 @@
+\documentclass[13pt, handout]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{beaver}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{page number in head/foot}{}
+\setbeamercolor*{item}{fg=red}
+
+\usepackage[portuguese]{babel}
+\usepackage{tikz}
+\usepackage{ragged2e}
+
+\title{Gestão de uma frota de táxis — Algoritmos de procura para otimização}
+\subtitle{{}\color{black}Inteligência Artificial}
+\author[Grupo 33]{
+    \begin{tabular}{lc}
+         André Santos & A106854 \\
+         Daniel Parente & A107363 \\
+         Pedro Ferreira & A107292 \\
+         Tiago Martins & A106938
+    \end{tabular}
+}
+
+\institute[DIUM]{
+    Universidade do Minho -- Licenciatura em Engenharia Informática
+}
+\date[2026/01/15]{\scriptsize 15 de janeiro de 2026}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Índice}
+    \tableofcontents
+\end{frame}
+
+\justifying
+
+\section{Descrição do Problema}
+
+\begin{frame}{Descrição do Problema -- Enquadramento e Objetivo }
+
+    Tem-se:
+    \begin{itemize}
+        \item Problema de decisão em tempo real, com restrições
+        \item Espaço de dados dinâmico
+    \end{itemize}
+
+    \vspace{0.5cm}
+
+    Para isso:
+    \begin{itemize}
+        \item Formulou-se como problema de procura
+        \item Implementaram-se vários algoritmos
+        \item Analisaram-se os resultados
+    \end{itemize}
+    
+\end{frame}
+
+\section{Formulação do Problema}
+
+\begin{frame}{Formulação do Problema -- Tipo de Problema}
+
+    \begin{itemize}
+        \item Procura em grafos
+        \item Não-determinístico
+        \item Ambiente dinâmico
+        \item Multi-agente
+        \item Parcialmente observável
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}{Formulação do Problema -- Estado do Sistema}
+
+    \[
+        E = \langle T, V, P, B \rangle
+    \]
+
+    \begin{itemize}
+        \item T: tempo acumulado
+        \item V: estado dos veículos
+        \item P: pedidos pendentes
+        \item B: pontos de abastecimento
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}{Formulação do Problema -- Estado Inicial e Objetivo}
+
+    Estado Inicial:
+    \begin{itemize}
+        \item Frota disponível
+        \item Autonomia máxima
+        \item Sem pedidos inicias
+    \end{itemize}
+
+    \vspace{0.5cm}
+
+    Objetivo:
+    \begin{itemize}
+        \item Sem pedidos pendentes
+        \item Sem viagens ativas
+    \end{itemize}
+    
+    \end{frame}
+
+\begin{frame}{Formulação do Problema -- Operadores}
+
+    \begin{itemize}
+        \item Atribuir pedido
+        \item Mover veículo
+        \item Transportar passageiros
+        \item Abastecer/recarregar
+        \item Esperar
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}{Formulação do Problema -- Função de Custo}
+
+    \[
+        C = w_t \times T + w_m \times M + w_e \times E + w_p \times P
+    \]
+
+    \begin{itemize}
+        \item T: Tempo
+        \item M: Custo monetário
+        \item E: Emissões
+        \item P: Penalizações
+    \end{itemize}
+\end{frame}
+
+\section{Modelação e Arquitetura}
+
+\begin{frame}{Modelação e Arquitetura -- Mapa}
+
+    \begin{itemize}
+        \item Uso de OSMnx
+        \item Grafo ponderado de várias cidades de Braga, Portugal
+    \end{itemize}
+    \vspace{0.5cm}
+
+    Nós: Ruas, estações, postos de abastecimento, ...
+    \vspace{0.5cm}
+    
+    Arestas: distância, tempo, velocidade
+    \vspace{0.5cm}
+    
+    Zonamento: centro vs periferia, zonas de trânsito intenso
+    
+\end{frame}
+
+\begin{frame}{Modelação e Arquitetura -- Sistema}
+
+    Separação clara:
+    \begin{itemize}
+        \item Simulador
+        \item Supervisor
+        \item Algoritmos
+        \item Estado/Estruturas de Dados
+        \item Vistas
+    \end{itemize}
+
+    \vspace{0.5cm}
+
+    Permite:
+    \begin{itemize}
+        \item Isolamento da lógica de procura
+        \item Simulação controlada
+        \item Expansibilidade futura
+    \end{itemize}
+    
+\end{frame}
+
+\section{Algoritmos de Procura}
+
+\begin{frame}{Algoritmos de Procura -- Não Informados}
+
+        DFS:
+        \begin{itemize}
+            \item sem garantias
+            \item apenas para comparações académicas
+        \end{itemize}
+
+        \vspace{0.5cm}
+        
+        BFS:
+        \begin{itemize}
+            \item minimiza saltos, mas...
+            \item ignora pesos
+            \item inviável em situações reais
+        \end{itemize}
+\end{frame}
+
+\begin{frame}{Algoritmos de Procura -- Informados}
+
+        Heurística: Distância Euclidiana
+        \vspace{0.5cm}
+        
+        Greedy:
+        \begin{itemize}
+            \item extremamente rápido
+            \item não ótimo, mas...
+            \item útil quando a velocidade de decisão é crítica
+        \end{itemize}
+
+        \vspace{0.5cm}
+        A* (A-Star):
+        \begin{itemize}
+            \item núcleo do sistema
+            \item soma ponderada de três fatores: tempo, custo e emissões
+            \item adaptável a diferentes objetivos e contextos
+        \end{itemize}
+\end{frame}
+
+\section{Simulação dinâmica e métricas}
+
+\begin{frame}{Simulação dinâmica e métricas}
+
+    Dinâmica simulada:
+    \begin{itemize}
+        \item pedidos aleatórios ao longo do tempo
+        \item trânsito variável
+        \item autonomia decrescente
+        \item filas em postos
+        \item falhas pontuais
+    \end{itemize}
+
+    \vspace{0.5cm}
+    Métricas recolhidas:
+    \begin{itemize}
+        \item tempo médio de resposta
+        \item ocupação da frota
+        \item custo total
+        \item pedidos não atendidos
+    \end{itemize}
+    
+\end{frame}
+
+\section{Conclusões e Demonstração do Sistema}
+
+\begin{frame}{Conclusões e Demonstração do Sistema}
+    
+    Apesar de algumas dificuldades, temos:
+    \begin{itemize}
+        \item Problema bem definido
+        \item Modelação apropriada e realista
+        \item Algoritmos clássicos bem desenvolvidos
+        \item Sistema expansível
+    \end{itemize}
+
+    \vspace{0.5cm}
+    Demonstração do Sistema!
+    
+\end{frame}
+
+\frame{\titlepage}
+
+\end{document}
