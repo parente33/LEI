@@ -1,0 +1,14 @@
+{
+  "id": 29,
+  "name": "Abuja",
+  "slug": "abuja",
+  "country": "Nigéria",
+  "image": "",
+  "coords": {
+    "lat": 9.0765,
+    "lng": 7.3986,
+    "zoom": 11
+  },
+  "continent_id": 6,
+  "continent_name": "África"
+}

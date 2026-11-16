@@ -1,0 +1,14 @@
+{
+  "id": 7,
+  "name": "Roma",
+  "slug": "roma",
+  "country": "Itália",
+  "image": "",
+  "coords": {
+    "lat": 41.9028,
+    "lng": 12.4964,
+    "zoom": 12
+  },
+  "continent_id": 1,
+  "continent_name": "Europa"
+}

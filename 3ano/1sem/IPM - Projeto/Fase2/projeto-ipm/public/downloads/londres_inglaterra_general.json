@@ -1,0 +1,14 @@
+{
+  "id": 4,
+  "name": "Londres",
+  "slug": "londres",
+  "country": "Inglaterra",
+  "image": "/londresmapa.png",
+  "coords": {
+    "lat": 51.5074,
+    "lng": -0.1278,
+    "zoom": 12
+  },
+  "continent_id": 1,
+  "continent_name": "Europa"
+}

@@ -1,0 +1,2 @@
+id,name,slug,country,image,lat,lng,zoom,continent_id,continent_name
+3,"Lisboa","lisboa","Portugal","/lisboamapa.png",38.7223,-9.1393,12,1,"Europa"

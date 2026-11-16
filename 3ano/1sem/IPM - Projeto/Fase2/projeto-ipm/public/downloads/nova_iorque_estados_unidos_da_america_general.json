@@ -1,0 +1,14 @@
+{
+  "id": 10,
+  "name": "Nova Iorque",
+  "slug": "novaiorque",
+  "country": "Estados Unidos da América",
+  "image": "/novaiorquemapa.png",
+  "coords": {
+    "lat": 40.7128,
+    "lng": -74.006,
+    "zoom": 11
+  },
+  "continent_id": 2,
+  "continent_name": "América do Norte e Central"
+}

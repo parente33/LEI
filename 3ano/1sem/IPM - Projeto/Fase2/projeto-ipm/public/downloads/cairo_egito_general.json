@@ -1,0 +1,14 @@
+{
+  "id": 30,
+  "name": "Cairo",
+  "slug": "cairo",
+  "country": "Egito",
+  "image": "",
+  "coords": {
+    "lat": 30.0444,
+    "lng": 31.2357,
+    "zoom": 10
+  },
+  "continent_id": 6,
+  "continent_name": "África"
+}

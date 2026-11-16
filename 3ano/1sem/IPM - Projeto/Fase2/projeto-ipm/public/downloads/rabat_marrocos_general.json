@@ -1,0 +1,14 @@
+{
+  "id": 34,
+  "name": "Rabat",
+  "slug": "rabat",
+  "country": "Marrocos",
+  "image": "",
+  "coords": {
+    "lat": 34.0209,
+    "lng": -6.8416,
+    "zoom": 12
+  },
+  "continent_id": 6,
+  "continent_name": "África"
+}

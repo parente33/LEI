@@ -1,0 +1,14 @@
+{
+  "id": 21,
+  "name": "Pyongyang",
+  "slug": "pyongyang",
+  "country": "Coreia do Norte",
+  "image": "",
+  "coords": {
+    "lat": 39.0392,
+    "lng": 125.7625,
+    "zoom": 11
+  },
+  "continent_id": 4,
+  "continent_name": "Ásia"
+}

@@ -1,0 +1,362 @@
+[
+  {
+    "booking_id": 711,
+    "listing_id": 1001,
+    "check_in": "2025-01-05",
+    "check_out": "2025-01-08",
+    "state": "EXECUTED",
+    "nr_guests": 2
+  },
+  {
+    "booking_id": 712,
+    "listing_id": 1001,
+    "check_in": "2025-03-10",
+    "check_out": "2025-03-12",
+    "state": "RESERVED",
+    "nr_guests": 1
+  },
+  {
+    "booking_id": 713,
+    "listing_id": 1001,
+    "check_in": "2025-06-15",
+    "check_out": "2025-06-17",
+    "state": "CANCELLED",
+    "nr_guests": 3
+  },
+  {
+    "booking_id": 714,
+    "listing_id": 1002,
+    "check_in": "2025-01-09",
+    "check_out": "2025-01-12",
+    "state": "EXECUTED",
+    "nr_guests": 4
+  },
+  {
+    "booking_id": 715,
+    "listing_id": 1002,
+    "check_in": "2025-04-02",
+    "check_out": "2025-04-04",
+    "state": "RESERVED",
+    "nr_guests": 2
+  },
+  {
+    "booking_id": 716,
+    "listing_id": 1002,
+    "check_in": "2025-08-14",
+    "check_out": "2025-08-16",
+    "state": "CANCELLED",
+    "nr_guests": 5
+  },
+  {
+    "booking_id": 717,
+    "listing_id": 1003,
+    "check_in": "2025-02-01",
+    "check_out": "2025-02-03",
+    "state": "EXECUTED",
+    "nr_guests": 1
+  },
+  {
+    "booking_id": 718,
+    "listing_id": 1003,
+    "check_in": "2025-03-20",
+    "check_out": "2025-03-22",
+    "state": "RESERVED",
+    "nr_guests": 3
+  },
+  {
+    "booking_id": 719,
+    "listing_id": 1003,
+    "check_in": "2025-07-05",
+    "check_out": "2025-07-07",
+    "state": "CANCELLED",
+    "nr_guests": 2
+  },
+  {
+    "booking_id": 720,
+    "listing_id": 1004,
+    "check_in": "2025-01-12",
+    "check_out": "2025-01-14",
+    "state": "EXECUTED",
+    "nr_guests": 3
+  },
+  {
+    "booking_id": 721,
+    "listing_id": 1004,
+    "check_in": "2025-04-10",
+    "check_out": "2025-04-12",
+    "state": "RESERVED",
+    "nr_guests": 2
+  },
+  {
+    "booking_id": 722,
+    "listing_id": 1004,
+    "check_in": "2025-09-01",
+    "check_out": "2025-09-03",
+    "state": "CANCELLED",
+    "nr_guests": 4
+  },
+  {
+    "booking_id": 723,
+    "listing_id": 1005,
+    "check_in": "2025-01-15",
+    "check_out": "2025-01-17",
+    "state": "EXECUTED",
+    "nr_guests": 2
+  },
+  {
+    "booking_id": 724,
+    "listing_id": 1005,
+    "check_in": "2025-03-25",
+    "check_out": "2025-03-28",
+    "state": "RESERVED",
+    "nr_guests": 5
+  },
+  {
+    "booking_id": 725,
+    "listing_id": 1005,
+    "check_in": "2025-10-06",
+    "check_out": "2025-10-08",
+    "state": "CANCELLED",
+    "nr_guests": 1
+  },
+  {
+    "booking_id": 726,
+    "listing_id": 1006,
+    "check_in": "2025-01-20",
+    "check_out": "2025-01-23",
+    "state": "EXECUTED",
+    "nr_guests": 4
+  },
+  {
+    "booking_id": 727,
+    "listing_id": 1006,
+    "check_in": "2025-05-02",
+    "check_out": "2025-05-04",
+    "state": "RESERVED",
+    "nr_guests": 2
+  },
+  {
+    "booking_id": 728,
+    "listing_id": 1006,
+    "check_in": "2025-11-15",
+    "check_out": "2025-11-17",
+    "state": "CANCELLED",
+    "nr_guests": 3
+  },
+  {
+    "booking_id": 729,
+    "listing_id": 1007,
+    "check_in": "2025-01-25",
+    "check_out": "2025-01-27",
+    "state": "EXECUTED",
+    "nr_guests": 1
+  },
+  {
+    "booking_id": 730,
+    "listing_id": 1007,
+    "check_in": "2025-04-18",
+    "check_out": "2025-04-20",
+    "state": "RESERVED",
+    "nr_guests": 3
+  },
+  {
+    "booking_id": 731,
+    "listing_id": 1007,
+    "check_in": "2025-09-10",
+    "check_out": "2025-09-12",
+    "state": "CANCELLED",
+    "nr_guests": 2
+  },
+  {
+    "booking_id": 732,
+    "listing_id": 1008,
+    "check_in": "2025-01-28",
+    "check_out": "2025-01-31",
+    "state": "EXECUTED",
+    "nr_guests": 5
+  },
+  {
+    "booking_id": 733,
+    "listing_id": 1008,
+    "check_in": "2025-05-08",
+    "check_out": "2025-05-10",
+    "state": "RESERVED",
+    "nr_guests": 2
+  },
+  {
+    "booking_id": 734,
+    "listing_id": 1008,
+    "check_in": "2025-12-01",
+    "check_out": "2025-12-03",
+    "state": "CANCELLED",
+    "nr_guests": 4
+  },
+  {
+    "booking_id": 735,
+    "listing_id": 1009,
+    "check_in": "2025-02-02",
+    "check_out": "2025-02-05",
+    "state": "EXECUTED",
+    "nr_guests": 2
+  },
+  {
+    "booking_id": 736,
+    "listing_id": 1009,
+    "check_in": "2025-06-12",
+    "check_out": "2025-06-14",
+    "state": "RESERVED",
+    "nr_guests": 3
+  },
+  {
+    "booking_id": 737,
+    "listing_id": 1009,
+    "check_in": "2025-10-20",
+    "check_out": "2025-10-22",
+    "state": "CANCELLED",
+    "nr_guests": 1
+  },
+  {
+    "booking_id": 738,
+    "listing_id": 1010,
+    "check_in": "2025-02-06",
+    "check_out": "2025-02-08",
+    "state": "EXECUTED",
+    "nr_guests": 1
+  },
+  {
+    "booking_id": 739,
+    "listing_id": 1010,
+    "check_in": "2025-05-15",
+    "check_out": "2025-05-18",
+    "state": "RESERVED",
+    "nr_guests": 4
+  },
+  {
+    "booking_id": 740,
+    "listing_id": 1010,
+    "check_in": "2025-11-25",
+    "check_out": "2025-11-27",
+    "state": "CANCELLED",
+    "nr_guests": 2
+  },
+  {
+    "booking_id": 741,
+    "listing_id": 1011,
+    "check_in": "2025-02-10",
+    "check_out": "2025-02-12",
+    "state": "EXECUTED",
+    "nr_guests": 3
+  },
+  {
+    "booking_id": 742,
+    "listing_id": 1011,
+    "check_in": "2025-06-20",
+    "check_out": "2025-06-22",
+    "state": "RESERVED",
+    "nr_guests": 1
+  },
+  {
+    "booking_id": 743,
+    "listing_id": 1011,
+    "check_in": "2025-10-28",
+    "check_out": "2025-10-30",
+    "state": "CANCELLED",
+    "nr_guests": 4
+  },
+  {
+    "booking_id": 744,
+    "listing_id": 1012,
+    "check_in": "2025-02-14",
+    "check_out": "2025-02-16",
+    "state": "EXECUTED",
+    "nr_guests": 2
+  },
+  {
+    "booking_id": 745,
+    "listing_id": 1012,
+    "check_in": "2025-07-01",
+    "check_out": "2025-07-03",
+    "state": "RESERVED",
+    "nr_guests": 5
+  },
+  {
+    "booking_id": 746,
+    "listing_id": 1012,
+    "check_in": "2025-12-10",
+    "check_out": "2025-12-12",
+    "state": "CANCELLED",
+    "nr_guests": 3
+  },
+  {
+    "booking_id": 747,
+    "listing_id": 1013,
+    "check_in": "2025-02-17",
+    "check_out": "2025-02-19",
+    "state": "EXECUTED",
+    "nr_guests": 1
+  },
+  {
+    "booking_id": 748,
+    "listing_id": 1013,
+    "check_in": "2025-07-10",
+    "check_out": "2025-07-13",
+    "state": "RESERVED",
+    "nr_guests": 2
+  },
+  {
+    "booking_id": 749,
+    "listing_id": 1013,
+    "check_in": "2025-11-30",
+    "check_out": "2025-12-02",
+    "state": "CANCELLED",
+    "nr_guests": 4
+  },
+  {
+    "booking_id": 750,
+    "listing_id": 1014,
+    "check_in": "2025-02-20",
+    "check_out": "2025-02-22",
+    "state": "EXECUTED",
+    "nr_guests": 3
+  },
+  {
+    "booking_id": 751,
+    "listing_id": 1014,
+    "check_in": "2025-08-02",
+    "check_out": "2025-08-04",
+    "state": "RESERVED",
+    "nr_guests": 2
+  },
+  {
+    "booking_id": 752,
+    "listing_id": 1014,
+    "check_in": "2025-12-15",
+    "check_out": "2025-12-17",
+    "state": "CANCELLED",
+    "nr_guests": 5
+  },
+  {
+    "booking_id": 753,
+    "listing_id": 1015,
+    "check_in": "2025-02-23",
+    "check_out": "2025-02-25",
+    "state": "EXECUTED",
+    "nr_guests": 2
+  },
+  {
+    "booking_id": 754,
+    "listing_id": 1015,
+    "check_in": "2025-08-18",
+    "check_out": "2025-08-20",
+    "state": "RESERVED",
+    "nr_guests": 4
+  },
+  {
+    "booking_id": 755,
+    "listing_id": 1015,
+    "check_in": "2025-12-20",
+    "check_out": "2025-12-22",
+    "state": "CANCELLED",
+    "nr_guests": 1
+  }
+]

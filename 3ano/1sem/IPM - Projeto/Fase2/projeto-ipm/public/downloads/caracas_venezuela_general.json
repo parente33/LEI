@@ -1,0 +1,14 @@
+{
+  "id": 16,
+  "name": "Caracas",
+  "slug": "caracas",
+  "country": "Venezuela",
+  "image": "",
+  "coords": {
+    "lat": 10.4806,
+    "lng": -66.9036,
+    "zoom": 11
+  },
+  "continent_id": 3,
+  "continent_name": "América do Sul"
+}

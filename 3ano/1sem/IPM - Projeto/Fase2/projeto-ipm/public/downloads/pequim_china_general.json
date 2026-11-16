@@ -1,0 +1,14 @@
+{
+  "id": 20,
+  "name": "Pequim",
+  "slug": "pequim",
+  "country": "China",
+  "image": "",
+  "coords": {
+    "lat": 39.9042,
+    "lng": 116.4074,
+    "zoom": 10
+  },
+  "continent_id": 4,
+  "continent_name": "Ásia"
+}

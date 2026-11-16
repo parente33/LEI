@@ -1,0 +1,14 @@
+{
+  "id": 15,
+  "name": "Brasília",
+  "slug": "brasilia",
+  "country": "Brasil",
+  "image": "",
+  "coords": {
+    "lat": -15.7975,
+    "lng": -47.8919,
+    "zoom": 11
+  },
+  "continent_id": 3,
+  "continent_name": "América do Sul"
+}

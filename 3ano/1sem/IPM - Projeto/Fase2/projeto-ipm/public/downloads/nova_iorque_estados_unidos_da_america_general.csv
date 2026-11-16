@@ -1,0 +1,2 @@
+id,name,slug,country,image,lat,lng,zoom,continent_id,continent_name
+10,"Nova Iorque","novaiorque","Estados Unidos da América","/novaiorquemapa.png",40.7128,-74.006,11,2,"América do Norte e Central"

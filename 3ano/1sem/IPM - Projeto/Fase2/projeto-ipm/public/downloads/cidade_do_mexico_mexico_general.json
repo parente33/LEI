@@ -1,0 +1,14 @@
+{
+  "id": 9,
+  "name": "Cidade do México",
+  "slug": "cidadedomexico",
+  "country": "México",
+  "image": "",
+  "coords": {
+    "lat": 19.4326,
+    "lng": -99.1332,
+    "zoom": 11
+  },
+  "continent_id": 2,
+  "continent_name": "América do Norte e Central"
+}

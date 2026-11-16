@@ -1,0 +1,14 @@
+{
+  "id": 31,
+  "name": "Dacar",
+  "slug": "dacar",
+  "country": "Senegal",
+  "image": "",
+  "coords": {
+    "lat": 14.7167,
+    "lng": -17.4677,
+    "zoom": 12
+  },
+  "continent_id": 6,
+  "continent_name": "África"
+}

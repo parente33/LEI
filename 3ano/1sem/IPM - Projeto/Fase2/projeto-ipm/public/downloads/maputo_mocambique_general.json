@@ -1,0 +1,14 @@
+{
+  "id": 33,
+  "name": "Maputo",
+  "slug": "maputo",
+  "country": "Moçambique",
+  "image": "",
+  "coords": {
+    "lat": -25.9692,
+    "lng": 32.5732,
+    "zoom": 12
+  },
+  "continent_id": 6,
+  "continent_name": "África"
+}

@@ -1,0 +1,14 @@
+{
+  "id": 1,
+  "name": "Amesterdão",
+  "slug": "amesterdao",
+  "country": "Holanda",
+  "image": "/amesterdaomapa.png",
+  "coords": {
+    "lat": 52.3676,
+    "lng": 4.9041,
+    "zoom": 12
+  },
+  "continent_id": 1,
+  "continent_name": "Europa"
+}

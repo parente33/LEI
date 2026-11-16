@@ -1,0 +1,2 @@
+id,name,slug,country,image,lat,lng,zoom,continent_id,continent_name
+30,"Cairo","cairo","Egito","",30.0444,31.2357,10,6,"África"

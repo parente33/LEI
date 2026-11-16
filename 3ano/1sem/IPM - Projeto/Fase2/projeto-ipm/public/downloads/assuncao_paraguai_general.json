@@ -1,0 +1,14 @@
+{
+  "id": 13,
+  "name": "Assunção",
+  "slug": "assuncao",
+  "country": "Paraguai",
+  "image": "",
+  "coords": {
+    "lat": -25.2637,
+    "lng": -57.5759,
+    "zoom": 12
+  },
+  "continent_id": 3,
+  "continent_name": "América do Sul"
+}

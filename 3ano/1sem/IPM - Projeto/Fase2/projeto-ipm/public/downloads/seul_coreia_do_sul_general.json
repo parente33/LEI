@@ -1,0 +1,14 @@
+{
+  "id": 22,
+  "name": "Seul",
+  "slug": "seul",
+  "country": "Coreia do Sul",
+  "image": "",
+  "coords": {
+    "lat": 37.5665,
+    "lng": 126.978,
+    "zoom": 11
+  },
+  "continent_id": 4,
+  "continent_name": "Ásia"
+}

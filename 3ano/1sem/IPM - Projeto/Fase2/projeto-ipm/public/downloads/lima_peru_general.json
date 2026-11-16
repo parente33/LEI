@@ -1,0 +1,14 @@
+{
+  "id": 17,
+  "name": "Lima",
+  "slug": "lima",
+  "country": "Peru",
+  "image": "",
+  "coords": {
+    "lat": -12.0464,
+    "lng": -77.0428,
+    "zoom": 11
+  },
+  "continent_id": 3,
+  "continent_name": "América do Sul"
+}

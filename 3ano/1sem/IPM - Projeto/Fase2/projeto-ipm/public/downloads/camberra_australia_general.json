@@ -1,0 +1,14 @@
+{
+  "id": 25,
+  "name": "Camberra",
+  "slug": "camberra",
+  "country": "Austrália",
+  "image": "",
+  "coords": {
+    "lat": -35.2809,
+    "lng": 149.13,
+    "zoom": 11
+  },
+  "continent_id": 5,
+  "continent_name": "Oceânia"
+}

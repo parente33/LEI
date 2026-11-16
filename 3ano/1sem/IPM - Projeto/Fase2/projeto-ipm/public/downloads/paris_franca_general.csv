@@ -1,0 +1,2 @@
+id,name,slug,country,image,lat,lng,zoom,continent_id,continent_name
+6,"Paris","paris","França","/parismapa.png",48.8566,2.3522,12,1,"Europa"

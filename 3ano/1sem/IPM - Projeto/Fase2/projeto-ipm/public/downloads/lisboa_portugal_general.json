@@ -1,0 +1,14 @@
+{
+  "id": 3,
+  "name": "Lisboa",
+  "slug": "lisboa",
+  "country": "Portugal",
+  "image": "/lisboamapa.png",
+  "coords": {
+    "lat": 38.7223,
+    "lng": -9.1393,
+    "zoom": 12
+  },
+  "continent_id": 1,
+  "continent_name": "Europa"
+}

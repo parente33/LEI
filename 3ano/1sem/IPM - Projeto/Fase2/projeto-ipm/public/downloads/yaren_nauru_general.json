@@ -1,0 +1,14 @@
+{
+  "id": 27,
+  "name": "Yaren",
+  "slug": "yaren",
+  "country": "Nauru",
+  "image": "",
+  "coords": {
+    "lat": -0.5475,
+    "lng": 166.9179,
+    "zoom": 13
+  },
+  "continent_id": 5,
+  "continent_name": "Oceânia"
+}

@@ -1,0 +1,14 @@
+{
+  "id": 6,
+  "name": "Paris",
+  "slug": "paris",
+  "country": "França",
+  "image": "/parismapa.png",
+  "coords": {
+    "lat": 48.8566,
+    "lng": 2.3522,
+    "zoom": 12
+  },
+  "continent_id": 1,
+  "continent_name": "Europa"
+}

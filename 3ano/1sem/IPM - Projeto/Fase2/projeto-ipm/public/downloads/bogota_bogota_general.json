@@ -1,0 +1,14 @@
+{
+  "id": 14,
+  "name": "Bogotá",
+  "slug": "bogota",
+  "country": "Bogotá",
+  "image": "",
+  "coords": {
+    "lat": 4.711,
+    "lng": -74.0721,
+    "zoom": 11
+  },
+  "continent_id": 3,
+  "continent_name": "América do Sul"
+}

@@ -1,0 +1,14 @@
+{
+  "id": 12,
+  "name": "Washington, D.C.",
+  "slug": "washington",
+  "country": "Estados Unidos da América",
+  "image": "",
+  "coords": {
+    "lat": 38.9072,
+    "lng": -77.0369,
+    "zoom": 11
+  },
+  "continent_id": 2,
+  "continent_name": "América do Norte e Central"
+}

@@ -1,0 +1,2 @@
+id,name,slug,country,image,lat,lng,zoom,continent_id,continent_name
+1,"Amesterdão","amesterdao","Holanda","/amesterdaomapa.png",52.3676,4.9041,12,1,"Europa"

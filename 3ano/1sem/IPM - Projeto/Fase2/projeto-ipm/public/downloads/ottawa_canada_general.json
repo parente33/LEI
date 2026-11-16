@@ -1,0 +1,14 @@
+{
+  "id": 11,
+  "name": "Ottawa",
+  "slug": "ottawa",
+  "country": "Canadá",
+  "image": "",
+  "coords": {
+    "lat": 45.4215,
+    "lng": -75.6972,
+    "zoom": 11
+  },
+  "continent_id": 2,
+  "continent_name": "América do Norte e Central"
+}

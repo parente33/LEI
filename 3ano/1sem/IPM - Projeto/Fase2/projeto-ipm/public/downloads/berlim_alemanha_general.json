@@ -1,0 +1,14 @@
+{
+  "id": 2,
+  "name": "Berlim",
+  "slug": "berlim",
+  "country": "Alemanha",
+  "image": "",
+  "coords": {
+    "lat": 52.52,
+    "lng": 13.405,
+    "zoom": 12
+  },
+  "continent_id": 1,
+  "continent_name": "Europa"
+}

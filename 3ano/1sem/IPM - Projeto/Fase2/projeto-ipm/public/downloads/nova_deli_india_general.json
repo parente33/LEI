@@ -1,0 +1,14 @@
+{
+  "id": 19,
+  "name": "Nova Deli",
+  "slug": "novadeli",
+  "country": "Índia",
+  "image": "",
+  "coords": {
+    "lat": 28.6139,
+    "lng": 77.209,
+    "zoom": 11
+  },
+  "continent_id": 4,
+  "continent_name": "Ásia"
+}

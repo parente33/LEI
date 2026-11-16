@@ -1,0 +1,14 @@
+{
+  "id": 18,
+  "name": "Santiago",
+  "slug": "santiago",
+  "country": "Chile",
+  "image": "",
+  "coords": {
+    "lat": -33.4489,
+    "lng": -70.6693,
+    "zoom": 11
+  },
+  "continent_id": 3,
+  "continent_name": "América do Sul"
+}

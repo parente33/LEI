@@ -1,0 +1,2 @@
+id,name,slug,country,image,lat,lng,zoom,continent_id,continent_name
+4,"Londres","londres","Inglaterra","/londresmapa.png",51.5074,-0.1278,12,1,"Europa"

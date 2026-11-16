@@ -1,0 +1,14 @@
+{
+  "id": 23,
+  "name": "Tóquio",
+  "slug": "toquio",
+  "country": "Japão",
+  "image": "",
+  "coords": {
+    "lat": 35.6762,
+    "lng": 139.6503,
+    "zoom": 10
+  },
+  "continent_id": 4,
+  "continent_name": "Ásia"
+}

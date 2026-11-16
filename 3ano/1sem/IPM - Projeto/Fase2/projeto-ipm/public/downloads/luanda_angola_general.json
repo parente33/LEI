@@ -1,0 +1,14 @@
+{
+  "id": 32,
+  "name": "Luanda",
+  "slug": "luanda",
+  "country": "Angola",
+  "image": "",
+  "coords": {
+    "lat": -8.8383,
+    "lng": 13.2344,
+    "zoom": 11
+  },
+  "continent_id": 6,
+  "continent_name": "África"
+}

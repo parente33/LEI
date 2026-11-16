@@ -1,0 +1,14 @@
+{
+  "id": 24,
+  "name": "Apia",
+  "slug": "apia",
+  "country": "Samoa",
+  "image": "",
+  "coords": {
+    "lat": -13.8507,
+    "lng": -171.7514,
+    "zoom": 12
+  },
+  "continent_id": 5,
+  "continent_name": "Oceânia"
+}
