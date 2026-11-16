@@ -1,0 +1,14 @@
+/home/parente33/GC/Fases/Fase4/build/CMakeFiles/edit_cache.dir
+/home/parente33/GC/Fases/Fase4/build/CMakeFiles/rebuild_cache.dir
+/home/parente33/GC/Fases/Fase4/build/src/core/CMakeFiles/core.dir
+/home/parente33/GC/Fases/Fase4/build/src/core/CMakeFiles/edit_cache.dir
+/home/parente33/GC/Fases/Fase4/build/src/core/CMakeFiles/rebuild_cache.dir
+/home/parente33/GC/Fases/Fase4/build/src/tinyxml/CMakeFiles/tinyxml.dir
+/home/parente33/GC/Fases/Fase4/build/src/tinyxml/CMakeFiles/edit_cache.dir
+/home/parente33/GC/Fases/Fase4/build/src/tinyxml/CMakeFiles/rebuild_cache.dir
+/home/parente33/GC/Fases/Fase4/build/src/generator/CMakeFiles/generator.dir
+/home/parente33/GC/Fases/Fase4/build/src/generator/CMakeFiles/edit_cache.dir
+/home/parente33/GC/Fases/Fase4/build/src/generator/CMakeFiles/rebuild_cache.dir
+/home/parente33/GC/Fases/Fase4/build/src/engine/CMakeFiles/engine.dir
+/home/parente33/GC/Fases/Fase4/build/src/engine/CMakeFiles/edit_cache.dir
+/home/parente33/GC/Fases/Fase4/build/src/engine/CMakeFiles/rebuild_cache.dir

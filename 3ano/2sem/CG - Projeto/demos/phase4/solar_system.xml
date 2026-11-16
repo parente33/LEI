@@ -1,0 +1,130 @@
+<world>
+    <window width="1920" height="1080" />
+
+    <camera>
+        <position x="40" y="50" z="60" />
+        <lookAt x="0" y="0" z="0" />
+        <up x="0" y="1" z="0" />
+        <projection fov="60" near="1" far="1000" />
+    </camera>
+
+    <lights>
+        <!-- sun acts as a point light source at the origin -->
+        <light type="point" posX="0" posY="0" posZ="0" />
+    </lights>
+
+    <group>
+
+        <!-- sun -->
+        <group>
+            <transform>
+                <!-- sun's rotation on its axis -->
+                <rotate time="25" x="0" y="1" z="0" />
+                <scale x="6" y="6" z="6" />
+            </transform>
+            <models>
+                <model file="sphere.3d">
+                    <texture file="sun.jpg" />
+                    <color>
+                        <diffuse R="255" G="255" B="255" />
+                        <ambient R="40" G="30" B="20" />
+                        <specular R="0" G="0" B="0" />
+                        <emissive R="255" G="140" B="40" />
+                        <shininess value="0" />
+                    </color>
+                </model>
+            </models>
+        </group>
+
+        <!-- earth -->
+        <group>
+            <transform>
+                <!-- orbit around the Sun -->
+                <rotate time="36.5" x="0" y="1" z="0" />
+                <translate x="52" y="0" z="0" />
+            </transform>
+
+            <group>
+                <transform>
+                    <!-- earth's rotation on its axis -->
+                    <rotate time="1.0" x="0" y="1" z="0" />
+                    <scale x="2.2" y="2.2" z="2.2" />
+                </transform>
+
+                <models>
+                    <model file="sphere.3d">
+                        <texture file="earth.jpg" />
+                        <color>
+                            <diffuse R="255" G="255" B="255" />
+                            <ambient R="25" G="25" B="25" />
+                            <specular R="255" G="255" B="255" />
+                            <emissive R="0" G="0" B="0" />
+                            <shininess value="64" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+
+            <!-- moon -->
+            <group>
+                <transform>
+                    <!-- moon's orbit around earth -->
+                    <rotate time="2.7" x="0" y="1" z="0" />
+                    <translate x="3" y="0" z="0" />
+                </transform>
+                <group>
+                    <transform>
+                        <!-- same rotation period as orbital period -->
+                        <rotate time="2.7" x="0" y="1" z="0" />
+                        <scale x="0.3" y="0.3" z="0.3" />
+                    </transform>
+                    <models>
+                        <model file="sphere.3d">
+                            <texture file="moon.jpg" />
+                            <color>
+                                <diffuse R="255" G="255" B="255" />
+                                <ambient R="20" G="20" B="20" />
+                                <specular R="80" G="80" B="80" />
+                                <emissive R="0" G="0" B="0" />
+                                <shininess value="16" />
+                            </color>
+                        </model>
+                    </models>
+                </group>
+            </group>
+        </group>
+
+        <!-- asteroid -->
+        <!-- orbits between earth and mars, on a slightly inclined path -->
+        <group>
+            <transform>
+                <translate time="60" align="true">
+                    <point x="36"  y="0"   z="0"  />
+                    <point x="24"  y="4"   z="20" />
+                    <point x="-10"  y="6"   z="32" />
+                    <point x="-36" y="2"   z="10"  />
+                    <point x="-24" y="-2"  z="-16" />
+                    <point x="10"   y="-4"  z="-30"/>
+                    <point x="36"  y="0"   z="0"  />
+                </translate>
+
+                <!-- tumbling rotation on multiple axes -->
+                <rotate time="0.3" x="1" y="1" z="0" />
+                <scale x="0.8" y="0.48" z="0.60" />
+            </transform>
+            <models>
+                <model file="sphere.3d">
+                    <texture file="asteroid.jpg" />
+                    <color>
+                        <diffuse R="255" G="255" B="255" />
+                        <ambient R="20" G="20" B="20" />
+                        <specular R="80" G="80" B="80" />
+                        <emissive R="0" G="0" B="0" />
+                        <shininess value="16" />
+                    </color>
+                </model>
+            </models>
+        </group>
+
+    </group>
+</world>

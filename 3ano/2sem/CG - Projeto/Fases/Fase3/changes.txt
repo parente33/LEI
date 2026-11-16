@@ -1,0 +1,14 @@
+NECESSARY:
+    revise literally everything, code format, namespaces, bloat, etc...
+
+
+KINDA NECESSARY:
+    add a little-endian check to prevent big-endian machines
+    make read and write the 3d file into assets directly
+    switch to pure glfw + glad, better performance and portability
+
+OPTIMIZATIONS:
+    glm, opengl mathmathics for vectors and calculations etc
+
+OPTIONAL:
+    add argument parser and validation for user input

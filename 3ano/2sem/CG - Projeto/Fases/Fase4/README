@@ -1,0 +1,14 @@
+build
+-----
+
+Run the following commands:
+
+    cmake -S . -B build    # configure the project and create the build directory
+    cmake --build build    # build the project
+
+Then execute the programs:
+
+    ./build/bin/generator
+    ./build/bin/engine
+
+NOTE: You are requied to have glfw3 installed on your system to build and run the project.
