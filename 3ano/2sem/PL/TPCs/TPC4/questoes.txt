@@ -1,0 +1,44 @@
+Pergunta 1 (Escolha Múltipla)
+
+Considere a seguinte gramática independente de contexto (CFG) com símbolo inicial S e terminais {a, b, c}.
+
+S -> aSa | bSb | a | b
+
+Quais das seguintes palavras são geradas por esta CFG?
+
+aaa
+aaaabbb
+babbab
+abaaaba
+
+<<<<<<<<
+
+Pergunta 2 (Escolha Múltipla)
+
+Considere a seguinte gramática independente de contexto (CFG) com símbolo inicial S e terminais {a, b, c}.
+
+S -> aSb | Sb | ε
+
+Quais das seguintes palavras são geradas por esta CFG?
+
+aab
+aabb
+abbbb
+bbb
+
+<<<<<<<<
+
+Pergunta 3 (Escolha Múltipla)
+
+Considere a seguinte gramática independente de contexto (CFG) com símbolo inicial S e terminais {a, b, c}.
+
+S -> aSa | bSb | A
+A -> cAc | B
+B -> aB | ε
+
+Quais das seguintes palavras são geradas por esta CFG?
+
+baaccaab
+ccabbacc
+a
+abcacba

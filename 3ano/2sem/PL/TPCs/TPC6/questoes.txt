@@ -1,0 +1,6 @@
+Pergunta 1
+
+Considere a gramática abaixo para representar árvores binárias com valores nas folhas. Escreva um parser recursivo descendente para calcular a profundidade máxima da árvore dada em anexo. Considere que as folhas têm profundidade 1.
+
+Tree -> x Tree Tree
+	| INT

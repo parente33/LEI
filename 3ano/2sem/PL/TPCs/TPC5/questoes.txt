@@ -1,0 +1,28 @@
+Pergunta 1 (Escolha Múltipla)
+
+O que pode concluir sobre a condição LL(1) relativamente à gramática abaixo?
+
+S → A | B
+A → 'a' A | C
+B → 'a' B | D
+C → 'x'
+D → 'y'
+
+A) Não tem conflitos
+B) Tem conflitos FIRST/FIRST
+C) Tem conflitos FIRST/FOLLOW
+
+>>>>>>>
+
+Pergunta 2 (Escolha Múltipla)
+
+O que pode concluir sobre a condição LL(1) relativamente à gramática abaixo?
+
+
+S → A B
+A → 'c' | ε
+B → 'c' 'd' | 'e'
+
+A) Não tem conflitos
+B) Tem conflitos FIRST/FIRST
+C) Tem conflitos FIRST/FOLLOW

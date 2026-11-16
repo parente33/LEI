@@ -1,0 +1,13 @@
+Pergunta 1 (Verdadeiro/Falso)
+
+A palavra ababab é aceite pelo autómato finito determinístico (DFA) abaixo?
+
+(dfa3.png)
+
+<<<<<<
+
+Pergunta 2 (Verdadeiro/Falso)
+
+A palavra abcabc é aceite pelo autómato finito não-determinístico (NFA) abaixo?
+
+(nfa1.png)
