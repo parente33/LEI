@@ -1,0 +1,20 @@
+Grupo 1
+
+Modelo de Domínio: 
+- não existe a noção de menu, que era referido no enunciado
+- o stock não é uma noção relativa a um armazem, mas à quantidade de unidades existentes.
+- as mensagens relativas a um pedido são do posto e não do funcionário
+- não se percebe os relacionamentos que levam a "Take-away" e "No restaurante". Fazem sentido como entidades?
+- os relacionamentos "do tipo" correspondem ao quê? É uma tentativa de ter um "é um"?
+O modelo de domínio não parece descrever todo o conhecimento que se tem do problema.
+
+Modelo de Use Cases:
+- Use Case Criar PEdido, começa com um passo desnecessário e não é preciso o passo 2. Obtém-se esse comportamento pelo fluxo alternativo. 
+Um pedido tem vários produtos e nenhum pode ter alergénios, é isso?
+Passo 6: se o autor não faz anotações não se coloca nada. O fluxo alternativo é que tem de dizer que faz anotações
+
+- Use Case Recolher Pedido: quem é o Actor, o funcionário ou o cliente?
+Se é o Cliente, como parece pelo diagrama, este Use Case é desnecessário pq ele não interage com o sistema.
+
+Deverão iterar novamente para tornar os modelos mais claros.
+

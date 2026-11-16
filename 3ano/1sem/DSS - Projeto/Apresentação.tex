@@ -1,0 +1,208 @@
+\documentclass[13pt, handout]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{beaver}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{page number in head/foot}{}
+\setbeamercolor*{item}{fg=red}
+
+\usepackage[portuguese]{babel}
+\usepackage{tikz}
+\usepackage{ragged2e}
+
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=0.3\paperwidth,ht=2.5ex,dp=1ex,center]{author in head/foot}
+      Grupo 01 (DIUM)
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=0.4\paperwidth,ht=2.5ex,dp=1ex,center]{title in head/foot}
+      Gestão de uma cadeia de restaurantes \textit{fast-food}
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=0.3\paperwidth,ht=2.5ex,dp=1ex,center]{date in head/foot}
+      \insertshortdate\hspace*{2ex}
+    \end{beamercolorbox}%
+  }%
+}
+
+\title{Gestão de uma cadeia de restaurantes \textit{fast-food}}
+\subtitle{{}\color{black}Desenvolvimento de Sistemas de Software}
+\author[Grupo 01]{
+    \begin{tabular}{lc}
+         André Santos & A106854 \\
+         Daniel Parente & A107363 \\
+         Pedro Ferreira & A107292 \\
+         Tiago Martins & A106938
+    \end{tabular}
+}
+
+\institute[DIUM]{
+    Universidade do Minho -- Licenciatura em Engenharia Informática
+}
+\date[16/01/2026]{\scriptsize 16 de janeiro de 2026}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Índice}
+    \tableofcontents
+\end{frame}
+
+\justifying
+
+\section{Análise de Requisitos}
+
+\begin{frame}{Análise de Requisitos -- O Problema}
+    
+Pretende-se desenvolver \textit{software} que:
+
+\vspace{0.5cm}
+
+\begin{itemize}
+    \item Permita o registo e gestão de pedidos efetuados por clientes;
+    \item Suporte a configuração livre do pedido por parte do cliente;
+    \item Assegure a preparação completa dos pedidos antes da entrega;
+    \item Garanta a gestores consultarem facilmente estatísticas sobre a cadeia de restaurantes.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Análise de Requisitos -- Modelo de Domínio}
+
+    \centering
+    \includegraphics[width=0.85\textwidth]{dominio.png} \\
+    {\scriptsize Modelo de Domínio construído.}
+
+\end{frame}
+
+\begin{frame}{Análise de Requisitos -- Identificação dos Casos de Uso}
+
+        \centering
+        
+        \begin{minipage}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{geral.png}
+        \end{minipage}
+        \hspace{0.4cm}
+        \begin{minipage}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{gestaodepedidos.png}
+        \end{minipage} \\
+        \vspace{0.25cm}
+        {\scriptsize Diagramas de casos de uso construídos.}
+
+        \begin{itemize}
+            \item Identificação dos atores e das interações com o sistema
+            \item Construção dos diagramas apropriados
+        \end{itemize}
+        
+\end{frame}
+
+\begin{frame}{Análise de Requisitos -- Especificação dos Casos de Uso}
+
+    \centering
+    \includegraphics[width=0.9\textwidth]{especificacao.png} \\
+    {\scriptsize Exemplo de uma especificação de caso de uso -- UC Mandar Mensagem.}
+    
+\end{frame}
+
+\section{Modelação Conceptual}
+
+\begin{frame}{Modelação Conceptual -- Definição da API da Camada de Negócio}
+
+    \centering
+    \includegraphics[width=\textwidth]{api.png} \\
+    {\scriptsize Definição da API da camada de negócio para o caso de uso "Preparar Etapa do Pedido".}
+
+    \begin{itemize}
+        \item Identificação das responsabilidades da camada de negócio para cada caso de uso;
+        \item Definição da API.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Modelação Conceptual -- Diagramas de Sequência}
+
+    \centering
+    \includegraphics[width=0.7\textwidth]{sequencia.png} \\
+    {\scriptsize Diagrama de sequência da operação de atualização do estado do pedido.}
+
+    \vspace{0.5cm}
+    \begin{itemize}
+        \item Modelação comportamental de todas as operações da camada de negócio.
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}{Modelação Conceptual -- Divisão por Subsistemas}
+
+    \centering
+    \includegraphics[width=0.7\textwidth]{componentessemdaos.png} \\
+    {\scriptsize Primeiro diagrama de componentes construído, sem DAOs.}
+    
+\end{frame}
+
+\begin{frame}{Modelação Conceptual -- Diagrama de Classes}
+
+    \centering
+    \includegraphics[width=1\textwidth]{subsystemcozinha.png} \\
+    {\scriptsize Diagrama de classes do subsistema de cozinha.}
+    
+\end{frame}
+
+\section{Implementação}
+
+\begin{frame}{Implementação -- BD Relacional}
+
+    \centering
+    \includegraphics[width=1\textwidth]{camadadedados.png} \\
+    {\scriptsize Hierarquia dos DAOs, utilizados para ORM.}
+    
+\end{frame}
+
+\begin{frame}{Implementação -- Arquitetura Final}
+
+    \centering
+
+    \begin{minipage}{0.45\textwidth}
+        \includegraphics[width=\textwidth]{componentes.png}
+    \end{minipage}
+    \hspace{0.5cm}
+    \begin{minipage}{0.45\textwidth}
+        \includegraphics[width=\textwidth]{packages.png}
+    \end{minipage} \\
+    \vspace{0.25cm}
+    {\scriptsize Diagramas de componentes e \emph{packages} finais (com alguns dos DAOs representados).}
+    
+\end{frame}
+
+\begin{frame}{Implementação -- Alterações aos Diagramas de Sequência}
+
+    \centering
+    \includegraphics[width=0.7\textwidth]{sequenciaDAOs.png} \\
+    {\scriptsize Diagrama de sequência apresentado anteriormente, acomodado aos DAOs.}
+
+    \vspace{0.5cm}
+    
+    \begin{itemize}
+        \item Adição de atualizações à base de dados;
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}{Implementação -- Camada de Apresentação}
+
+    \begin{itemize}
+        \item Composição de um manual de utilização para os utilizadores;
+        \item Camada de apresentação na arquitetura MVC.
+    \end{itemize}
+
+    \vspace{0.5cm}
+
+    \centering
+    \includegraphics[width=0.7\textwidth]{view.png} \\
+    {\scriptsize Menu que aparece após correr o programa.}
+    
+\end{frame}
+
+\frame{\titlepage}
+
+\end{document}
