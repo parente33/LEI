@@ -1,0 +1,36 @@
+@startuml
+
+left to right direction
+
+actor "Utilizador\nAutenticado" as User
+actor "Atleta" as Athlete
+actor "Treinador" as Coach
+actor "Secretaria" as Secretary
+actor "Gerência" as Management
+
+Athlete --|> User
+Coach --|> User
+Secretary --|> User
+Management --|> User
+
+rectangle "Subsistema: Gestão Logística e Instalações" {
+    usecase "Consultar Ocupação de Espaços" as UC1
+    usecase "Solicitar Reserva de Instalação" as UC2
+    usecase "Agendar Manutenção" as UC4
+    usecase "Encomendar Equipamento" as UC5
+}
+
+Coach --> UC1
+Coach --> UC2
+
+Management --> UC1
+Management --> UC4
+Management --> UC2
+
+Secretary --> UC2
+Secretary --> UC4
+
+Athlete --> UC1
+Athlete --> UC5
+
+@enduml

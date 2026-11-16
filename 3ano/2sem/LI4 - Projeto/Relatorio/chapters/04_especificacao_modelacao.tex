@@ -1,0 +1,2089 @@
+% ============================================================
+% CAPÍTULO 4 — ESPECIFICAÇÃO E MODELAÇÃO DO SOFTWARE
+% Sistema de Gestão Integrada — Clube Amigos de Polvoreira (CAP)
+% ============================================================
+
+\chapter{Especificação e Modelação do Software}\label{chap:especificacao_modelacao}
+
+% ============================================================
+% SECÇÃO 4.1 — INTRODUÇÃO E DECISÕES ARQUITETURAIS
+% ============================================================
+
+\section{Introdução e Contexto das Decisões Arquiteturais}
+
+Depois de terminar o levantamento de requisitos, a equipa começou a definir a arquitetura do sistema. O objetivo desta fase é especificar a estrutura, o comportamento e as interfaces do sistema com detalhe suficiente para poder implementar nas fases seguintes.
+
+Para apoiar as decisões de arquitetura, foram usados modelos de linguagem para comparar as opções disponíveis, tendo em conta as restrições do CAP: conformidade RGPD para dados clínicos, geração de ficheiros SAF-T, integração com sistemas de pagamento externos e uma equipa de desenvolvimento pequena. As interações com os modelos estão documentadas no Capítulo~\ref{chap:documentacao_ia}, Secção~\ref{sec:ia_arquitetura}.
+
+As secções seguintes apresentam, para cada decisão, as opções avaliadas e a escolha final da equipa.
+
+% ============================================================
+% SECÇÃO 4.2 — DECISÕES ARQUITETURAIS
+% ============================================================
+
+\section{Decisões Arquiteturais}
+\label{sec:decisoes_arq}
+\label{sec:rel_decisoes_arq}
+\verIA{subsec:ia_arq_decisoes}
+
+\subsection{Padrão Arquitetural Global}
+
+O padrão arquitetural define como os componentes comunicam entre si e como os dados são organizados. Foram avaliadas três abordagens.
+
+A \textbf{Arquitetura Monolítica em Camadas} organiza o código em camadas (apresentação, negócio e acesso a dados). É simples de implementar mas tende a gerar acoplamento elevado entre módulos à medida que o sistema cresce. A falta de fronteiras claras também dificulta a separação de dados exigida pelo RGPD (\textbf{RNF-01}).
+
+A \textbf{Arquitetura de Microsserviços} divide a aplicação em serviços independentes que comunicam via rede. É mais escalável mas introduz complexidade infraestrutural elevada, e a gestão de transações distribuídas seria um problema para garantir a consistência com o SAF-T \cite{saft2024} (\textbf{RNF-11}).
+
+O \textbf{Monólito Modular} mantém um único artefacto de implantação mas com fronteiras lógicas claras entre os módulos. Os módulos comunicam através de um barramento de eventos em memória, sem dependências diretas. Por exemplo, quando o atestado de um atleta caduca, o módulo clínico emite um evento que o módulo desportivo usa para bloquear o atleta em convocatórias.
+
+\begin{center}
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|>{\raggedright\arraybackslash}p{3.5cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Opção Arquitetural}} & \textcolor{white}{\textbf{Vantagens}} & \textcolor{white}{\textbf{Desvantagens}} \\ \hline
+\endfirsthead
+
+\multicolumn{3}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Opção Arquitetural}} & \textcolor{white}{\textbf{Vantagens}} & \textcolor{white}{\textbf{Desvantagens}} \\ \hline
+\endhead
+
+\hline \multicolumn{3}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Comparação de padrões arquiteturais.}
+\label{tab:comparacao_padroes_arq} \\
+\endlastfoot
+
+Monólito em Camadas & Simplicidade de implantação; curva de aprendizagem reduzida; rastreamento transacional facilitado. & Alto acoplamento lógico; dificuldade na segregação estrita de dados RGPD. \\ \hline
+Microsserviços & Escalabilidade independente por domínio; isolamento físico total de dados sensíveis. & Complexidade operacional elevada; gestão crítica de transações distribuídas para o SAF-T. \\ \hline
+Monólito Modular & Implantação unificada com baixo acoplamento interno; consistência transacional garantida; separação lógica orientada ao domínio (DDD). & Exige disciplina rigorosa na manutenção das fronteiras dos módulos. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+\end{center}
+
+Foram também identificados dois riscos: acoplamento acidental entre módulos e fragilidade do barramento de eventos em memória. A equipa registou estes riscos para resolver no futuro.
+
+\textbf{Decisão da equipa:} Adoptou-se o \textbf{Monólito Modular}. Esta opção separa as áreas sensíveis sem a complexidade dos microsserviços. A comunicação entre módulos é feita por eventos de domínio.
+
+\subsection{Sistema de Gestão de Base de Dados}
+
+A base de dados tem de suportar a gestão de contas, a emissão de faturas, o registo de avaliações físicas e o armazenamento de queixas clínicas.
+
+O \textbf{MongoDB}, uma base de dados NoSQL, tem grande flexibilidade de esquema. No entanto, tem limitações em transações complexas e não garante propriedades ACID de forma nativa, o que é problemático para o módulo financeiro (\textbf{RNF-11}).
+
+O \textbf{Microsoft SQL Server} é um motor relacional robusto. Os custos de licenciamento tornam esta opção menos viável para um clube de média dimensão.
+
+O \textbf{PostgreSQL} garante conformidade ACID, essencial para o módulo financeiro (\textbf{RNF-01} e \textbf{RNF-13}). É importante para garantir que as faturas e recibos não se perdem e para suportar o SAF-T.
+\begin{center}
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|>{\raggedright\arraybackslash}p{3cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Opção SGBD}} & \textcolor{white}{\textbf{Vantagens}} & \textcolor{white}{\textbf{Desvantagens}} \\ \hline
+\endfirsthead
+
+\multicolumn{3}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Opção SGBD}} & \textcolor{white}{\textbf{Vantagens}} & \textcolor{white}{\textbf{Desvantagens}} \\ \hline
+\endhead
+
+\hline \multicolumn{3}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Comparação de sistemas de gestão de base de dados.}
+\label{tab:comparacao_sgbd} \\
+\endlastfoot
+
+MongoDB & Esquema dinâmico; ideal para séries temporais de métricas desportivas. & Suporte limitado a transações ACID; risco de inconsistência para o SAF-T. \\ \hline
+SQL Server & Robustez transacional corporativa; ferramentas avançadas de auditoria. & Custos de licenciamento comerciais elevados. \\ \hline
+PostgreSQL & Conformidade ACID estrita a custo zero; integridade relacional absoluta para encadeamento criptográfico do SAF-T. & Curva de aprendizagem ligeiramente superior ao SQLite ou bases documentais simples. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+\end{center}
+
+\textbf{Decisão da equipa:} Escolheu-se o \textbf{PostgreSQL}. Garante que os dados financeiros não se perdem, suporta transações seguras e é gratuito, o que se encaixa no orçamento do CAP.
+
+\subsection{Tecnologias e Stack de Backend}
+
+Foram avaliadas três tecnologias para o servidor, tendo em conta a necessidade de automatizar tarefas como a vigilância de atestados e os alertas de pagamentos em atraso.
+
+O \textbf{Node.js com NestJS} tem bom desempenho em operações de I/O. No entanto, é \textit{single-threaded} e pode ter problemas com operações intensivas de CPU, como a geração do SAF-T (\textbf{RNF-06}).
+
+O \textbf{Java com Spring Boot} é robusto e tem boas ferramentas de segurança. O consumo de recursos da JVM e a verbosidade da linguagem podem abrandar o desenvolvimento num projeto com prazos curtos.
+
+O \textbf{Microsoft .NET 7 com C\#} tem bom desempenho e integração com a base de dados via Entity Framework Core. O suporte nativo para \textit{BackgroundServices} facilita a criação dos \textit{cronjobs} para monitorizar atestados e pagamentos (\textbf{RNF-08}).
+
+\begin{center}
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|>{\raggedright\arraybackslash}p{3.5cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Opção Backend}} & \textcolor{white}{\textbf{Vantagens}} & \textcolor{white}{\textbf{Desvantagens}} \\ \hline
+\endfirsthead
+
+\multicolumn{3}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Opção Backend}} & \textcolor{white}{\textbf{Vantagens}} & \textcolor{white}{\textbf{Desvantagens}} \\ \hline
+\endhead
+
+\hline \multicolumn{3}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Comparação de tecnologias de \textit{backend}.}
+\label{tab:comparacao_backend} \\
+\endlastfoot
+
+Node.js (NestJS) & Elevado desempenho I/O; ideal para \textit{webhooks} e notificações \textit{WebSocket}. & Bloqueio da \textit{thread} principal durante geração intensiva do SAF-T XML. \\ \hline
+Java (Spring Boot) & Padrão corporativo para aplicações transacionais; ecossistema maduro de segurança (RBAC). & Consumo de memória elevado; verbosidade e morosidade no ciclo de desenvolvimento. \\ \hline
+C\# (.NET 7) & Desempenho computacional elevado; suporte nativo para \textit{cronjobs} e \textit{workers} assíncronos. & Exige proficiência nas abstrações de injeção de dependência do Entity Framework Core. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+\end{center}
+
+\textbf{Decisão da equipa:} Optou-se pelo \textbf{C\# com .NET 7}. Permite criar facilmente os mecanismos de vigilância automática e tem o desempenho necessário para processar os dados fiscais.
+
+\subsection{Paradigma de Comunicação e API}
+
+Foi necessário escolher o protocolo de comunicação entre o servidor e os clientes.
+
+O \textbf{GraphQL} permite ao cliente escolher que dados quer receber. No entanto, controlar o acesso a dados sensíveis (como dados médicos) é mais complexo com este paradigma.
+
+O \textbf{gRPC} tem baixa latência e alta eficiência. No entanto, tem dificuldades de integração com navegadores web e não é flexível para receber \textit{webhooks} externos (como confirmações de pagamento).
+
+A \textbf{Arquitetura RESTful} com JSON é compatível com qualquer cliente e facilita a receção de \textit{webhooks} financeiros. Permite também aplicar o controlo de acessos por rota, protegendo os dados sensíveis conforme o RGPD (\textbf{RNF-02} e \textbf{RNF-03}). Foi também definido um mecanismo de reconciliação periódica para lidar com falhas de rede nos pagamentos.
+
+\begin{center}
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|>{\raggedright\arraybackslash}p{3.5cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Paradigma de API}} & \textcolor{white}{\textbf{Vantagens}} & \textcolor{white}{\textbf{Desvantagens}} \\ \hline
+\endfirsthead
+
+\multicolumn{3}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Paradigma de API}} & \textcolor{white}{\textbf{Vantagens}} & \textcolor{white}{\textbf{Desvantagens}} \\ \hline
+\endhead
+
+\hline \multicolumn{3}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Comparação de paradigmas de API.}
+\label{tab:comparacao_api} \\
+\endlastfoot
+
+GraphQL & Elimina \textit{over-fetching}; excelente para \textit{dashboards} com agregação complexa. & Ocultação seletiva de dados sensíveis (RBAC) exige camadas de segurança complexas e propensas a falhas. \\ \hline
+gRPC & Latência mínima; forte tipagem binária; elevado desempenho. & Inflexível para \textit{webhooks} externos em texto plano; dificulta consumo por clientes web. \\ \hline
+RESTful API & Aceitação universal; RBAC simples por rota; integração nativa com \textit{gateways} de pagamento. & Requer planeamento metódico das rotas para ecrãs com múltiplos recursos. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+\end{center}
+
+\textbf{Decisão da equipa:} Optou-se por uma \textbf{RESTful API}. Esta escolha torna a comunicação simples e segura, facilita o uso de serviços de pagamento externos e garante que apenas as pessoas autorizadas acedem aos dados médicos ou financeiros.
+
+% ============================================================
+% SECÇÃO 4.3 — APRESENTAÇÃO GERAL DA ESPECIFICAÇÃO
+% ============================================================
+
+\section{Apresentação Geral da Especificação}
+
+Foram construídos modelos para descrever a estrutura e o comportamento do sistema, que serão apresentados neste capítulo. Para os diagramas, usou-se a linguagem UML \cite{omg2017}.
+
+A modelação divide-se em duas partes. Na \textbf{modelação estrutural}, foram criados diagramas que identificam as entidades e as relações entre elas. Na \textbf{modelação comportamental}, foram criados diagramas que mostram como o sistema responde a eventos e quais os estados das entidades principais.
+
+% ============================================================
+% SECÇÃO 4.4 — MODELAÇÃO ESTRUTURAL
+% ============================================================
+
+\section{Modelação Estrutural}\label{sec:rel_modelacao_estrutural}
+\verIA{subsec:ia_arq_diagramas}
+
+\subsection{Modelo de Domínio}
+
+O primeiro diagrama construído foi o \textbf{modelo de domínio}, que mostra as entidades principais e as relações entre elas. Não foram incluídas relações de consulta nem atributos simples como identificadores e preços, para não tornar o diagrama demasiado grande. O modelo foi construído com base nos requisitos e nas entrevistas.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{modelo_dominio.png}
+    \caption{Modelo de domínio do sistema CAP.}
+    \label{fig:modelo-dominio}
+\end{figure}
+
+No diagrama, usam-se classes de associação --- \textit{Atleta no Plantel}, \textit{Item na Convocatória}, \textit{Participação em Jogo} e \textit{Pagamento de Quota} --- para representar entidades que resultam de relações entre dois conceitos e que têm informação adicional (por exemplo, a posição de um atleta numa equipa). O \textit{Pagamento de Quota} e a \textit{Fatura} são especializações de \textit{Transação}, para manter o historial financeiro exigido pelo SAF-T.
+
+\subsection{Diagrama de Classes}
+
+O \textbf{diagrama de classes} complementa o modelo de domínio com a especificação técnica necessária para a implementação: visibilidade dos atributos, tipos de dados e relações entre classes. As classes estão agrupadas em cinco pacotes funcionais. A flag \texttt{isApto} em \texttt{Atleta} é atualizada de forma assíncrona através de eventos de domínio, sem acesso direto aos módulos Clínico ou Financeiro.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,keepaspectratio,height=0.85\textheight]{diagrama_classes.png}
+    \caption{Diagrama de classes do sistema CAP, organizado por pacote funcional.}
+    \label{fig:diagrama-classes}
+\end{figure}
+
+Do diagrama lêem-se os cinco pacotes funcionais:
+
+\begin{itemize}
+    \item \textbf{Utilizadores} --- Hierarquia de utilizadores com herança de \texttt{Utilizador} (classe abstrata). \texttt{Atleta} possui a propriedade \texttt{isApto} refletindo a sua disponibilidade consolidada através de eventos de domínio gerados por outros módulos. \texttt{Secretaria} e \texttt{Gerencia} especializam \texttt{Funcionario} (também abstrato) com operações administrativas e fiscais.
+
+    \item \textbf{Desportivo} --- Cadeia \texttt{Modalidade → Equipa → Plantel → AtletaPlantel} modelada com composições fortes. \texttt{Convocatoria} expõe as operações \texttt{publicar()}, \texttt{validarAtletas()} e \texttt{cancelar()}, que materializam a máquina de estados descrita na modelação comportamental.
+
+    \item \textbf{Clínico} --- \texttt{AtestadoMedico} expõe \texttt{isValido()} e \texttt{diasAteExpirar()}, consumidos pelo motor de alertas automáticos. \texttt{Lesao} expõe \texttt{isAtivo()} para bloquear convocatórias de atletas lesionados.
+
+    \item \textbf{Financeiro} --- \texttt{PagamentoQuota} e \texttt{Fatura} herdam de \texttt{Transacao} (abstrata), garantindo o rastreamento histórico exigido pelo SAF-T. \texttt{Fatura} expõe \texttt{gerarPDF()} para a emissão automática de documentos.
+
+    \item \textbf{Infraestrutura} --- \texttt{Reserva} expõe \texttt{verificarConflito()} para prevenir sobreposições de horários nas instalações do clube.
+\end{itemize}
+
+\subsection{Diagrama de Componentes}
+
+O \textbf{diagrama de componentes} mostra como o sistema está dividido em partes menores, cada uma com uma responsabilidade específica. Está alinhado com a decisão de Monólito Modular.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.85\textheight,keepaspectratio]{diagrama_componentes.png}
+    \caption{Diagrama de componentes da arquitetura do sistema CAP.}
+    \label{fig:diagrama-componentes}
+\end{figure}
+
+Na revisão foi identificado o risco de o API Gateway passar a ter lógica de negócio. Para evitar isso, o Gateway foi limitado a roteamento, autenticação e controlo de acessos. O \textit{rate limiting} foi registado para implementação futura.
+
+A aplicação está dividida em três camadas principais.\footnote{A aplicação móvel representada visualmente nos diagramas como uma componente planeada foi retirada do escopo oficial por questões de prazos letivos; os diagramas ilustram assim a visão abrangente inicialmente concebida, sendo a versão entregue estritamente Web.} A \textbf{Camada de Apresentação} inclui a aplicação web (SPA Next.js/React). A \textbf{Camada de API} é o API Gateway (ASP.NET Core 7), responsável pelo roteamento, autenticação JWT e controlo de acessos. A \textbf{Camada de Negócio}, implementada como Monólito Modular, tem sete módulos: Gestão de Utilizadores, Gestão Desportiva, Gestão Clínica, Gestão Financeira, Gestão de Instalações, Notificações e Relatórios (SAF-T). A \textbf{Camada de Dados} usa o PostgreSQL via Entity Framework Core.
+
+A divisão em módulos independentes permite desenvolver cada área em paralelo e fazer alterações sem afetar os outros módulos.
+
+\subsection{Diagrama de Implantação}
+
+O \textbf{diagrama de implantação} mostra como os componentes do sistema estão distribuídos pelos nós de \textit{hardware} e serviços externos.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{diagrama_deployment.png}
+    \caption{Diagrama de implantação do sistema CAP.}
+    \label{fig:diagrama-deployment}
+\end{figure}
+
+O diagrama tem quatro camadas. Na \textbf{Camada Cliente}, os utilizadores acedem pelo \textit{browser}. Na \textbf{Camada de Servidor}, o API Gateway trata do roteamento e autenticação, e os \textit{BackgroundServices} gerem os \textit{cronjobs}. Na \textbf{Camada de Dados}, o PostgreSQL é acedido pelo servidor via Entity Framework Core. Na camada de \textbf{Serviços Externos}, o gateway de pagamentos comunica com o servidor via API REST e \textit{webhooks}. O serviço de email/SMS é invocado pelo módulo de Notificações.
+
+\subsection{Matriz de Permissões RBAC}\label{sec:rel_rbac}
+\verIA{subsec:ia_arq_rbac}
+
+O sistema implementa um modelo de controlo de acessos baseado em papéis (\textit{Role-Based Access Control} --- RBAC), conforme exigido pelo \textbf{RNF-03}. A tabela seguinte mapeia cada operação principal do sistema ao conjunto de papéis que tem permissão de a executar, servindo como contrato de referência para a implementação da camada de autorização no API Gateway.
+
+\begin{center}
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|>{\raggedright\arraybackslash}X|c|c|c|c|c|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Operação}} & \textcolor{white}{\textbf{Atleta}} & \textcolor{white}{\textbf{EE}} & \textcolor{white}{\textbf{Treinador}} & \textcolor{white}{\textbf{Secretaria}} & \textcolor{white}{\textbf{Gerência}} \\ \hline
+\endfirsthead
+
+\multicolumn{6}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Operação}} & \textcolor{white}{\textbf{Atleta}} & \textcolor{white}{\textbf{EE}} & \textcolor{white}{\textbf{Treinador}} & \textcolor{white}{\textbf{Secretaria}} & \textcolor{white}{\textbf{Gerência}} \\ \hline
+\endhead
+
+\hline \multicolumn{6}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Matriz de permissões RBAC: papéis versus operações principais do sistema (\checkmark = permitido, --- = negado).}
+\label{tab:rbac} \\
+\endlastfoot
+
+Registar-se / Iniciar sessão & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\ \hline
+Editar perfil próprio & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\ \hline
+Aprovar / rejeitar registo & --- & --- & --- & \checkmark & \checkmark \\ \hline
+Gerir equipas e plantéis & --- & --- & \checkmark & --- & \checkmark \\ \hline
+Agendar / cancelar treinos & --- & --- & \checkmark & --- & \checkmark \\ \hline
+Registar presenças em treino & --- & --- & \checkmark & --- & --- \\ \hline
+Criar / publicar convocatória & --- & --- & \checkmark & --- & --- \\ \hline
+Confirmar presença (convocatória) & \checkmark & \checkmark & --- & --- & --- \\ \hline
+Registar resultado de jogo & --- & --- & \checkmark & --- & \checkmark \\ \hline
+Submeter atestado médico & \checkmark & \checkmark & --- & --- & --- \\ \hline
+Validar atestado médico & --- & --- & --- & \checkmark & \checkmark \\ \hline
+Reportar lesão / queixa & \checkmark & \checkmark & \checkmark & --- & --- \\ \hline
+Consultar dados clínicos (próprios) & \checkmark & \checkmark & --- & --- & --- \\ \hline
+Consultar dados clínicos (plantel) & --- & --- & \checkmark & \checkmark & \checkmark \\ \hline
+Efetuar pagamento de quota & \checkmark & \checkmark & --- & --- & --- \\ \hline
+Registar pagamento manual & --- & --- & --- & \checkmark & \checkmark \\ \hline
+Gerar relatório SAF-T & --- & --- & --- & \checkmark & \checkmark \\ \hline
+Consultar contabilidade global & --- & --- & --- & --- & \checkmark \\ \hline
+Reservar instalação & --- & --- & \checkmark & \checkmark & \checkmark \\ \hline
+Gerir instalações (manutenção) & --- & --- & --- & --- & \checkmark \\ \hline
+Gerir modalidades e épocas & --- & --- & --- & --- & \checkmark \\ \hline
+Consultar dashboards de desempenho & \checkmark & \checkmark & \checkmark & --- & \checkmark \\ \hline
+Consultar logs de auditoria & --- & --- & --- & --- & \checkmark \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+\end{center}
+
+
+% ============================================================
+% SECÇÃO 4.5 — MODELAÇÃO COMPORTAMENTAL
+% ============================================================
+
+\section{Modelação Comportamental}\label{sec:rel_modelacao_comportamental}
+\verIA{subsec:ia_arq_comportamento}
+
+\subsection{Diagramas de Máquina de Estados}
+
+Foram construídos diagramas de máquina de estados para as entidades com ciclos de vida mais complexos.
+
+O primeiro diagrama aborda a \textbf{situação do atleta}, que é central para o modelo de negócio do CAP:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth,height=0.85\textheight,keepaspectratio]{maquina_estados_atleta.png}
+    \caption{Diagrama de máquina de estados da situação do atleta.}
+    \label{fig:maquina_estados_atleta}
+\end{figure}
+
+Um atleta recém-registado fica no estado \textit{Inapto Clínico} até que o atestado médico seja validado pela Secretaria. Quando a documentação está aprovada e as quotas estão pagas, o atleta passa para \textit{Apto}, o único estado em que pode ser convocado (\textbf{RF-08}). Uma lesão, um atestado caducado ou quotas em atraso alteram automaticamente o estado do atleta.
+
+O segundo diagrama descreve os estados possíveis de uma \textbf{quota}:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth,height=0.85\textheight,keepaspectratio]{maquina_estados_quota.png}
+    \caption{Diagrama de máquina de estados dos estados de uma quota.}
+    \label{fig:maquina_estados_quota}
+\end{figure}
+
+Uma quota começa com o estado \textit{Pendente} (\textbf{RF-17}). Após pagamento passa a \textit{Paga}. Se o prazo expirar sem pagamento, passa a \textit{Em Atraso}, e pode ainda ser paga ou resultar em suspensão do atleta. Uma quota paga pode ser reembolsada em caso de erro.
+
+O terceiro diagrama representa os estados de uma \textbf{convocatória}:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth,height=0.85\textheight,keepaspectratio]{maquina_estados_convocatoria.png}
+    \caption{Diagrama de máquina de estados dos estados de uma convocatória.}
+    \label{fig:maquina_estados_convocatoria}
+\end{figure}
+
+Uma convocatória começa como \textit{Rascunho} (\textbf{RF-08}). Antes de ser publicada, o sistema verifica se todos os atletas estão aptos. Se houver erros, volta a \textit{Rascunho}; caso contrário, fica \textit{Publicada}. Os encarregados podem então confirmar ou recusar a presença. Após o evento, a convocatória passa a \textit{Finalizada}. Pode ser cancelada a partir dos estados \textit{Rascunho} ou \textit{Publicada}.
+
+O quarto diagrama representa o ciclo de vida de um \textbf{Atestado Médico Desportivo (EMD)}, entidade clínica com estados independentes dos da situação geral do atleta:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth,height=0.85\textheight,keepaspectratio]{maquina_estados_atestado.png}
+    \caption{Diagrama de máquina de estados do ciclo de vida do Atestado Médico Desportivo (RF-11).}
+    \label{fig:maquina_estados_atestado}
+\end{figure}
+
+Um atestado começa como \textit{Submetido} e fica em \textit{Pendente de Validação}. A Secretaria pode aprová-lo (\textit{Válido}) ou rejeitá-lo (\textit{Rejeitado}). Quando válido, o sistema envia alertas de caducidade a 30, 15 e 7 dias (\textbf{RF-11}). Quando expira, o atleta passa a \textit{Inapto Clínico}. Em estado \textit{Rejeitado} ou \textit{Expirado}, pode ser submetido um novo documento.
+
+O quinto diagrama formaliza o ciclo de vida de uma \textbf{Reserva de Instalação}, entidade cujos estados determinam a disponibilidade dos espaços físicos do clube (\textbf{RF-20}):
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth,height=0.85\textheight,keepaspectratio]{maquina_estados_reserva.png}
+    \caption{Diagrama de máquina de estados do ciclo de vida de uma Reserva de Instalação (RF-20).}
+    \label{fig:maquina_estados_reserva}
+\end{figure}
+
+Uma reserva começa como \textit{Pendente}. O sistema verifica conflitos de horário: se não houver conflitos, a reserva fica \textit{Confirmada}; caso contrário, é rejeitada com sugestões de alternativas. Uma reserva confirmada pode ser cancelada pelo utilizador ou pela Gerência. Quando o evento termina, passa automaticamente a \textit{Concluída}.
+
+O sexto diagrama modela o ciclo de vida de uma \textbf{Lesão}, entidade clínica que determina a disponibilidade de convocação do atleta (\textbf{RF-12}):
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth,height=0.85\textheight,keepaspectratio]{maquina_estados_lesao.png}
+    \caption{Diagrama de máquina de estados do ciclo de vida de uma Lesão (RF-12).}
+    \label{fig:maquina_estados_lesao}
+\end{figure}
+
+Uma lesão começa como \textit{Reportada} pelo atleta ou encarregado. Após confirmação, fica \textit{Ativa} e o atleta fica bloqueado em convocatórias. Com tratamento formal, passa para \textit{Em Recuperação}. Após alta clínica, fica \textit{Resolvida}. Uma recaída pode repor o estado \textit{Ativa}.
+
+
+\subsection{Diagramas de Casos de Uso}
+
+Foi construído um diagrama de casos de uso com todas as operações suportadas pelo sistema. Devido ao número elevado de casos de uso, o diagrama foi dividido por subsistemas. O diagrama geral mostra os atores e os subsistemas com que interagem.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,keepaspectratio,height=0.85\textheight]{casos_uso_geral.png}
+    \caption{Diagrama de casos de uso geral (visão sintética dos seis agrupamentos funcionais).}
+    \label{fig:casos_uso_geral}
+\end{figure}
+
+Os atores do sistema são: o \textbf{Utilizador} (operações comuns a todos), o \textbf{Atleta}, o \textbf{Treinador}, o \textbf{Encarregado de Educação} (responsável legal por atletas menores), a \textbf{Secretaria} (gestão administrativa) e a \textbf{Gerência} (acesso total). O diagrama geral agrupa os casos de uso nos seis subsistemas.
+
+O subsistema de \textbf{Gestão de Utilizadores} agrupa as operações relacionadas com o ciclo de vida das contas no sistema. O ator genérico \textit{Utilizador} pode registar-se e iniciar sessão, enquanto a \textit{Secretaria} é responsável pela aprovação dos pedidos de registo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.85\textheight,keepaspectratio]{casos_uso_utilizadores.png}
+    \caption{Diagrama de casos de uso do subsistema de Gestão de Utilizadores.}
+    \label{fig:casos_uso_utilizadores}
+\end{figure}
+
+O subsistema de \textbf{Gestão Desportiva} concentra as operações relativas à organização das equipas e à atividade desportiva do clube. O \textit{Treinador} gere plantéis, cria e publica convocatórias e regista as estatísticas de jogo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.85\textheight,keepaspectratio]{casos_uso_desportiva.png}
+    \caption{Diagrama de casos de uso do subsistema de Gestão Desportiva.}
+    \label{fig:casos_uso_desportiva}
+\end{figure}
+
+O subsistema de \textbf{Gestão Clínica} cobre o acompanhamento do estado de saúde dos atletas. O \textit{Atleta} e o \textit{Encarregado} podem submeter atestados médicos e registar queixas físicas. A \textit{Secretaria} valida os atestados.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.85\textheight,keepaspectratio]{casos_uso_clinica.png}
+    \caption{Diagrama de casos de uso do subsistema de Gestão Clínica.}
+    \label{fig:casos_uso_clinica}
+\end{figure}
+
+O subsistema de \textbf{Gestão Financeira} abrange o controlo das quotas e o processamento de pagamentos. A \textit{Gerência} gera as quotas no início de cada época. O \textit{Encarregado} efetua os pagamentos, que resultam na emissão automática de uma fatura. A \textit{Secretaria} pode exportar o ficheiro SAF-T.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.85\textheight,keepaspectratio]{casos_uso_financeira.png}
+    \caption{Diagrama de casos de uso do subsistema de Gestão Financeira.}
+    \label{fig:casos_uso_financeira}
+\end{figure}
+
+O subsistema de \textbf{Gestão de Notificações} funciona transversalmente. O \textit{Sistema}, através de \textit{cronjobs}, emite notificações de caducidade e atrasos. Os \textit{Utilizadores} configuram os métodos preferidos de receção.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.85\textheight,keepaspectratio]{casos_uso_notificacoes.png}
+    \caption{Diagrama de casos de uso do subsistema de Gestão de Notificações.}
+    \label{fig:casos_uso_notificacoes}
+\end{figure}
+
+O subsistema de \textbf{Gestão de Instalações} foca-se na prevenção de conflitos físicos. A \textit{Gerência} gere a manutenção. O \textit{Treinador} pode consultar a ocupação dos campos e solicitar reservas pontuais.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.85\textheight,keepaspectratio]{casos_uso_instalacoes.png}
+    \caption{Diagrama de casos de uso do subsistema de Gestão de Instalações.}
+    \label{fig:casos_uso_instalacoes}
+\end{figure}
+
+% --- GESTÃO DE UTILIZADORES ---
+\subsubsection{Subsistema de Gestão de Utilizadores}
+
+O caso de uso \textit{Registar-se} (Tabela~\ref{tab:uc_registar}) corresponde ao \textbf{RF-01}. Qualquer novo membro tem de se registar antes de aceder à plataforma. O registo cria uma conta com estado \textit{Pendente}, que só é ativada após validação pela Secretaria.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Registar-se''.}
+\label{tab:uc_registar} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Registar-se \\ \hline
+\textbf{Requisitos associados} & RF-01, RNF-01 \\ \hline
+\textbf{Ator} & Candidato a Atleta / Encarregado de Educação \\ \hline
+\textbf{Descrição} & Um novo membro solicita a criação de conta para aceder à plataforma do CAP. \\ \hline
+\textbf{Pré-condição} & O sistema está online e o utilizador não tem sessão ativa. \\ \hline
+\textbf{Pós-condição} & É criada uma entidade de utilizador com estado \textit{Pendente}, aguardando validação da Secretaria. \\ \hline
+\textbf{Fluxo normal} &
+1. O utilizador acede à página de registo e preenche o formulário (nome, email, \textit{password}, NIF e papel pretendido). \newline
+2. O sistema valida a complexidade da \textit{password} e o formato do email. \newline
+3. O sistema verifica se o email ou NIF já existem na base de dados. \newline
+4. O sistema cifra a \textit{password} utilizando \textit{bcrypt}. \newline
+5. O sistema regista o pedido com o estado \textit{Pendente}. \newline
+6. O sistema notifica a Secretaria sobre o novo pedido. \newline
+7. O sistema apresenta uma mensagem de sucesso e instruções para aguardar aprovação. \\ \hline
+\textbf{Fluxo de exceção 1} &
+[utilizador já existente] (passo 3) \newline
+3.1. O sistema informa que o email ou NIF já estão associados a uma conta. \newline
+3.2. O sistema sugere a recuperação de \textit{password} ou contacto com a Secretaria. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Iniciar Sessão} (Tabela~\ref{tab:uc_iniciar_sessao}) é o mecanismo de autenticação do sistema, conforme o \textbf{RF-01}, \textbf{RNF-01} e \textbf{RNF-03}. Após autenticação, o utilizador recebe um token JWT para aceder à plataforma.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Iniciar Sessão''.}
+\label{tab:uc_iniciar_sessao} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Iniciar Sessão \\ \hline
+\textbf{Requisitos associados} & RF-01, RNF-01, RNF-03 \\ \hline
+\textbf{Ator} & Atleta / Treinador / Staff / Gerência / Encarregado \\ \hline
+\textbf{Descrição} & O utilizador autentica-se no sistema para aceder às funcionalidades do seu perfil. \\ \hline
+\textbf{Pré-condição} & O utilizador possui uma conta ativa e aprovada. \\ \hline
+\textbf{Pós-condição} & O utilizador obtém um token de acesso (JWT) e é redirecionado para o seu \textit{dashboard}. \\ \hline
+\textbf{Fluxo normal} &
+1. O utilizador insere as suas credenciais (email e \textit{password}). \newline
+2. O sistema verifica a existência da conta e valida a \textit{password}. \newline
+3. O sistema verifica se o estado da conta é \textit{Ativo}. \newline
+4. O sistema gera um token JWT e regista o \textit{log} de acesso. \newline
+5. O sistema redireciona o utilizador para a página inicial correspondente ao seu papel. \\ \hline
+\textbf{Fluxo de exceção 1} &
+[credenciais inválidas] (passo 2) \newline
+2.1. O sistema informa que o email ou a \textit{password} estão incorretos. \newline
+2.2. O sistema bloqueia temporariamente após 5 tentativas falhadas (\textbf{RNF-01}). \\ \hline
+\textbf{Fluxo de exceção 2} &
+[conta pendente ou suspensa] (passo 3) \newline
+3.1. O sistema informa que a conta ainda não foi aprovada ou se encontra suspensa. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Aprovar Registo} (Tabela~\ref{tab:uc_aprovar_registo}) é exclusivo da Secretaria e decorre do \textbf{RF-01}. Nenhum utilizador acede à plataforma sem validação prévia, conforme o \textbf{RNF-03}.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Aprovar Registo''.}
+\label{tab:uc_aprovar_registo} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Aprovar Registo \\ \hline
+\textbf{Requisitos associados} & RF-01, RNF-03, RNF-13 \\ \hline
+\textbf{Ator} & Funcionário da Secretaria \\ \hline
+\textbf{Descrição} & O funcionário valida a legitimidade de um novo pedido de registo e ativa a conta. \\ \hline
+\textbf{Pré-condição} & O funcionário está autenticado e existem pedidos no estado \textit{Pendente}. \\ \hline
+\textbf{Pós-condição} & O utilizador é notificado da decisão e a conta transita de estado. \\ \hline
+\textbf{Fluxo normal} &
+1. O funcionário acede à lista de registos pendentes. \newline
+2. O funcionário analisa os dados e documentos anexados. \newline
+3. O funcionário aprova o pedido. \newline
+4. O sistema altera o estado para \textit{Ativo} e atribui as permissões RBAC. \newline
+5. O sistema dispara um email de confirmação para o utilizador. \\ \hline
+\textbf{Fluxo alternativo 1} &
+[rejeição por dados inválidos] (passo 3) \newline
+3.1. O funcionário rejeita o pedido e indica o motivo (ex: NIF inválido). \newline
+3.2. O sistema altera o estado para \textit{Rejeitado} e notifica o utilizador. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% --- GESTÃO DESPORTIVA ---
+\subsubsection{Subsistema de Gestão Desportiva}
+
+
+O caso de uso \textit{Vincular Encarregado a Atleta} (Tabela~\ref{tab:uc_vincular_ee}) corresponde ao \textbf{RF-02}. O encarregado fica responsável pelo atleta menor e a vinculação é validada pela Secretaria.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Vincular Encarregado a Atleta''.}
+\label{tab:uc_vincular_ee} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Vincular Encarregado a Atleta \\ \hline
+\textbf{Requisitos associados} & RF-02, RNF-13 \\ \hline
+\textbf{Ator} & Encarregado de Educação / Secretaria \\ \hline
+\textbf{Descrição} & O encarregado solicita a associação formal ao perfil de um atleta menor. \\ \hline
+\textbf{Pré-condição} & Ambos os perfis (EE e Atleta) existem na base de dados com estado \textit{Ativo}. \\ \hline
+\textbf{Pós-condição} & O EE herda permissões de visualização dos dados do atleta e a conta corrente fica consolidada. \\ \hline
+\textbf{Fluxo normal} &
+1. O EE acede à área de gestão de dependentes e insere o NIF ou código único do atleta. \newline
+2. O sistema verifica a existência do atleta e a ausência de vínculo duplicado. \newline
+3. O sistema cria um pedido de vinculação no estado \textit{Pendente}. \newline
+4. A Secretaria revê e aprova o pedido. \newline
+5. O sistema ativa o vínculo e concede ao EE acesso à conta corrente e dados desportivos do atleta. \\ \hline
+\textbf{Fluxo de exceção 1} &
+[atleta não encontrado ou já vinculado] (passo 2) \newline
+2.1. O sistema informa que o código é inválido ou a vinculação já existe. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Enviar Mensagem Interna} (Tabela~\ref{tab:uc_chat}) implementa o \textbf{RF-03}. Substitui os canais informais por um sistema de mensagens com controlo de acessos. Apenas é possível contactar pessoas dentro da hierarquia permitida.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Enviar Mensagem Interna''.}
+\label{tab:uc_chat} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Enviar Mensagem Interna \\ \hline
+\textbf{Requisitos associados} & RF-03, RNF-01, RNF-13 \\ \hline
+\textbf{Ator} & Qualquer utilizador autenticado \\ \hline
+\textbf{Descrição} & O utilizador envia uma mensagem a um contacto ou grupo permitido pela hierarquia do sistema. \\ \hline
+\textbf{Pré-condição} & O utilizador está autenticado e o destinatário pertence à lista de contactos autorizados. \\ \hline
+\textbf{Pós-condição} & A mensagem é persistida na base de dados e o destinatário recebe uma notificação \textit{push}. \\ \hline
+\textbf{Fluxo normal} &
+1. O utilizador seleciona um contacto da lista (filtrada por equipa e papel). \newline
+2. O utilizador redige a mensagem e, opcionalmente, anexa um ficheiro (PDF/imagem, máx. 5 MB). \newline
+3. O sistema valida o tipo e tamanho do anexo. \newline
+4. O sistema armazena a mensagem com registo de auditoria (\textbf{RNF-13}). \newline
+5. O sistema dispara uma notificação \textit{push} para o destinatário. \\ \hline
+\textbf{Fluxo de exceção 1} &
+[destinatário fora do âmbito permitido] (passo 1) \newline
+1.1. O sistema não apresenta o destinatário na lista de contactos autorizados. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Configurar Preferências de Notificação} (Tabela~\ref{tab:uc_config_notif}) corresponde ao \textbf{RF-04}. Permite que cada utilizador escolha os canais e os tipos de eventos para os quais quer ser notificado.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Configurar Preferências de Notificação''.}
+\label{tab:uc_config_notif} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Configurar Preferências de Notificação \\ \hline
+\textbf{Requisitos associados} & RF-04, RNF-05 \\ \hline
+\textbf{Ator} & Qualquer utilizador autenticado \\ \hline
+\textbf{Descrição} & O utilizador define quais os eventos que deseja receber e por que canal (email, SMS ou notificação \textit{in-app}). \\ \hline
+\textbf{Pré-condição} & O utilizador está autenticado e tem email e/ou telefone registado no perfil. \\ \hline
+\textbf{Pós-condição} & As preferências são persistidas e o motor de notificações respeita-as nos envios futuros. \\ \hline
+\textbf{Fluxo normal} &
+1. O utilizador acede à secção ``Notificações'' do seu perfil. \newline
+2. O sistema apresenta a lista de tipos de evento (convocatórias, quotas, atestados, etc.) e os canais disponíveis. \newline
+3. O utilizador ativa ou desativa combinações evento/canal. \newline
+4. O sistema persiste as preferências na base de dados. \\ \hline
+\textbf{Fluxo alternativo 1} &
+[canal sem dados de contacto associados] (passo 3) \newline
+3.1. O sistema alerta que o canal SMS não está disponível por falta de número de telemóvel no perfil. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Criar Convocatória} (Tabela~\ref{tab:uc_criar_convocatoria}) corresponde ao \textbf{RF-08}. O treinador seleciona atletas por disponibilidade, estado clínico e situação de quotas. O resultado é um registo em estado \textit{Rascunho}, que pode ser editado antes de ser publicado.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Criar Convocatória''.}
+\label{tab:uc_criar_convocatoria} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Criar Convocatória \\ \hline
+\textbf{Requisitos associados} & RF-08 \\ \hline
+\textbf{Ator} & Treinador \\ \hline
+\textbf{Descrição} & O treinador estrutura a lista de atletas para um jogo ou evento específico. \\ \hline
+\textbf{Pré-condição} & O treinador está autenticado e associado a uma equipa com plantel definido. \\ \hline
+\textbf{Pós-condição} & É gerada uma convocatória em estado \textit{Rascunho} na base de dados. \\ \hline
+\textbf{Fluxo normal} &
+1. O treinador seleciona a equipa e o evento futuro. \newline
+2. O sistema apresenta a lista de atletas disponíveis (filtrando lesionados ou suspensos). \newline
+3. O treinador define a data, hora de concentração e local do evento. \newline
+4. O treinador seleciona os atletas titulares e suplentes. \newline
+5. O sistema guarda a convocatória no estado \textit{Rascunho}. \\ \hline
+\textbf{Fluxo de exceção 1} &
+[conflito de horário do atleta] (passo 4) \newline
+4.1. O sistema deteta que um atleta já tem outra convocatória no mesmo horário. \newline
+4.2. O sistema emite um alerta e solicita a substituição ou confirmação. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Publicar Convocatória} (Tabela~\ref{tab:uc_publicar_convocatoria}) corresponde ao \textbf{RF-08} e \textbf{RF-04}. Após publicação, a convocatória transita para \textit{Publicada} e são enviados alertas a todos os convocados e encarregados.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Publicar Convocatória''.}
+\label{tab:uc_publicar_convocatoria} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Publicar Convocatória \\ \hline
+\textbf{Requisitos associados} & RF-08, RF-04 \\ \hline
+\textbf{Ator} & Treinador \\ \hline
+\textbf{Descrição} & O treinador oficializa a convocatória, disparando as notificações para os convocados. \\ \hline
+\textbf{Pré-condição} & Existe uma convocatória em estado \textit{Rascunho}. \\ \hline
+\textbf{Pós-condição} & A convocatória passa ao estado \textit{Publicada} e as notificações são enfileiradas. \\ \hline
+\textbf{Fluxo normal} &
+1. O treinador seleciona uma convocatória em rascunho. \newline
+2. O sistema realiza uma verificação final de aptidão (atestados e quotas em dia). \newline
+3. O treinador confirma a publicação. \newline
+4. O sistema altera o estado para \textit{Publicada}. \newline
+5. O sistema dispara notificações (\textit{push}, SMS ou email) para os atletas e encarregados. \\ \hline
+\textbf{Fluxo de exceção 1} &
+[atletas inaptos detetados] (passo 2) \newline
+2.1. O sistema avisa que existem atletas com atestado caducado ou quotas em atraso. \newline
+2.2. O treinador decide se mantém a convocação ou substitui os atletas. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% --- GESTÃO CLÍNICA ---
+\subsubsection{Subsistema de Gestão Clínica}
+
+
+O caso de uso \textit{Gerir Modalidades e Épocas} (Tabela~\ref{tab:uc_gerir_epoca}) é exclusivo da Gerência e corresponde ao \textbf{RF-05}. Inicia formalmente cada nova época e gera as quotas para todos os atletas inscritos.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Gerir Modalidades e Épocas''.}
+\label{tab:uc_gerir_epoca} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Gerir Modalidades e Épocas \\ \hline
+\textbf{Requisitos associados} & RF-05, RF-17 \\ \hline
+\textbf{Ator} & Gerência \\ \hline
+\textbf{Descrição} & A Gerência cria, edita ou fecha épocas desportivas e gere as modalidades disponíveis no clube. \\ \hline
+\textbf{Pré-condição} & O utilizador está autenticado com papel de Gerência. \\ \hline
+\textbf{Pós-condição} & A nova época fica ativa, os atletas são alocados aos escalões e as quotas da época são geradas automaticamente. \\ \hline
+\textbf{Fluxo normal} &
+1. A Gerência acede ao módulo de gestão de épocas e define o nome, data de início e fim. \newline
+2. O sistema verifica que não existe uma época ativa em curso. \newline
+3. A Gerência confirma a abertura da época. \newline
+4. O sistema recalcula os escalões etários de todos os atletas ativos. \newline
+5. O sistema gera automaticamente o plano de quotas para todos os atletas da nova época (\textbf{RF-17}). \\ \hline
+\textbf{Fluxo de exceção 1} &
+[época já ativa] (passo 2) \newline
+2.1. O sistema informa que existe uma época ativa e exige o seu fecho antes de criar uma nova. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Agendar Sessão de Treino} (Tabela~\ref{tab:uc_agendar_treino}) corresponde ao \textbf{RF-06}. Reserva automaticamente o espaço físico e atualiza o calendário dos atletas.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Agendar Sessão de Treino''.}
+\label{tab:uc_agendar_treino} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Agendar Sessão de Treino \\ \hline
+\textbf{Requisitos associados} & RF-06, RF-20 \\ \hline
+\textbf{Ator} & Treinador / Gerência \\ \hline
+\textbf{Descrição} & O treinador cria uma sessão de treino no calendário, reservando automaticamente a instalação correspondente. \\ \hline
+\textbf{Pré-condição} & O treinador está autenticado e associado à equipa; a instalação existe na base de dados. \\ \hline
+\textbf{Pós-condição} & A sessão é criada e o slot da instalação fica bloqueado; o calendário dos atletas é atualizado. \\ \hline
+\textbf{Fluxo normal} &
+1. O treinador seleciona a equipa e o espaço físico pretendido. \newline
+2. O treinador define a data, hora de início e duração. \newline
+3. O sistema verifica a ausência de conflitos de horário no espaço (\textbf{RF-20}). \newline
+4. O sistema cria a sessão e reserva automaticamente o espaço. \newline
+5. O sistema notifica os atletas da equipa sobre o novo treino (\textbf{RF-04}). \\ \hline
+\textbf{Fluxo de exceção 1} &
+[conflito de horário] (passo 3) \newline
+3.1. O sistema informa que o espaço está ocupado e sugere alternativas. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Registar Presenças em Treino} (Tabela~\ref{tab:uc_registar_presencas}) corresponde ao \textbf{RF-07}. O treinador regista a chamada digitalmente, substituindo o papel e atualizando as estatísticas de assiduidade.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Registar Presenças em Treino''.}
+\label{tab:uc_registar_presencas} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Registar Presenças em Treino \\ \hline
+\textbf{Requisitos associados} & RF-07 \\ \hline
+\textbf{Ator} & Treinador \\ \hline
+\textbf{Descrição} & O treinador assinala a presença ou falta de cada atleta numa sessão de treino concluída. \\ \hline
+\textbf{Pré-condição} & Sessão de treino criada no calendário; treinador autenticado e associado à equipa. \\ \hline
+\textbf{Pós-condição} & O registo de assiduidade é persistido; as estatísticas individuais de cada atleta são atualizadas. \\ \hline
+\textbf{Fluxo normal} &
+1. O treinador acede à sessão de treino e abre a lista de chamada gerada automaticamente. \newline
+2. Para cada atleta, o treinador seleciona: \textit{Presente}, \textit{Falta Justificada} ou \textit{Falta Injustificada}. \newline
+3. Para faltas justificadas, o treinador regista o motivo. \newline
+4. O treinador submete o registo. \newline
+5. O sistema persiste os dados e atualiza as estatísticas de assiduidade em \textit{background}. \\ \hline
+\textbf{Fluxo alternativo 1} &
+[atleta lesionado] (passo 2) \newline
+2.1. O sistema destaca automaticamente os atletas com estado \textit{Lesionado}; o treinador regista como \textit{Ausente por Lesão}. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Partilhar Plano de Treino} (Tabela~\ref{tab:uc_plano_treino}) corresponde ao \textbf{RF-09}. Centraliza os conteúdos técnicos numa plataforma controlada. A informação fica isolada entre equipas.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Partilhar Plano de Treino''.}
+\label{tab:uc_plano_treino} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Partilhar Plano de Treino \\ \hline
+\textbf{Requisitos associados} & RF-09, RNF-02 \\ \hline
+\textbf{Ator} & Treinador \\ \hline
+\textbf{Descrição} & O treinador carrega um plano de treino ou recurso tático e associa-o à sessão ou época correspondente. \\ \hline
+\textbf{Pré-condição} & O treinador está autenticado e associado à equipa; o módulo de armazenamento tem espaço disponível. \\ \hline
+\textbf{Pós-condição} & O ficheiro é armazenado e os atletas da equipa têm acesso imediato em modo leitura. \\ \hline
+\textbf{Fluxo normal} &
+1. O treinador seleciona a sessão de treino ou época e carrega o ficheiro (PDF, MP4 ou imagem). \newline
+2. O sistema valida o formato e tamanho máximo (50 MB). \newline
+3. O sistema armazena o ficheiro com isolamento por equipa (\textbf{RNF-02}). \newline
+4. O sistema notifica os atletas da equipa sobre o novo conteúdo disponível. \\ \hline
+\textbf{Fluxo de exceção 1} &
+[formato ou tamanho inválido] (passo 2) \newline
+2.1. O sistema rejeita o ficheiro e informa o treinador do formato ou tamanho permitido. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Registar Ocorrência de Jogo} (Tabela~\ref{tab:uc_ocorrencia_jogo}) corresponde ao \textbf{RF-10}. O sistema distingue eventos desportivos (golos, cartões) de ocorrências disciplinares, que podem gerar suspensões e bloquear o atleta em convocatórias futuras.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Registar Ocorrência de Jogo''.}
+\label{tab:uc_ocorrencia_jogo} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Registar Ocorrência de Jogo \\ \hline
+\textbf{Requisitos associados} & RF-10, RF-08 \\ \hline
+\textbf{Ator} & Treinador / Gerência \\ \hline
+\textbf{Descrição} & O treinador regista eventos ocorridos durante um jogo (golos, cartões, substituições, ocorrências disciplinares). \\ \hline
+\textbf{Pré-condição} & O utilizador está autenticado; o jogo está criado no calendário. \\ \hline
+\textbf{Pós-condições} & As estatísticas do atleta são atualizadas; suspensões disciplinares ativas bloqueiam convocatórias. \\ \hline
+\textbf{Fluxo normal} &
+1. O treinador seleciona o jogo e o tipo de ocorrência (Evento de Jogo ou Ocorrência Disciplinar). \newline
+2. O treinador seleciona o atleta visado e preenche os detalhes (minuto, tipo de cartão, etc.). \newline
+3. O sistema regista a ocorrência no histórico do atleta. \newline
+4. Se for cartão vermelho ou sanção federativa, o sistema aplica automaticamente a suspensão correspondente. \newline
+5. O sistema bloqueia o atleta suspenso em novas convocatórias até ao término da suspensão. \\ \hline
+\textbf{Fluxo alternativo 1} &
+[ocorrência disciplinar grave] (passo 4) \newline
+4.1. O sistema permite anexar o relatório oficial em PDF e notifica a Gerência. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Consultar Dashboard de Desempenho} (Tabela~\ref{tab:uc_dashboard_desempenho}) corresponde ao \textbf{RF-15}. Mostra dados de assiduidade, ocorrências e métricas físicas adaptados ao perfil do utilizador, com isolamento de informação entre atletas.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Consultar Dashboard de Desempenho''.}
+\label{tab:uc_dashboard_desempenho} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Consultar Dashboard de Desempenho \\ \hline
+\textbf{Requisitos associados} & RF-15 \\ \hline
+\textbf{Ator} & Atleta / Encarregado / Treinador / Gerência \\ \hline
+\textbf{Descrição} & O utilizador acede a uma visão gráfica personalizada do historial de desempenho desportivo. \\ \hline
+\textbf{Pré-condição} & O utilizador está autenticado e existem dados acumulados no sistema. \\ \hline
+\textbf{Pós-condição} & O sistema apresenta gráficos e tabelas em modo \textit{read-only}, ajustados ao nível de acesso. \\ \hline
+\textbf{Fluxo normal} &
+1. O utilizador acede ao painel de desempenho. \newline
+2. O sistema agrega dados de assiduidade, ocorrências, lesões e métricas físicas. \newline
+3. O utilizador aplica filtros temporais (época atual, últimos 30 dias, época anterior). \newline
+4. O sistema renderiza os gráficos e tabelas adaptados ao papel do utilizador. \newline
+5. A Gerência pode exportar o relatório para PDF ou Excel. \\ \hline
+\textbf{Fluxo alternativo 1} &
+[dados insuficientes] (passo 2) \newline
+2.1. O sistema informa que não há dados suficientes para o período selecionado e apresenta o histórico disponível. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Registar Avaliação de Atleta} (Tabela~\ref{tab:uc_avaliar_atleta}) corresponde ao \textbf{RF-16}. Permite à equipa técnica registar avaliações qualitativas e objetivos de progressão, visíveis pelo atleta e pelo encarregado em modo de leitura.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Registar Avaliação de Atleta''.}
+\label{tab:uc_avaliar_atleta} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Registar Avaliação de Atleta \\ \hline
+\textbf{Requisitos associados} & RF-16 \\ \hline
+\textbf{Ator} & Treinador \\ \hline
+\textbf{Descrição} & O treinador regista uma avaliação qualitativa e/ou define objetivos individuais de progressão para um atleta. \\ \hline
+\textbf{Pré-condição} & O treinador está autenticado e o atleta a avaliar pertence ao plantel. \\ \hline
+\textbf{Pós-condição} & A avaliação é persistida; o atleta e o EE recebem uma notificação e têm acesso em leitura. \\ \hline
+\textbf{Fluxo normal} &
+1. O treinador seleciona o atleta e o contexto (treino ou jogo específico). \newline
+2. O treinador preenche a avaliação com pontuações (escala 1--5) e texto livre. \newline
+3. O treinador define opcionalmente um objetivo com prazo e estado inicial \textit{Em Curso}. \newline
+4. O sistema persiste a avaliação e notifica o atleta e o EE. \\ \hline
+\textbf{Fluxo de exceção 1} &
+[tentativa de ver avaliação de outro atleta] (passo 1 — pelo Atleta) \newline
+1.1. O sistema bloqueia o acesso e retorna HTTP 403 Forbidden. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Submeter Atestado Médico} (Tabela~\ref{tab:uc_submeter_atestado}) corresponde ao \textbf{RF-11}. O atleta ou encarregado submete o documento digitalmente e este fica em estado \textit{Pendente de Validação} até a Secretaria o rever.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Submeter Atestado Médico''.}
+\label{tab:uc_submeter_atestado} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Submeter Atestado Médico \\ \hline
+\textbf{Requisitos associados} & RF-11 \\ \hline
+\textbf{Ator} & Atleta / Encarregado de Educação \\ \hline
+\textbf{Descrição} & O utilizador carrega o Exame Médico Desportivo (EMD) para validação administrativa. \\ \hline
+\textbf{Pré-condição} & O utilizador está autenticado e o ficheiro está em formato digital (PDF/JPG). \\ \hline
+\textbf{Pós-condição} & O documento é armazenado e o estado clínico do atleta transita para \textit{Pendente de Validação}. \\ \hline
+\textbf{Fluxo normal} &
+1. O utilizador acede à área de documentos de saúde. \newline
+2. O utilizador seleciona o ficheiro e insere a data de validade. \newline
+3. O sistema valida a integridade do ficheiro e o tamanho máximo. \newline
+4. O sistema encripta o documento (\textbf{RNF-01}) e guarda-o na base de dados. \newline
+5. O sistema notifica a Secretaria para análise. \\ \hline
+\textbf{Fluxo de exceção 1} &
+[data de validade expirada] (passo 2) \newline
+2.1. O utilizador insere uma data de validade já passada. \newline
+2.2. O sistema bloqueia a submissão e solicita um documento atualizado. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Validar Atestado Médico} (Tabela~\ref{tab:uc_validar_atestado}) corresponde ao \textbf{RF-11}. A validação tem de ser feita manualmente pela Secretaria. Quando aprovado, o atleta transita para \textit{Apto} e o sistema agenda alertas de caducidade.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Validar Atestado Médico''.}
+\label{tab:uc_validar_atestado} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Validar Atestado Médico \\ \hline
+\textbf{Requisitos associados} & RF-11, RNF-01 \\ \hline
+\textbf{Ator} & Funcionário da Secretaria \\ \hline
+\textbf{Descrição} & O funcionário analisa o documento submetido e confirma a sua validade legal. \\ \hline
+\textbf{Pré-condição} & Existem documentos no estado \textit{Pendente de Validação}. \\ \hline
+\textbf{Pós-condição} & O atleta transita para o estado \textit{Apto} ou \textit{Inapto} e é notificado. \\ \hline
+\textbf{Fluxo normal} &
+1. O funcionário abre a lista de documentos pendentes. \newline
+2. O sistema exibe o documento encriptado e os metadados. \newline
+3. O funcionário confronta a imagem com a data inserida. \newline
+4. O funcionário aprova o documento. \newline
+5. O sistema atualiza o estado para \textit{Válido} e agenda o alerta de caducidade (--30 dias). \newline
+6. O sistema atualiza a situação do atleta para \textit{Apto}. \\ \hline
+\textbf{Fluxo alternativo 1} &
+[rejeição de documento] (passo 4) \newline
+4.1. O funcionário deteta rasuras ou dados ilegíveis e rejeita o atestado. \newline
+4.2. O sistema notifica o atleta para submeter nova cópia. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% --- GESTÃO FINANCEIRA ---
+\subsubsection{Subsistema de Gestão Financeira}
+
+
+O caso de uso \textit{Reportar Lesão} (Tabela~\ref{tab:uc_reportar_lesao}) corresponde ao \textbf{RF-12}. Permite registar lesões de forma centralizada e impede que atletas lesionados sejam incluídos em convocatórias.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Reportar Lesão''.}
+\label{tab:uc_reportar_lesao} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Reportar Lesão \\ \hline
+\textbf{Requisitos associados} & RF-12, RF-04 \\ \hline
+\textbf{Ator} & Atleta / Encarregado de Educação \\ \hline
+\textbf{Descrição} & O atleta ou encarregado reporta uma lesão ou queixa física, tornando-a visível ao treinador e ao departamento médico. \\ \hline
+\textbf{Pré-condição} & O utilizador está autenticado; o atleta tem perfil ativo integrado no plantel. \\ \hline
+\textbf{Pós-condição} & O estado do atleta transita para \textit{Lesionado}; o treinador é notificado e o atleta fica bloqueado em convocatórias. \\ \hline
+\textbf{Fluxo normal} &
+1. O utilizador acede à área de saúde e seleciona ``Reportar Queixa ou Lesão''. \newline
+2. O utilizador preenche o formulário: zona corporal afetada, nível de dor (1--10), descrição, data de ocorrência. \newline
+3. O sistema cria o registo de lesão com estado \textit{Reportada}. \newline
+4. O sistema notifica o treinador e o departamento médico. \newline
+5. O sistema destaca o atleta nas listas de plantel e bloqueia a sua convocação. \\ \hline
+\textbf{Fluxo alternativo 1} &
+[alta clínica] (pós-condição) \newline
+A.1. O departamento médico regista a alta, transitando a lesão para \textit{Resolvida}. \newline
+A.2. O sistema liberta o atleta para convocatórias. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Registar Dados Biométricos} (Tabela~\ref{tab:uc_biometria}) corresponde ao \textbf{RF-13}. O registo periódico de indicadores físicos cria um historial que apoia as decisões de treino e recuperação. O acesso é controlado em conformidade com o RGPD (\textbf{RNF-01}).
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Registar Dados Biométricos''.}
+\label{tab:uc_biometria} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Registar Dados Biométricos \\ \hline
+\textbf{Requisitos associados} & RF-13, RNF-01 \\ \hline
+\textbf{Ator} & Treinador / Departamento Médico / Atleta \\ \hline
+\textbf{Descrição} & O utilizador regista ou atualiza os dados antropométricos e biométricos do atleta (peso, altura, IMC, frequência cardíaca). \\ \hline
+\textbf{Pré-condição} & O utilizador está autenticado; o atleta tem perfil ativo. \\ \hline
+\textbf{Pós-condição} & Os dados são armazenados com data de registo; as métricas derivadas (IMC) são recalculadas e os gráficos atualizados. \\ \hline
+\textbf{Fluxo normal} &
+1. O utilizador seleciona o atleta e acede ao módulo de métricas físicas. \newline
+2. O utilizador insere os valores medidos. \newline
+3. O sistema valida os valores (rejeita valores negativos ou implausíveis). \newline
+4. O sistema calcula métricas derivadas (ex: IMC = peso / altura²). \newline
+5. O sistema persiste os dados e atualiza os gráficos de evolução temporal. \\ \hline
+\textbf{Fluxo de exceção 1} &
+[valor implausível] (passo 3) \newline
+3.1. O sistema rejeita o valor e assinala o campo com a faixa de valores aceitáveis. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Submeter Documentação Federativa} (Tabela~\ref{tab:uc_doc_federativa}) corresponde ao \textbf{RF-14}. Centraliza os documentos de identificação necessários para a filiação federativa e o seguro desportivo. O acesso é restrito ao remetente e à Secretaria/Gerência.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Submeter Documentação Federativa''.}
+\label{tab:uc_doc_federativa} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Submeter Documentação Federativa \\ \hline
+\textbf{Requisitos associados} & RF-14, RNF-01 \\ \hline
+\textbf{Ator} & Atleta / Encarregado de Educação \\ \hline
+\textbf{Descrição} & O utilizador carrega cópias digitais de documentos de identificação oficial para os processos federativos. \\ \hline
+\textbf{Pré-condição} & O utilizador está autenticado e o atleta está associado a uma modalidade com inscrição federativa. \\ \hline
+\textbf{Pós-condição} & Os documentos são armazenados de forma encriptada (RGPD) e a Secretaria é notificada para validação. \\ \hline
+\textbf{Fluxo normal} &
+1. O utilizador acede à área de documentos e seleciona o tipo (Cartão de Cidadão, Passaporte, fotografia). \newline
+2. O utilizador carrega o ficheiro (PDF, JPG, PNG, máx. 5 MB). \newline
+3. O sistema valida o formato e encripta o documento (\textbf{RNF-01}). \newline
+4. O sistema cria o pedido com estado \textit{A aguardar validação} e notifica a Secretaria. \\ \hline
+\textbf{Fluxo de exceção 1} &
+[formato ou tamanho inválido] (passo 2) \newline
+2.1. O sistema rejeita o ficheiro e apresenta as restrições de formato e tamanho. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Efetuar Pagamento} (Tabela~\ref{tab:uc_efetuar_pagamento}) corresponde ao \textbf{RF-17}, \textbf{RNF-10} e \textbf{RNF-11}. Permite pagar mensalidades digitalmente com emissão automática de fatura. A confirmação é recebida de forma assíncrona via \textit{webhook} do gateway externo.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Efetuar Pagamento''.}
+\label{tab:uc_efetuar_pagamento} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Efetuar Pagamento \\ \hline
+\textbf{Requisitos associados} & RF-17, RNF-10, RNF-11 \\ \hline
+\textbf{Ator} & Encarregado de Educação / Atleta \\ \hline
+\textbf{Descrição} & O utilizador liquida uma ou mais quotas através de métodos digitais integrados. \\ \hline
+\textbf{Pré-condição} & Existem quotas no estado \textit{Pendente} ou \textit{Em Atraso}. \\ \hline
+\textbf{Pós-condição} & A quota transita para o estado \textit{Paga} e a fatura é emitida automaticamente. \\ \hline
+\textbf{Fluxo normal} &
+1. O utilizador seleciona as mensalidades a liquidar. \newline
+2. O sistema gera um pedido de pagamento ao \textit{gateway} externo (Ifthenpay ou Easypay). \newline
+3. O utilizador escolhe o método (MB Way, Referência MB ou Cartão). \newline
+4. O sistema recebe a confirmação de sucesso via \textit{webhook}. \newline
+5. O sistema altera o estado da quota e gera o documento PDF da fatura/recibo. \\ \hline
+\textbf{Fluxo de exceção 1} &
+[cancelamento ou falha no \textit{gateway}] (passo 4) \newline
+4.1. O utilizador cancela a operação ou o \textit{gateway} devolve erro. \newline
+4.2. O sistema mantém a quota como pendente e notifica o utilizador. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Gerar Relatório SAF-T} (Tabela~\ref{tab:uc_gerar_saft}) corresponde ao \textbf{RF-19} e \textbf{RNF-11}. Exporta as receitas do clube em formato XML conforme o esquema SAF-T(PT) \cite{saft2024}, cumprindo as obrigações fiscais.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Gerar Relatório SAF-T''.}
+\label{tab:uc_gerar_saft} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Gerar Relatório SAF-T \\ \hline
+\textbf{Requisitos associados} & RF-19, RNF-11 \\ \hline
+\textbf{Ator} & Gerência \\ \hline
+\textbf{Descrição} & O sistema extrai as transações do período e gera o ficheiro XML legal. \\ \hline
+\textbf{Pré-condição} & Existem faturas emitidas no período selecionado. \\ \hline
+\textbf{Pós-condição} & É gerado um ficheiro XML em conformidade com as normas da Autoridade Tributária. \\ \hline
+\textbf{Fluxo normal} &
+1. O administrador define o intervalo de datas (mês/ano). \newline
+2. O sistema recolhe todos os documentos de venda e recibos assinados digitalmente. \newline
+3. O sistema valida a estrutura XML e o número de série das faturas. \newline
+4. O sistema gera o ficheiro e disponibiliza o \textit{link} de \textit{download} seguro. \\ \hline
+\textbf{Fluxo de exceção 1} &
+[assinatura digital inválida] (passo 3) \newline
+3.1. O sistema deteta uma fatura não devidamente selada. \newline
+3.2. O sistema interrompe a geração e notifica o suporte técnico. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% --- GESTÃO DE INSTALAÇÕES ---
+\subsubsection{Subsistema de Gestão de Instalações}
+
+
+O caso de uso \textit{Consultar Contabilidade Global} (Tabela~\ref{tab:uc_contabilidade}) corresponde ao \textbf{RF-18}. Disponibiliza à Gerência uma visão centralizada de todas as despesas e receitas. O acesso é restrito aos perfis de topo.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Consultar Contabilidade Global''.}
+\label{tab:uc_contabilidade} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Consultar Contabilidade Global \\ \hline
+\textbf{Requisitos associados} & RF-18, RNF-11 \\ \hline
+\textbf{Ator} & Gerência / Tesouraria \\ \hline
+\textbf{Descrição} & A Gerência acede ao painel financeiro centralizado com receitas, despesas e balanço por categoria. \\ \hline
+\textbf{Pré-condição} & O utilizador está autenticado com papel de Gerência ou Tesouraria; existem movimentos financeiros registados. \\ \hline
+\textbf{Pós-condição} & O sistema apresenta o painel financeiro com dados atualizados em tempo real. \\ \hline
+\textbf{Fluxo normal} &
+1. A Gerência acede ao módulo de contabilidade e seleciona o período de análise. \newline
+2. O sistema agrega receitas (quotas, patrocínios) e despesas (pessoal, fornecedores) por categoria. \newline
+3. O sistema renderiza gráficos comparativos (receitas vs.\ despesas) e tabelas detalhadas. \newline
+4. A Gerência pode registar novas faturas de fornecedores com data limite de pagamento. \newline
+5. A Gerência exporta o relatório financeiro em PDF ou Excel. \\ \hline
+\textbf{Fluxo de exceção 1} &
+[tentativa de acesso por utilizador sem permissão] \newline
+O sistema retorna HTTP 403 Forbidden sem expor os dados. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Consultar Calendário de Eventos} (Tabela~\ref{tab:uc_calendario}) agrega numa única vista os treinos (\textbf{RF-06}), convocatórias (\textbf{RF-08}) e reservas (\textbf{RF-20}). Cada papel vê apenas os eventos que lhe dizem respeito.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Consultar Calendário de Eventos''.}
+\label{tab:uc_calendario} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Consultar Calendário de Eventos \\ \hline
+\textbf{Requisitos associados} & RF-06, RF-08, RF-20 \\ \hline
+\textbf{Ator} & Qualquer utilizador autenticado \\ \hline
+\textbf{Descrição} & O utilizador consulta o calendário de eventos da época, filtrado de acordo com o seu papel e equipas associadas. \\ \hline
+\textbf{Pré-condição} & O utilizador está autenticado. \\ \hline
+\textbf{Pós-condição} & O calendário é apresentado em modo \textit{read-only} com os eventos relevantes para o utilizador. \\ \hline
+\textbf{Fluxo normal} &
+1. O utilizador acede ao calendário e seleciona a vista (mensal, semanal, diária). \newline
+2. O sistema filtra os eventos com base no papel do utilizador e equipas associadas. \newline
+3. O sistema renderiza os eventos com código de cores por tipo (treino, jogo, reserva). \newline
+4. O utilizador clica num evento para ver os detalhes (local, hora, convocados). \\ \hline
+\textbf{Fluxo alternativo 1} &
+[sem eventos no período] (passo 3) \newline
+3.1. O sistema apresenta o calendário vazio e sugere a navegação para períodos com eventos. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Gerar Relatório de Gestão} (Tabela~\ref{tab:uc_relatorio_gestao}) agrega dados do \textbf{RF-15} e do \textbf{RF-18} num documento exportável, para a Gerência apresentar a evolução do clube.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Gerar Relatório de Gestão''.}
+\label{tab:uc_relatorio_gestao} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Gerar Relatório de Gestão \\ \hline
+\textbf{Requisitos associados} & RF-15, RF-18 \\ \hline
+\textbf{Ator} & Gerência \\ \hline
+\textbf{Descrição} & A Gerência gera um relatório de síntese configurável que agrega dados desportivos, financeiros e clínicos para um período definido. \\ \hline
+\textbf{Pré-condição} & O utilizador está autenticado com papel de Gerência; existem dados suficientes no período selecionado. \\ \hline
+\textbf{Pós-condição} & O relatório é gerado em PDF e fica disponível para download. \\ \hline
+\textbf{Fluxo normal} &
+1. A Gerência seleciona os módulos a incluir (desportivo, financeiro, clínico) e o período. \newline
+2. O sistema agrega os dados dos módulos selecionados. \newline
+3. O sistema gera o documento PDF com cabeçalho institucional e tabelas de síntese. \newline
+4. O sistema disponibiliza o link de download seguro com tempo de expiração. \\ \hline
+\textbf{Fluxo de exceção 1} &
+[dados insuficientes para o período] (passo 2) \newline
+2.1. O sistema informa quais os módulos sem dados e prossegue com os restantes. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Consultar Logs de Auditoria} (Tabela~\ref{tab:uc_auditoria}) corresponde ao \textbf{RNF-13}. Regista de forma imutável todas as operações sensíveis do sistema. O acesso é exclusivo da Gerência.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Consultar Logs de Auditoria''.}
+\label{tab:uc_auditoria} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Consultar Logs de Auditoria \\ \hline
+\textbf{Requisitos associados} & RNF-13 \\ \hline
+\textbf{Ator} & Gerência \\ \hline
+\textbf{Descrição} & A Gerência consulta o registo de auditoria de operações sensíveis realizadas no sistema (autenticações, aprovações, alterações de dados clínicos, pagamentos). \\ \hline
+\textbf{Pré-condição} & O utilizador está autenticado com papel de Gerência. \\ \hline
+\textbf{Pós-condição} & O sistema apresenta os registos de auditoria em modo \textit{read-only}. Os logs são imutáveis. \\ \hline
+\textbf{Fluxo normal} &
+1. A Gerência acede ao módulo de auditoria e define filtros (utilizador, tipo de operação, intervalo de datas). \newline
+2. O sistema retorna a lista de eventos de auditoria correspondentes. \newline
+3. A Gerência pode exportar os logs em CSV para análise externa. \\ \hline
+\textbf{Fluxo de exceção 1} &
+[tentativa de modificação de log] \newline
+O sistema rejeita qualquer tentativa de escrita no registo de auditoria (imutabilidade garantida por design). \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+O caso de uso \textit{Solicitar Reserva de Instalação} (Tabela~\ref{tab:uc_solicitar_reserva}) corresponde ao \textbf{RF-20}. O sistema verifica conflitos de horário em tempo real e regista as reservas num calendário partilhado. Em caso de conflito, são apresentadas sugestões de horários alternativos.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Caso de uso ``Solicitar Reserva de Instalação''.}
+\label{tab:uc_solicitar_reserva} \\
+\endlastfoot
+
+\textbf{Caso de uso} & Solicitar Reserva de Instalação \\ \hline
+\textbf{Requisitos associados} & RF-20 \\ \hline
+\textbf{Ator} & Treinador / Gerência / \textit{Staff} \\ \hline
+\textbf{Descrição} & O utilizador agenda um espaço físico para um treino, jogo amigável ou manutenção. \\ \hline
+\textbf{Pré-condição} & O utilizador está autenticado e a instalação está disponível na base de dados. \\ \hline
+\textbf{Pós-condição} & O sistema reserva o recurso e bloqueia o horário para outros utilizadores. \\ \hline
+\textbf{Fluxo normal} &
+1. O utilizador acede ao mapa de ocupação e seleciona o recurso. \newline
+2. O utilizador define a janela temporal (início e fim). \newline
+3. O sistema verifica a ausência de conflitos com treinos regulares ou jogos oficiais. \newline
+4. O sistema regista a reserva com estado \textit{Confirmado}. \newline
+5. O sistema atualiza o calendário global em tempo real. \\ \hline
+\textbf{Fluxo de exceção 1} &
+[conflito de horários] (passo 3) \newline
+3.1. O sistema informa que o campo já está reservado por outra equipa. \newline
+3.2. O sistema sugere o campo mais próximo ou um horário livre adjacente. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+\subsection{Diagramas de Sequência}
+
+Foram também construídos \textbf{diagramas de sequência} para os cenários mais críticos, mostrando a ordem das mensagens entre o utilizador, o \textit{frontend}, a API REST, a base de dados e os componentes externos.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,keepaspectratio,height=0.85\textheight]{sequencia_login.png}
+    \caption{Diagrama de sequência relativo à autenticação e emissão de token JWT.}
+    \label{fig:seq_login}
+\end{figure}
+
+A Figura~\ref{fig:seq_login} mostra o fluxo de autenticação (\textbf{RF-01}, \textbf{RNF-01}, \textbf{RNF-03}). O utilizador submete as credenciais e o sistema valida a \textit{password} e o estado da conta. Após 5 tentativas falhadas, a conta é bloqueada por 15 minutos. Para contas válidas, é emitido um token JWT com expiração de 7 dias. O acesso é registado para auditoria (\textbf{RNF-13}).
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,keepaspectratio,height=0.85\textheight]{sequencia_registo_utilizador.png}
+    \caption{Diagrama de sequência relativo ao registo de utilizador.}
+    \label{fig:seq_registo_utilizador}
+\end{figure}
+
+
+A Figura~\ref{fig:seq_registo_utilizador} mostra o fluxo de registo. O utilizador submete o formulário e o sistema valida o email e a \textit{password}. Se o email já existir, retorna HTTP 409. Caso contrário, cria o utilizador com estado \texttt{PENDING} e notifica a Secretaria para aprovação.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,keepaspectratio,height=0.85\textheight]{sequencia_pagamento_quota.png}
+    \caption{Diagrama de sequência relativo ao pagamento eletrónico de quotas.}
+    \label{fig:seq_pagamento_quota}
+\end{figure}
+
+A Figura~\ref{fig:seq_pagamento_quota} mostra o fluxo de pagamento. O sistema aguarda a confirmação assíncrona do \textit{gateway}. Se a confirmação não chegar, executa \textit{polling} para verificar o estado. Uma vez confirmada, a quota fica como \texttt{PAGA}, a fatura é gerada e o atleta fica disponível para convocação.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,keepaspectratio,height=0.85\textheight]{sequencia_publicar_convocatoria.png}
+    \caption{Diagrama de sequência relativo à publicação de convocatórias.}
+    \label{fig:seq_publicar_convocatoria}
+\end{figure}
+
+A Figura~\ref{fig:seq_publicar_convocatoria} mostra a publicação de uma convocatória. O sistema verifica se todos os atletas estão aptos. Se alguma validação falhar, retorna HTTP 400. Se tudo estiver correto, a convocatória é publicada e as notificações são enviadas de forma assíncrona.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth,height=0.85\textheight,keepaspectratio]{sequencia_reserva.png}
+    \caption{Diagrama de sequência relativo à reserva de instalação.}
+    \label{fig:seq_reserva}
+\end{figure}
+
+A Figura~\ref{fig:seq_reserva} mostra o fluxo de reserva de instalação (\textbf{RF-20}). O sistema verifica conflitos de horário. Se existir sobreposição, retorna HTTP 409. Caso contrário, a reserva é inserida de forma transacional.
+
+\subsection{Diagramas de Atividade}
+
+Foram também construídos \textbf{diagramas de atividade} para as operações com fluxos de controlo mais complexos, de forma a facilitar a implementação.
+
+\subsubsection{Diagrama de atividade: Registo de utilizador}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth,height=0.85\textheight,keepaspectratio]{atividade_registo_utilizador.png}
+    \caption{Diagrama de atividade relativo ao registo de um utilizador.}
+    \label{fig:atividade_registo}
+\end{figure}
+
+Este diagrama mostra o processo de registo de um novo utilizador (\textbf{RF-01}). O sistema valida o email e cria o registo como \textit{Pendente}. A Secretaria é notificada para aprovar a conta e o utilizador recebe confirmação por email.
+
+\subsubsection{Diagrama de atividade: Processamento de pagamento}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.85\textheight,keepaspectratio]{atividade_pagamento_quota.png}
+    \caption{Diagrama de atividade relativo ao processamento de pagamento de quota.}
+    \label{fig:atividade_pagamento}
+\end{figure}
+
+Este diagrama descreve o fluxo de pagamento de quotas (\textbf{RF-17}). O encarregado seleciona o que quer pagar e o sistema verifica os dados. Se estiver tudo correto, o sistema liga-se ao \textit{Gateway} de Pagamentos externo de forma segura (\textbf{RNF-10}). Se o pagamento for aceite, o sistema marca a quota como \textit{Paga}, gera a fatura em PDF e envia-a por email. O atleta fica disponível para convocação.
+
+\subsubsection{Diagrama de atividade: Publicação de convocatória}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth,height=0.85\textheight,keepaspectratio]{atividade_publicar_convocatoria.png}
+    \caption{Diagrama de atividade relativo à publicação de uma convocatória.}
+    \label{fig:atividade_convocatoria}
+\end{figure}
+
+Este diagrama detalha o processo de publicar uma convocatória (\textbf{RF-08}). Quando o treinador clica em publicar, o sistema executa verificações automáticas: valida se os atletas têm as quotas pagas e o atestado médico válido. Se houver algum problema, o treinador é avisado para poder corrigir. Se estiver tudo correto, a convocatória fica oficial e o sistema envia notificações para todos os convocados (\textbf{RF-04}). Quando o evento termina, o sistema fecha a convocatória e guarda os dados para as estatísticas.
+
+\subsubsection{Diagrama de atividade: Submissão e Validação de Atestado}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth,height=0.85\textheight,keepaspectratio]{atividade_atestado.png}
+    \caption{Diagrama de atividade relativo à submissão e validação do Exame Médico Desportivo.}
+    \label{fig:atividade_atestado}
+\end{figure}
+
+Este diagrama mostra o processo de submissão e validação de atestado (\textbf{RF-11}). O sistema verifica o formato do ficheiro e notifica a Secretaria. Se aprovado, o atleta passa a \textit{Apto} e o sistema agenda alertas de caducidade.
+
+\subsubsection{Diagrama de atividade: Reserva de Instalação}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth,height=0.85\textheight,keepaspectratio]{atividade_reserva.png}
+    \caption{Diagrama de atividade relativo à reserva de uma instalação desportiva do clube.}
+    \label{fig:atividade_reserva}
+\end{figure}
+
+Este diagrama mostra o fluxo de reserva de instalação (\textbf{RF-20}). O sistema verifica conflitos de horário e sugere alternativas se necessário. Após confirmação, o slot fica bloqueado e é enviado um lembrete 24 horas antes. O cancelamento liberta o slot e notifica a equipa.
+
+% ============================================================
+% SECÇÃO 4.6 — DESIGN DE INTERFACES
+% ============================================================
+
+\section{Design de Interfaces}
+
+A interface do sistema CAP foi desenhada para ser simples e eficiente para os diferentes perfis de utilizadores. Como a aplicação pode ser usada em dispositivos móveis ou computadores, a prioridade foi garantir legibilidade e rapidez.
+
+\subsection{Identidade Visual e Princípios de Design}
+
+O design usa tons de azul e branco do clube. O \textit{frontend} é uma SPA com \textbf{React}, o que permite navegação sem recarregamentos. As prioridades foram: \textit{dashboards} dedicados a cada papel, indicadores visuais para estados críticos (atestado, quota, aptidão) e atenção especial aos ecrãs de registo, publicação de convocatória e pagamento.
+
+Os princípios fundamentais aplicados foram:
+\begin{itemize}
+    \item \textbf{Acessibilidade}: Contraste elevado de texto e elementos clicáveis dimensionados para uso tátil em dispositivos móveis.
+    \item \textbf{Foco na tarefa}: Os \textit{dashboards} apresentam apenas a informação relevante para o papel do utilizador.
+    \item \textbf{\textit{Feedback} imediato}: Uso de notificações visuais para confirmar ações como a submissão de um atestado ou a receção de um pagamento.
+    \item \textbf{Semáforo de estado}: Indicadores coloridos (verde/amarelo/vermelho) para a aptidão clínica e financeira de cada atleta.
+\end{itemize}
+
+\subsection{Esboços das Interfaces Principais}\label{sec:wireframes}
+
+Nesta secção apresentam-se os protótipos de baixa fidelidade dos ecrãs principais. Os esboços foram construídos com o subsistema \textit{Salt} do PlantUML.
+
+\subsubsection{Ecrã de Login e Registo (RF-01)}
+
+O ecrã de entrada foi desenhado para ser simples. O formulário de registo recolhe os dados base e permite escolher o perfil. Após o registo, o sistema informa que a conta fica em estado \textit{Pendente} até aprovação pela Secretaria.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth,height=0.85\textheight,keepaspectratio]{mockup_login.png}
+    \caption{Esboço do ecrã de login e registo do sistema CAP.}
+    \label{fig:mockup_login}
+\end{figure}
+
+Este ecrã interage diretamente com o \textit{endpoint} \texttt{POST /api/users/register} detalhado na especificação de API.
+
+\subsubsection{Dashboard do Treinador (RF-08)}
+
+O \textit{dashboard} do treinador mostra os próximos treinos e jogos e permite criar convocatórias. O painel de alertas destaca os atletas com problemas clínicos ou financeiros. O painel de confirmações mostra as respostas dos convocados.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth,height=0.85\textheight,keepaspectratio]{mockup_dashboard_treinador.png}
+    \caption{Esboço do \textit{dashboard} principal do treinador.}
+    \label{fig:mockup_treinador}
+\end{figure}
+As ações neste ecrã disparam o fluxo de sequência de \textit{Publicação de Convocatória} e consomem o \textit{endpoint} \texttt{PUT /api/callouts/\{id\}/publish}.
+
+\subsubsection{Perfil do Atleta e Encarregado (RF-11, RF-17)}
+
+Este ecrã mostra a situação do sócio. Apresenta indicadores de estado para o atestado médico e para as quotas, uma tabela das mensalidades e botões para pagamento e submissão de documentos. O historial clínico resume as ocorrências recentes.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth,height=0.85\textheight,keepaspectratio]{mockup_perfil_atleta.png}
+    \caption{Esboço do ecrã de perfil do atleta e encarregado de educação.}
+    \label{fig:mockup_atleta}
+\end{figure}
+
+A interface consome dados dos módulos Clínico e Financeiro, utilizando os \textit{endpoints} de submissão de ficheiros e consulta de extrato.
+
+\subsubsection{Dashboard da Secretaria (RF-01, RF-11, RF-14, RF-19)}
+
+O \textit{dashboard} da Secretaria centraliza as aprovações e validações. O painel de ``Aprovações Pendentes'' mostra os registos de utilizadores (\textbf{RF-01}), os atestados a validar (\textbf{RF-11}) e os documentos federativos (\textbf{RF-14}). Os botões ``Exportar SAF-T'' (\textbf{RF-19}) e ``Registar Pagamento Manual'' (\textbf{RF-17}) estão disponíveis diretamente no painel principal.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth,height=0.85\textheight,keepaspectratio]{mockup_secretaria.png}
+    \caption{Esboço do \textit{dashboard} principal da Secretaria.}
+    \label{fig:mockup_secretaria}
+\end{figure}
+
+Este ecrã consome dados dos módulos de Utilizadores, Clínico e Financeiro, utilizando os \textit{endpoints} de aprovação de registo (\texttt{POST /api/users/\{id\}/approve}), validação de atestado (\texttt{POST /api/clinical/medical-exams/\{id\}/validate}) e geração de SAF-T.
+
+
+% ============================================================
+% SECÇÃO 4.7 — ESPECIFICAÇÃO DE API
+% ============================================================
+
+\section{Especificação de API (RESTful)}\label{sec:rel_api}
+\verIA{subsec:ia_arq_api}
+
+A API do CAP segue a arquitetura RESTful definida na Secção~\ref{sec:decisoes_arq}: recursos identificados por URI, verbos HTTP com semântica clara (\texttt{GET} para leitura, \texttt{POST} para criação, \texttt{PUT}/\texttt{PATCH} para alteração, \texttt{DELETE} para remoção) e respostas estruturadas em formato JSON. O design da API foi concebido com o objetivo de ser inteiramente consumido pela aplicação \textit{frontend} em Next.js, mantendo assim uma rigorosa separação de responsabilidades (separação da lógica de apresentação e de negócio).
+
+O controlo de acesso baseia-se nos papéis definidos na Matriz RBAC (Tabela~\ref{tab:rbac}), e é aplicado globalmente em cada rota utilizando o atributo \texttt{[Authorize(Roles = "...")]} providenciado pelo ASP.NET Core. A autenticação processa-se através da emissão e validação de \textit{JSON Web Tokens} (JWT) transmitidos no cabeçalho \texttt{Authorization} dos pedidos HTTP. Adicionalmente, as respostas a erros (por exemplo, falhas de validação, não autorizado, ou recurso não encontrado) seguem a norma \textit{Problem Details for HTTP APIs} (RFC 7807), garantindo respostas consistentes que simplificam o tratamento de falhas pelo \textit{frontend}.
+
+Todos os \textit{endpoints} protegidos exigem o cabeçalho \texttt{Authorization: Bearer <token>}, onde o token JWT é emitido pelo \textit{endpoint} de autenticação e inclui o papel do utilizador como \textit{claim}. Pedidos sem token ou com papel insuficiente recebem \textbf{401 Unauthorized} (sem token) ou \textbf{403 Forbidden} (token válido mas papel insuficiente). A resposta 403 é usada intencionalmente em vez de 404 apenas quando o recurso não existe; para recursos que existem mas o utilizador não tem permissão, devolve-se 403 sem revelar a existência do recurso, prevenindo enumeração por utilizadores não autorizados.
+
+A especificação completa dos \textit{endpoints} foi gerada com recurso a LLM conforme documentado no Capítulo~\ref{chap:documentacao_ia}, Secção~\ref{subsec:ia_arq_api}, e depois revista e ajustada pela equipa para refletir a linguagem de domínio (e.g., \texttt{POST /api/sports/convocations/\{id\}/publish} em vez de \texttt{PUT /api/sports/convocations/\{id\}}).
+
+As tabelas seguintes detalham os \textit{endpoints} principais por módulo. Foram escolhidos sete representativos, cobrindo o caminho típico de um utilizador: autenticação, registo, consulta da sua situação clínico-financeira, ação principal de um treinador (publicar convocatória), confirmação assíncrona de pagamento (\textit{webhook}), submissão de exame médico e reserva de espaço.
+
+\paragraph{Autenticação (login).}
+A Tabela~\ref{tab:api_login} especifica o ponto de entrada do sistema. Este \textit{endpoint} é o único do módulo de utilizadores que é público; a partir do momento em que devolve o JWT, todos os pedidos seguintes têm de o transportar no cabeçalho \texttt{Authorization}. As três respostas de erro (401, 403, 423) distinguem cenários diferentes que a interface trata com mensagens distintas: credenciais erradas, conta por aprovar e conta bloqueada por tentativas falhadas (\textbf{RNF-01}).
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Especificação da API: autenticação e emissão de JWT.}
+\label{tab:api_login} \\
+\endlastfoot
+
+\textbf{Endpoint} & \texttt{POST /api/auth/login} \\ \hline
+\textbf{Descrição} & Autentica um utilizador registado e ativo, emitindo um token de acesso JWT com o papel do utilizador para aplicação de RBAC nos pedidos subsequentes. \\ \hline
+\textbf{Controlo de Acesso} & Público (não requer autenticação prévia) \\ \hline
+\textbf{Payload (Pedido)} & JSON contendo \texttt{email} e \texttt{password}. \\ \hline
+\textbf{Respostas} &
+\textbf{200 OK}: \texttt{\{accessToken, expiresIn, role\}} --- token JWT válido por 7 dias. \newline
+\textbf{401 Unauthorized}: Credenciais inválidas (email ou \textit{password} incorretos). \newline
+\textbf{403 Forbidden}: Conta existe mas está em estado \textit{Pendente} ou \textit{Suspensa}. \newline
+\textbf{423 Locked}: Conta bloqueada temporariamente após 5 tentativas falhadas (\textbf{RNF-01}). \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+\paragraph{Registo de utilizador.}
+A Tabela~\ref{tab:api_register} cobre o fluxo de criação de conta. O \textit{endpoint} é igualmente público para que candidatos sem credenciais consigam submeter o pedido, mas a conta nasce em estado \textit{Pendente} (\textbf{RF-01}) --- só após aprovação da Secretaria fica apta a fazer \textit{login}. As respostas 400 e 409 separam erros de validação (formato de email, \textit{password} fraca) de duplicação de identidade (email ou NIF já existentes), o que é importante porque o tratamento na interface é diferente: o primeiro caso pede correção, o segundo sugere recuperação de \textit{password}.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Especificação da API: registo de utilizador.}
+\label{tab:api_register} \\
+\endlastfoot
+
+\textbf{Endpoint} & \texttt{POST /api/users/register} \\ \hline
+\textbf{Descrição} & Regista um novo utilizador no sistema. Fica com o estado \textit{Pendente} a aguardar aprovação. \\ \hline
+\textbf{Controlo de Acesso} & Público (não requer autenticação) \\ \hline
+\textbf{Payload (Pedido)} & JSON contendo \texttt{nome}, \texttt{email}, \texttt{password}, \texttt{nif} e \texttt{tipoUtilizador}. \\ \hline
+\textbf{Respostas} &
+\textbf{201 Created}: Utilizador registado com sucesso (estado Pendente). \newline
+\textbf{400 Bad Request}: Erro de validação (email inválido ou \textit{password} fraca). \newline
+\textbf{409 Conflict}: Email ou NIF já registado. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+\paragraph{Consulta da situação do atleta.}
+A Tabela~\ref{tab:api_athlete_status} agrega num único pedido a aptidão clínica, o estado das quotas e a existência de lesão ativa. Foi desenhado assim, em detrimento de três chamadas separadas, para que o \textit{frontend} do treinador (Secção~\ref{sec:wireframes}) consiga preencher os semáforos de cada atleta sem inflacionar o número de pedidos no carregamento de uma lista de plantel. O controlo de acesso restringe a leitura ao treinador da equipa, à Secretaria e à Gerência --- o próprio atleta usa um \textit{endpoint} diferente, focado no seu perfil.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Especificação da API: consulta de situação do atleta.}
+\label{tab:api_athlete_status} \\
+\endlastfoot
+
+\textbf{Endpoint} & \texttt{GET /api/athletes/\{id\}/status} \\ \hline
+\textbf{Descrição} & Devolve a situação agregada de um atleta: aptidão clínica, estado das quotas e existência de lesão ativa. \\ \hline
+\textbf{Controlo de Acesso} & Treinador (equipa do atleta) / Secretaria / Gerência \\ \hline
+\textbf{Payload (Pedido)} & (Vazio) \\ \hline
+\textbf{Respostas} &
+\textbf{200 OK}: JSON com \texttt{isApto}, \texttt{atestadoValido}, \texttt{quotasRegularizadas}, \texttt{lesaoAtiva} e \texttt{diasAteExpirarAtestado}. \newline
+\textbf{401 Unauthorized}: Token JWT ausente ou inválido. \newline
+\textbf{403 Forbidden}: Utilizador sem permissão para este atleta. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+\paragraph{Publicação de convocatória.}
+A Tabela~\ref{tab:api_publish_callout} mostra o \textit{endpoint} que oficializa uma convocatória que ainda estava em rascunho. Optou-se por um verbo dedicado (\texttt{/publish}) em vez de um simples \texttt{PUT} sobre o recurso, porque a publicação dispara efeitos colaterais não-idempotentes: validação de aptidão de todos os convocados, escrita imutável da lista e enfileiramento de notificações \textit{push} (\textbf{RF-08}). A resposta 409 cobre o caso de tentativas de re-publicação --- importante porque, em situações reais, dois treinadores podiam clicar em simultâneo.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Especificação da API: publicação de convocatória.}
+\label{tab:api_publish_callout} \\
+\endlastfoot
+
+\textbf{Endpoint} & \texttt{PUT /api/callouts/\{id\}/publish} \\ \hline
+\textbf{Descrição} & Oficializa uma convocatória em rascunho, aplicando validações de negócio e disparando notificações assíncronas. \\ \hline
+\textbf{Controlo de Acesso} & Treinador (restrito à equipa da convocatória) \\ \hline
+\textbf{Payload (Pedido)} & (Vazio) \\ \hline
+\textbf{Respostas} &
+\textbf{200 OK}: Convocatória publicada e notificações enfileiradas. \newline
+\textbf{400 Bad Request}: Falha na validação (atleta com atestado caducado ou quotas em atraso). \newline
+\textbf{403 Forbidden}: Utilizador sem permissão para gerir esta equipa. \newline
+\textbf{409 Conflict}: Convocatória já não se encontra em estado \textit{Rascunho}. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+\paragraph{\textit{Webhook} de pagamento.}
+A Tabela~\ref{tab:api_payment_webhook} documenta o ponto de entrada que o \textit{Gateway} externo chama para confirmar pagamentos. Ao contrário dos restantes, este \textit{endpoint} não é consumido pelo \textit{frontend}: é chamado servidor-a-servidor pelo prestador (e.g., EasyPay). Por isso a autenticação não é JWT mas sim uma \textbf{assinatura HMAC} sobre o \textit{payload}, calculada com uma chave partilhada. A resposta 401 nesta tabela tem peso especial --- representa uma tentativa de fraude (\textit{webhook} forjado a tentar marcar uma quota como paga) e é registada para auditoria.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Especificação da API: \textit{webhook} de pagamento.}
+\label{tab:api_payment_webhook} \\
+\endlastfoot
+
+\textbf{Endpoint} & \texttt{POST /api/payments/webhooks/easypay} \\ \hline
+\textbf{Descrição} & Recebe a confirmação assíncrona de pagamento emitida pelo \textit{Gateway} externo, liquidando a quota e emitindo a fatura. \\ \hline
+\textbf{Controlo de Acesso} & Restrito via assinatura HMAC (\textit{Gateway}) \\ \hline
+\textbf{Payload (Pedido)} & JSON do \textit{Gateway} contendo \texttt{transactionId}, \texttt{status}, \texttt{amount} e \texttt{reference}. \\ \hline
+\textbf{Respostas} &
+\textbf{200 OK}: Transação processada e reconhecida pelo sistema. \newline
+\textbf{400 Bad Request}: \textit{Payload} malformado ou transação desconhecida. \newline
+\textbf{401 Unauthorized}: Assinatura digital inválida (tentativa de fraude). \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+\paragraph{Submissão de exame médico.}
+A Tabela~\ref{tab:api_medical_exam} é o único \textit{endpoint} principal que recebe ficheiros binários. O conteúdo é enviado em \texttt{multipart/form-data} e o servidor encripta-o em repouso (\textbf{RNF-01}), guardando apenas a referência na base de dados. A submissão não valida o exame de imediato --- coloca-o numa fila para a Secretaria validar, refletindo o fluxo definido na máquina de estados de \textit{Exame Médico}. Por isso a resposta de sucesso é 201, e não 200: o recurso foi criado, mas o seu efeito final (atleta apto) só ocorre após a aprovação.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Especificação da API: submissão de exame médico.}
+\label{tab:api_medical_exam} \\
+\endlastfoot
+
+\textbf{Endpoint} & \texttt{POST /api/clinical/medical-exams} \\ \hline
+\textbf{Descrição} & Recebe a submissão de um Exame Médico Desportivo. O documento é encriptado e aguarda validação da Secretaria. \\ \hline
+\textbf{Controlo de Acesso} & Atleta / Encarregado de Educação \\ \hline
+\textbf{Payload (Pedido)} & \texttt{multipart/form-data} contendo o \texttt{ficheiro} (PDF/JPG) e a \texttt{dataValidade}. \\ \hline
+\textbf{Respostas} &
+\textbf{201 Created}: Ficheiro guardado e notificação enviada à Secretaria. \newline
+\textbf{400 Bad Request}: Formato de ficheiro não suportado, tamanho excedido ou data de validade no passado. \newline
+\textbf{401 Unauthorized}: Utilizador não autenticado. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+\paragraph{Reserva de instalação.}
+A Tabela~\ref{tab:api_reservation} demonstra o tratamento de concorrência. A verificação de conflitos é transacional: a procura por reservas sobrepostas e a inserção da nova reserva ocorrem dentro do mesmo \texttt{BEGIN/COMMIT}, evitando que duas equipas reservem o mesmo pavilhão à mesma hora por uma condição de corrida (cenário descrito na entrevista da Gerência, Secção~\ref{sec:requisitos_funcionais}). A resposta 409 inclui no corpo o próximo horário livre, para que o \textit{frontend} possa sugerir alternativas sem nova chamada.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Especificação da API: criação de reserva de instalação.}
+\label{tab:api_reservation} \\
+\endlastfoot
+
+\textbf{Endpoint} & \texttt{POST /api/facilities/reservations} \\ \hline
+\textbf{Descrição} & Regista uma reserva de instalação, verificando transacionalmente a ausência de conflitos de horário. \\ \hline
+\textbf{Controlo de Acesso} & Treinador / Gerência / \textit{Staff} \\ \hline
+\textbf{Payload (Pedido)} & JSON contendo \texttt{instalacaoId}, \texttt{inicio} (ISO 8601) e \texttt{fim} (ISO 8601). \\ \hline
+\textbf{Respostas} &
+\textbf{201 Created}: Reserva criada com sucesso e calendário atualizado. \newline
+\textbf{400 Bad Request}: Datas inválidas ou janela temporal inferior a 30 minutos. \newline
+\textbf{409 Conflict}: Conflito de horário com reserva existente (inclui horário livre mais próximo). \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ============================================================
+% SECÇÃO 4.8 — VALIDAÇÃO DA ESPECIFICAÇÃO
+% ============================================================
+
+\section{Validação da Especificação Construída}
+
+Os artefactos produzidos neste capítulo foram revistos face aos requisitos elicitados anteriormente. A tabela seguinte mapeia cada requisito funcional aos artefactos que o cobrem.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|c|c|c|c|c|c|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{RF}} & \textcolor{white}{\textbf{Nome}} & \textcolor{white}{\textbf{Dom.}} & \textcolor{white}{\textbf{Clas.}} & \textcolor{white}{\textbf{UC}} & \textcolor{white}{\textbf{Seq.}} & \textcolor{white}{\textbf{Atv.}} & \textcolor{white}{\textbf{API}} \\ \hline
+\endfirsthead
+
+\multicolumn{8}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{RF}} & \textcolor{white}{\textbf{Nome}} & \textcolor{white}{\textbf{Dom.}} & \textcolor{white}{\textbf{Clas.}} & \textcolor{white}{\textbf{UC}} & \textcolor{white}{\textbf{Seq.}} & \textcolor{white}{\textbf{Atv.}} & \textcolor{white}{\textbf{API}} \\ \hline
+\endhead
+
+\hline \multicolumn{8}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Tabela de rastreabilidade: RF versus artefactos de especificação (\checkmark = coberto, --- = não aplicável ou fora do âmbito do capítulo).}
+\label{tab:rastreabilidade} \\
+\endlastfoot
+
+RF-01 & Utilizadores e Perfis & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\ \hline
+RF-02 & Perfis Parentais & \checkmark & \checkmark & \checkmark & --- & --- & --- \\ \hline
+RF-03 & Chat Interno & --- & --- & \checkmark & --- & --- & --- \\ \hline
+RF-04 & Notificações Automáticas & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & --- \\ \hline
+RF-05 & Modalidades e Épocas & \checkmark & \checkmark & \checkmark & --- & --- & --- \\ \hline
+RF-06 & Horários e Treinos & \checkmark & \checkmark & \checkmark & --- & --- & --- \\ \hline
+RF-07 & Presenças e Faltas & \checkmark & \checkmark & \checkmark & --- & --- & --- \\ \hline
+RF-08 & Convocatórias & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\ \hline
+RF-09 & Planos de Treino & --- & --- & \checkmark & --- & --- & --- \\ \hline
+RF-10 & Ocorrências/Disciplina & \checkmark & \checkmark & \checkmark & --- & --- & --- \\ \hline
+RF-11 & Exame Médico (EMD) & \checkmark & \checkmark & \checkmark & --- & \checkmark & \checkmark \\ \hline
+RF-12 & Lesões e Recuperação & \checkmark & \checkmark & \checkmark & --- & --- & --- \\ \hline
+RF-13 & Métricas Físicas & \checkmark & \checkmark & \checkmark & --- & --- & --- \\ \hline
+RF-14 & Documentação Federativa & --- & --- & \checkmark & --- & --- & --- \\ \hline
+RF-15 & Dashboards Desempenho & --- & --- & \checkmark & --- & --- & --- \\ \hline
+RF-16 & Avaliação Qualitativa & --- & --- & \checkmark & --- & --- & --- \\ \hline
+RF-17 & Quotas e Pagamentos & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\ \hline
+RF-18 & Contabilidade Global & \checkmark & \checkmark & \checkmark & --- & --- & --- \\ \hline
+RF-19 & Conformidade SAF-T & \checkmark & \checkmark & \checkmark & --- & --- & --- \\ \hline
+RF-20 & Espaços Físicos (Reservas) & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\ \hline
+RF-21 & Manutenção de Infraestruturas & --- & --- & --- & --- & --- & --- \\ \hline
+RF-22 & Stock e Loja & \checkmark & --- & --- & --- & --- & --- \\ \hline
+RF-23 & Eventos Extra-desportivos & --- & --- & --- & --- & --- & --- \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+Na parte estrutural, o \textbf{modelo de domínio} mostra as entidades e relações, o \textbf{diagrama de classes} adiciona detalhe de implementação, e o \textbf{diagrama de componentes} confirma a divisão em módulos. O \textbf{diagrama de implantação} documenta a distribuição física e as integrações externas. A \textbf{matriz RBAC} mapeia os 5 papéis às operações principais.
+
+Na parte comportamental, as \textbf{seis máquinas de estado} cobrem as entidades com ciclos de vida mais complexos. Os \textbf{cinco diagramas de sequência} mostram os fluxos assíncronos. Os \textbf{cinco diagramas de atividade} detalham a lógica dos algoritmos principais. As \textbf{vinte e sete tabelas de caso de uso} cobrem os processos associados aos vinte e três RF.
+
+Os \textbf{esboços de interface} mostram os três perfis com maior complexidade (Treinador, Atleta/Encarregado, Secretaria). A \textbf{especificação de API} documenta os sete \textit{endpoints} principais.
+
+No total, os artefactos produzidos cobrem todos os vinte e três requisitos funcionais e os treze requisitos não funcionais elicitados \cite{sommerville2015}.
+
+%==========================================================================
+% FIM DO CAPÍTULO 4
+%==========================================================================

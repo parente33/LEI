@@ -1,0 +1,146 @@
+\chapter{Definição e Caracterização do Sistema}
+
+\section{Contextualização}
+Os clubes desportivos têm um papel importante na promoção do desporto e no convívio social das comunidades onde estão inseridos. São também responsáveis pela formação de atletas e pela organização de eventos.
+
+Com o aumento do número de atletas e de atividades, a gestão destes clubes torna-se mais difícil. Gerir informações de atletas, treinadores, pagamentos e outras tarefas de forma manual pode levar a erros e desorganização.
+
+Por isso, o uso de sistemas informáticos para apoiar esta gestão é cada vez mais importante. Estes sistemas permitem centralizar a informação e facilitar os processos administrativos.
+\section{Apresentação do Caso de Estudo}
+O Clube Amigos de Polvoreira (CAP) é um clube desportivo fundado em 1990 em Polvoreira, Guimarães. Começou com um pequeno grupo de moradores que queria incentivar o desporto e o convívio entre os jovens da zona.
+
+Com o passar dos anos, o clube cresceu muito e hoje tem várias modalidades, desde a formação até aos escalões amadores e profissionais. Este crescimento tornou o CAP muito importante para a comunidade, mas também trouxe novos desafios para quem o gere.
+
+Atualmente, a gestão é feita em grande parte de forma manual ou com ferramentas separadas. O controlo de sócios, os pagamentos das quotas, a disponibilidade dos atletas e a contabilidade do clube são geridos de forma tradicional, o que exige muito trabalho e causa erros.
+
+Como o clube quer continuar a crescer e a organizar-se melhor, decidiu avançar com a criação de uma aplicação de gestão. Esta ferramenta vai ajudar a direção, facilitar o trabalho dos treinadores e melhorar a comunicação com os atletas.
+
+\section{Motivação e Objetivos}
+O clube tem um número considerável de atletas, treinadores e funcionários e pretende crescer para competir a níveis mais altos.
+
+Até agora, os registos são feitos em papel por várias pessoas diferentes. A direção já recebeu queixas sobre o volume de papel e já houve casos de perda de documentos. Este processo manual causa erros e não permite que a direção tenha controlo sobre as informações.
+
+O clube precisa de crescer e o sistema em papel já não chega. O sistema informático é a solução para estes problemas. Com ele, o CAP quer:
+\begin{itemize}
+    \item Melhorar a comunicação entre atletas, direção e treinadores;
+    \item Ter um maior controlo e segurança sobre os dados do clube;
+    \item Facilitar a gestão das finanças, percebendo melhor os gastos e lucros;
+    \item Permitir que os treinadores saibam rapidamente quem está disponível para jogar;
+    \item Facilitar o pagamento das quotas aos sócios.
+\end{itemize}
+
+\section{Justificação e Utilidade do Sistema}
+\begin{itemize}
+    \item \textbf{Fiabilidade dos dados}: A digitalização reduz os erros de registo, garante que os ficheiros não se perdem e permite controlar quem acede a cada informação.
+    \item \textbf{Produtividade administrativa}: O sistema automatiza tarefas repetitivas (cobrança de quotas, verificação de atestados), libertando tempo à secretaria e à gerência.
+    \item \textbf{Apoio à decisão}: O acesso a estatísticas financeiras e desportivas permite à direção tomar decisões informadas e apresentar resultados a potenciais investidores.
+    \item \textbf{Comunicação centralizada}: Substituição da dependência de grupos informais (WhatsApp) por um canal oficial de notificações, garantindo que a informação chega a todos.
+    \item \textbf{Controlo clínico}: Monitorização automática das datas de validade dos atestados médicos e registo de queixas físicas para prevenção de lesões.
+    \item \textbf{Pagamentos modernos}: A integração com MBWay e referências Multibanco simplifica o processo para os encarregados de educação e reduz as situações de pagamento em atraso.
+\end{itemize}
+\section{Recursos Necessários}
+Para o projeto foram usados os seguintes recursos humanos e materiais.
+
+Ao nível dos \textbf{recursos humanos}, a equipa divide-se em:
+\begin{itemize}
+    \item \textbf{Equipa de desenvolvimento} --- André Santos, Daniel Parente, Pedro Ferreira e Tiago Martins.
+    \item \textbf{Equipa do clube} --- Orlando Ramalho Forte (presidente), José Alvires Pereira (vice-presidente), Paulo Coentrão Silva (tesoureiro) e Patrício Maria Cunha Costa (advogado).
+\end{itemize}
+
+Ao nível dos \textbf{recursos materiais}, foram utilizados:
+\begin{center}
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|>{\raggedright\arraybackslash}p{4cm}|>{\raggedright\arraybackslash}X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Categoria}} & \textcolor{white}{\textbf{Recursos}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Categoria}} & \textcolor{white}{\textbf{Recursos}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Recursos de software utilizados no projeto.}
+\label{tab:recursos-software} \\
+\endlastfoot
+
+Hardware          & 4 computadores pessoais (um por elemento da equipa). \\ \hline
+Linguagens        & C\# (.NET), TypeScript, SQL, LaTeX. \\ \hline
+Frameworks        & ASP.NET Core, Entity Framework Core \cite{efcore2023}, Next.js \cite{nextjs2024}, React, shadcn/ui. \\ \hline
+Base de Dados     & PostgreSQL 15 \cite{postgresql2024}. \\ \hline
+Infra \& DevOps   & Docker, Docker Compose \cite{docker2024}, Git, GitHub. \\ \hline
+Modelação         & PlantUML, draw.io. \\ \hline
+Desenvolvimento   & Visual Studio Code, JetBrains Rider, Postman. \\ \hline
+Documentação      & LaTeX (TeXstudio), Google Docs, Gemini. \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+\end{center}
+
+\section{Análise de Viabilidade}
+Antes de avançar, foi feita uma análise de viabilidade do ponto de vista operacional e financeiro. Os valores apresentados foram obtidos a partir das entrevistas com a direção do CAP e do questionário aos sócios, por isso são \textbf{estimativas baseadas no que foi dito pelos utilizadores} e não medições exatas. Uma versão em produção será necessária para confirmar estes números.
+
+\subsection*{Benefícios operacionais esperados}
+\begin{itemize}
+    \item \textbf{Redução de trabalho administrativo}: A secretaria disse na entrevista gastar cerca de \textbf{20 horas por mês} a verificar transferências manualmente e a atualizar o livro de quotas. Com a integração de pagamentos automáticos (RF-17), espera-se poupar pelo menos metade desse tempo.
+    \item \textbf{Redução de erros}: O sistema tem validações automáticas (email e NIF únicos, conflitos de horário, quotas e atestados) que cobrem cerca de 80\% dos erros reportados pela direção.
+    \item \textbf{Aumento de sócios}: 65\% dos inquiridos disseram que a falta de pagamento \textit{online} era um problema para renovar a tempo. Com MBWay e Multibanco, espera-se que mais sócios renovem dentro do prazo.
+    \item \textbf{Redução de custos materiais}: Ao deixar de usar papel para atestados, recibos e convocatórias, o CAP pode poupar algumas centenas de euros por ano (o clube usa cerca de 8\,000 folhas/ano).
+\end{itemize}
+
+\subsection*{Estimativa de custo}
+O custo total do projeto foi estimado em menos de 50\,000~€, segundo a seguinte decomposição:
+\begin{center}
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}p{3.2cm}|>{\raggedright\arraybackslash}p{4.5cm}|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Rubrica}} & \textcolor{white}{\textbf{Estimativa}} & \textcolor{white}{\textbf{Pressuposto}} \\ \hline
+\endfirsthead
+
+\multicolumn{3}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Rubrica}} & \textcolor{white}{\textbf{Estimativa}} & \textcolor{white}{\textbf{Pressuposto}} \\ \hline
+\endhead
+
+\hline \multicolumn{3}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Decomposição da estimativa de custo do projeto.}
+\label{tab:estimativa-custo} \\
+\endlastfoot
+
+Desenvolvimento (4 elementos $\times$ 16 semanas) & $\approx$ 38\,400~€ & 30~h/semana, 20~€/h (júnior) \\ \hline
+Infraestrutura cloud (1.º ano)        & $\approx$ 1\,200~€  & VPS + Postgres geridas \\ \hline
+Domínio, certificado SSL e email      & $\approx$ 200~€     & Renovação anual \\ \hline
+Licenças de software                  & $\approx$ 0~€       & Toda a \textit{stack} é OSS \\ \hline
+Margem para imprevistos ($\approx$ 15\%) & $\approx$ 6\,000~€ & Reserva técnica \\ \hline
+\textbf{Total estimado} & \textbf{$\approx$ 45\,800~€} & \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+\end{center}
+
+A gerência referiu que o clube perdeu um patrocínio por falta de organização de dados, um valor superior ao custo anual deste projeto. O investimento parece ser viável. A arquitetura modular permite adicionar funcionalidades no futuro sem precisar de refazer o que já está feito.
+\section{Plano de Execução do Projeto}
+Foi feita uma reunião com Orlando Ramalho Forte para definir o plano de execução.
+A equipa escolheu a metodologia \textit{Waterfall} \cite{royce1970}, onde o projeto avança de forma linear por fases.
+O plano definido foi o seguinte:
+
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth]{\includegraphics[width=\textwidth]{gantt.png}}
+    \caption{Diagrama de Gantt para planeamento da execução do projeto.}
+    \label{fig:gantt}
+\end{figure}
+
+O plano segue as quatro etapas do enunciado: Requisitos (9~fev a 2~mar), Arquitetura e \textit{Design} (2~mar a 23~mar), Implementação (23~mar a 13~abr) e Verificação e Testes (13~abr a 11~mai). O relatório e a apresentação ficam para a última semana de maio. Ao longo do projeto houve algumas sobreposições entre fases quando isso fazia sentido, como foi o caso da especificação de algumas máquinas de estados que decorreu ao mesmo tempo que a implementação dos módulos correspondentes.
+
+%==========================================================================
+% CAPÍTULO 3 - LEVANTAMENTO E ANÁLISE DE REQUISITOS
+%==========================================================================
+

@@ -1,0 +1,45 @@
+\chapter{Conclusão}\label{chap:conclusao}
+
+\section{Síntese do Trabalho Realizado}
+
+Este relatório documenta o desenvolvimento de um sistema de gestão para o Clube Amigos de Polvoreira (CAP), desde o levantamento de requisitos até à implementação e avaliação. O resultado é uma plataforma funcional, contentorizada com Docker, que digitaliza os processos administrativos, desportivos, clínicos e financeiros do clube.
+
+O sistema usa uma arquitetura de Monólito Modular com sete módulos independentes, cada um com o seu esquema na base de dados. Do lado da apresentação, foi desenvolvida uma SPA em Next.js/React com \textit{dashboards} adaptados a cada papel.
+
+Dos 23 requisitos funcionais, 14 foram cumpridos, 6 parcialmente e 3 ficaram fora do âmbito. Os RNF ligados ao código (RBAC, modularidade, SAF-T, design responsivo) foram cumpridos; os de produção (\textit{uptime}, escalabilidade, \textit{backups}) só serão avaliáveis em ambiente real.
+
+\section{Análise Crítica}
+
+O projeto permitiu aplicar conceitos de Engenharia de Software desde o levantamento de requisitos até à implementação. Três decisões foram as mais acertadas em retrospetiva:
+
+\begin{itemize}
+    \item A escolha do \textbf{Monólito Modular}. Para a dimensão da equipa e o prazo disponível, microsserviços teriam consumido tempo em orquestração sem benefício real.
+    \item A abordagem \textbf{Code-First} com EF Core. Trabalhar sobre as classes C\# concentrou a equipa na lógica de negócio. As \textit{migrations} versionadas permitiram subir a base de dados em segundos.
+    \item O \texttt{DataSeeder} programático. Gerar dados em C\# com datas relativas à data corrente mantém os \textit{dashboards} realistas e facilita demonstrações.
+\end{itemize}
+
+As notificações ficaram limitadas a alertas \textit{in-app} por falta de tempo para configurar provedores externos. Lacunas iniciais mais graves --- \textit{hashing} de palavras-passe e testes automatizados --- foram corrigidas na iteração final com \texttt{BCrypt.Net-Next} e \texttt{xUnit}.
+
+\section{Reflexão sobre o Uso de IA Generativa}
+
+O uso de LLMs como assistentes ao longo do projeto deixou três lições.
+
+\textbf{Os LLMs são aceleradores, não substitutos.} Em tarefas com conhecimento padrão (UML, esqueletos de classes, comparação de tecnologias) poupam horas. Em decisões específicas do domínio --- como o número de meses de atraso para bloquear um atleta --- o modelo não tem como saber e qualquer resposta é improviso.
+
+\textbf{A resposta é boa quando o contexto é bom.} Os \textit{prompts} com restrições concretas (equipa, prazo, RGPD, SAF-T) produziram respostas úteis. Pedidos genéricos produziram texto vago cheio de termos como ``pilar estrutural'' que tiveram de ser cortados.
+
+\textbf{O risco de uniformização é real.} Várias secções delegadas ao mesmo modelo ficam com o mesmo tom. Foi necessário reescrever passagens para devolver a voz da equipa ao texto.
+
+\section{Trabalho Futuro}
+
+A arquitetura modular permite evolução incremental. As linhas de trabalho prioritárias são, por ordem de urgência:
+
+\begin{enumerate}
+    \item \textbf{Segurança Adicional}: mover o segredo JWT para variáveis de ambiente injetadas pelo orquestrador em produção e adicionar autenticação de dois fatores (2FA) para os papéis de Secretaria e Gerência.
+    \item \textbf{Notificações externas}: ligar o serviço de notificações a um \textit{gateway} de email e SMS para os alertas de RF-04.
+    \item \textbf{Testes}: expandir os testes unitários para outras regras de negócio (\texttt{isApto()}, cálculo de IMC) e adicionar testes de integração end-to-end em CI.
+    \item \textbf{Pagamentos reais}: substituir a simulação por uma ligação à API do Ifthenpay ou Easypay com validação HMAC.
+    \item \textbf{Observabilidade e \textit{backups}}: centralizar \textit{logs}, adicionar métricas básicas e uma rotina de \textit{backups} encriptados (RNF-09 e RNF-13).
+\end{enumerate}
+
+A versão atual cumpre os objetivos definidos e é uma base para continuar. O mais importante foi deixar uma arquitetura suficientemente organizada para que quem continuar o projeto consiga fazê-lo sem reescrever o que está feito.

@@ -1,0 +1,1650 @@
+\chapter{Levantamento e Análise de Requisitos}\label{chap:analise_requisitos}
+
+\section{Estratégia e Métodos}\label{sec:rel_estrategia}
+
+O levantamento de requisitos é uma das fases mais importantes, porque qualquer erro aqui pode causar problemas no desenvolvimento. Para este projeto, foi usada uma abordagem baseada nas boas práticas de engenharia de software \cite{sommerville2015}.
+
+A estratégia usada baseou-se em três pontos:
+\begin{enumerate}
+    \item \textbf{Usar várias fontes}: Foram usadas várias fontes de informação, como documentos do clube, entrevistas e questionários, para ter uma visão mais completa das necessidades.
+    \item \textbf{Consultar os utilizadores}: Foi recolhida informação junto das pessoas que vão usar o sistema, desde a gerência até aos atletas.
+    \item \textbf{Revisão dos requisitos}: Sempre que foi identificado um requisito novo, voltou-se a confirmar com o clube se era o que pretendiam.
+\end{enumerate}
+
+O primeiro passo foi identificar todos os grupos de pessoas que interagem com o clube, para perceber quem seriam os utilizadores principais do sistema e quem seria afetado de forma indireta.
+
+\begin{itemize}
+    \item \textbf{\textit{Stakeholders} primários} (utilizadores diretos do sistema):
+    \begin{itemize}
+        \item Atletas -- praticantes das diversas modalidades do clube
+        \item Treinadores -- responsáveis técnicos das equipas
+        \item Encarregados de Educação -- responsáveis legais pelos atletas menores
+        \item Secretaria -- funcionários administrativos do clube
+        \item Gerência -- órgãos de direção e administração
+    \end{itemize}
+
+    \item \textbf{\textit{Stakeholders} secundários} (afetados indiretamente):
+    \begin{itemize}
+        \item Sócios não-praticantes -- membros associados sem atividade desportiva ativa
+        \item Fornecedores e parceiros -- entidades externas com relações comerciais
+        \item Autoridades desportivas -- federações e associações reguladoras
+        \item Autoridade Tributária -- entidade reguladora fiscal (para efeitos de conformidade SAF-T)
+    \end{itemize}
+\end{itemize}
+
+Para cada grupo foram identificadas as necessidades e o que esperavam do sistema. Isto ajudou a escolher os métodos de levantamento mais adequados para cada perfil.
+
+\verIA{sec:ia_requisitos}
+
+
+
+\subsection{Métodos de Levantamento Utilizados}
+
+Foram escolhidos três métodos para o levantamento de requisitos:
+
+\begin{center}
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|>{\raggedright\arraybackslash}p{3.5cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Método}} & \textcolor{white}{\textbf{Objetivo Principal}} & \textcolor{white}{\textbf{Informação Obtida}} \\ \hline
+\endfirsthead
+
+\multicolumn{3}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Método}} & \textcolor{white}{\textbf{Objetivo Principal}} & \textcolor{white}{\textbf{Informação Obtida}} \\ \hline
+\endhead
+
+\hline \multicolumn{3}{|r|}{\textit{Continua na próxima página\ldots}} \\ \hline \endfoot
+
+\hline
+\caption{Métodos de levantamento de requisitos e suas contribuições.}
+\label{tab:metodos-levantamento} \\
+\endlastfoot
+
+Análise Documental & Compreender os processos atuais e os dados manipulados & Entidades de dados, fluxos de informação, regras de negócio implícitas \\ \hline
+Entrevistas Direcionadas & Captar necessidades específicas e problemas vivenciados & Requisitos funcionais prioritários, dores dos utilizadores, expectativas qualitativas \\ \hline
+Questionário Online & Validar requisitos em escala e identificar prioridades & Validação estatística, priorização de funcionalidades, identificação de consensos \\ \hline
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+\end{center}
+
+A combinação destes três métodos foi importante para ter uma visão completa das necessidades. A análise documental mostrou o que existe atualmente, as entrevistas revelaram os problemas e as necessidades, e os questionários permitiram perceber o que era mais prioritário para os utilizadores.
+
+\verIA{sec:ia_requisitos}
+
+\subsection{Planeamento do Levantamento}
+
+O levantamento foi organizado em três fases, com uma duração total de três semanas:
+
+\begin{enumerate}
+    \item \textbf{Fase 1 -- Análise Documental} (1 semana): Recolha e análise dos documentos do clube, identificação dos dados e processos existentes.
+
+    \item \textbf{Fase 2 -- Entrevistas} (1 semana): Entrevistas com representantes de cada grupo de utilizadores, sobre problemas atuais e funcionalidades desejadas.
+
+    \item \textbf{Fase 3 -- Questionário e Consolidação} (1 semana): Distribuição do questionário, análise dos resultados e reunião de todos os requisitos num documento preliminar.
+\end{enumerate}
+
+Na primeira reunião ficou registado o plano e a divisão de tarefas entre os membros da equipa:
+
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth]{\includegraphics[width=0.9\textwidth]{ata1.drawio.png}}
+    \caption{Ata reunião 1}
+    \label{fig:ar-01}
+\end{figure}
+
+\subsection{Análise Documental}\label{sec:rel_documental}
+
+A análise documental foi o ponto de partida do levantamento. Este método permitiu perceber os processos do clube, identificar os dados que o sistema vai ter de gerir e descobrir regras de negócio que não teriam sido identificadas só com entrevistas.
+
+\subsubsection{Objetivo e Abordagem}
+
+O objetivo desta fase foi perceber como a informação circula no clube, identificando:
+\begin{itemize}
+    \item Os tipos de documentos usados regularmente;
+    \item Os dados registados em cada documento;
+    \item As relações entre documentos e processos;
+    \item As regras de validação que se aplicam;
+    \item Os pontos onde o sistema atual falha ou é ineficiente.
+\end{itemize}
+
+Foi pedido à gerência do clube exemplos dos documentos que usam no dia a dia. Foram escolhidos três documentos principais que cobrem as três áreas do clube: clínica, desportiva e financeira.
+
+\subsubsection{Documentos Analisados}
+
+\paragraph{Atestado Médico Desportivo}
+
+A análise deste documento foi importante para perceber os requisitos do módulo clínico. O atestado médico é um documento obrigatório para a prática desportiva federada, e sem ele o atleta não pode participar em competições.
+
+Da análise do documento, foram extraídos os seguintes requisitos:
+\begin{itemize}
+    \item Necessidade de registar a data de emissão e a data de validade do atestado;
+    \item Obrigatoriedade de associar cada atestado a um atleta específico;
+    \item Requisito de armazenamento do documento digitalizado;
+    \item Necessidade de um sistema de alertas automáticos para caducidade (30 dias antes, 7 dias antes, e no dia de expiração);
+    \item Bloqueio automático de atletas com atestado caducado para convocatórias e participação em jogos.
+\end{itemize}
+
+\verIA{sec:ia_documentos}
+
+
+\paragraph{Relatório Oficial de Jogo}
+
+O relatório de jogo permitiu perceber os requisitos da área desportiva. Este documento é preenchido manualmente após cada jogo e contém informação sobre o desempenho dos atletas.
+
+Da análise do documento, foram identificadas as seguintes necessidades:
+\begin{itemize}
+    \item Registo dos atletas titulares e suplentes por jogo;
+    \item Acompanhamento dos minutos jogados por cada atleta;
+    \item Registo de eventos de jogo: golos marcados, assistências, cartões amarelos e vermelhos;
+    \item Resultado final e dados do adversário;
+    \item Observações técnicas do treinador.
+\end{itemize}
+
+\verIA{sec:ia_documentos}
+
+Estes dados serviram para definir os requisitos do módulo de estatísticas, que vai permitir criar perfis de desempenho para cada atleta e equipa.
+
+\paragraph{Fatura/Recibo de Quota}
+
+A análise da fatura de quotas mostrou os requisitos do módulo financeiro e permitiu perceber como funciona o ciclo de pagamentos no clube.
+
+Da análise do documento, foram identificadas as seguintes necessidades:
+\begin{itemize}
+    \item Associação de identificadores únicos a cada pagamento;
+    \item Registo de datas limite de pagamento por período (mensal, trimestral, anual);
+    \item Gestão de estados de pagamento (pendente, pago, em atraso, reembolsado);
+    \item Geração automática de faturas em conformidade com requisitos fiscais;
+    \item Exportação para formato SAF-T conforme exigido pela Autoridade Tributária.
+\end{itemize}
+
+\verIA{sec:ia_documentos}
+
+
+\newpage
+\subsection{Entrevistas Direcionadas}\label{sec:rel_entrevistas}
+
+As entrevistas foram o método principal de levantamento. Foram feitas entrevistas a três tipos de utilizadores do clube: um elemento da Gerência, um Treinador e um Atleta.
+
+\subsubsection{Metodologia das Entrevistas}
+
+Cada entrevista foi dividida em três partes:
+
+\begin{enumerate}
+    \item \textbf{Contextualização} (5 minutos): Apresentação do projeto e dos objetivos da entrevista.
+
+    \item \textbf{Questões estruturadas} (20 minutos): Perguntas sobre:
+    \begin{itemize}
+        \item O que fazem no dia a dia no clube;
+        \item Problemas com os processos atuais;
+        \item Funcionalidades que gostariam no novo sistema;
+        \item O que esperam em termos de facilidade de uso.
+    \end{itemize}
+
+    \item \textbf{Discussão aberta} (15 minutos): Espaço para o entrevistado falar sobre outras questões ou sugerir funcionalidades não mencionadas.
+\end{enumerate}
+
+As entrevistas foram gravadas em áudio com autorização e depois transcritas. De cada transcrição foram retirados os requisitos identificados, organizados por área funcional.
+
+\subsubsection{Resultados por Perfil de \textit{Stakeholder}}
+
+As entrevistas mostraram que a falta de organização está a causar perdas financeiras e problemas de comunicação. Os principais pontos de cada entrevista são os seguintes:
+
+\subsubsection*{Perspetiva da Gerência}
+\begin{itemize}
+    \item \textbf{Perda de Investimento e Gestão Financeira:} O clube perdeu o patrocínio de uma empresa de bebidas energéticas simplesmente porque a gerência não conseguiu compilar e apresentar dados estruturados sobre o desempenho das equipas para justificar o investimento. Ficou clara a necessidade de \textit{dashboards} financeiros, gráficos de desempenho exportáveis e geração automática de ficheiros SAF-T.
+    \item \textbf{Caos nas Quotas:} O modelo atual de pagamentos manuais resulta em esquecimentos frequentes por parte dos encarregados de educação. É urgente criar um perfil parental agregador com geração de referências Multibanco/MBWay e bloqueio automático de atletas com mensalidades em atraso.
+    \item \textbf{Conflitos de Espaços:} Foi relatado um episódio em que as equipas de Futsal e Voleibol tentaram usar o pavilhão ao mesmo tempo devido a um erro num caderno de papel. O sistema tem de gerir o calendário de instalações.
+\end{itemize}
+
+\verIA{sec:ia_entrevistas}
+
+\subsubsection*{Perspetiva da Equipa Técnica (Treinadores)}
+\begin{itemize}
+    \item \textbf{Falhas de Comunicação:} A dependência de grupos de WhatsApp para avisar sobre alterações de horários e convocatórias não funciona. Ocorreram situações em que a equipa foi para jogo com apenas um suplente porque os atletas não viram a mensagem. É obrigatório haver um sistema de convocatórias na plataforma com botões de confirmação (Sim/Não/Talvez).
+    \item \textbf{Falta de Histórico Clínico:} Um atleta agravou uma lesão (rotura muscular) durante um treino porque o treinador não foi informado da queixa física que tinha ocorrido em casa. O sistema precisa de um módulo onde a equipa técnica possa consultar os atletas inaptos em tempo real.
+    \item \textbf{Estatísticas e Material:} Há a necessidade de gráficos radar para comparar capacidades de atletas da mesma posição, além de um sistema rápido para registar assiduidade, ocorrências de jogo (golos, cartões) e requisitar material à secretaria.
+\end{itemize}
+
+\verIA{sec:ia_entrevistas}
+
+\subsubsection*{Perspetiva dos Atletas}
+\begin{itemize}
+    \item \textbf{Atestados Médicos Caducados:} Um problema crítico identificado foi a falta de avisos sobre a validade dos exames médicos desportivos, o que levou a que um atleta ficasse de fora de uma competição importante. A plataforma tem de alertar automaticamente para a caducidade destes documentos.
+    \item \textbf{Autonomia Clínica e Financeira:} Os atletas querem poder registar queixas físicas autonomamente para que estas cheguem de imediato ao treinador, e desejam ter acesso fácil aos horários, ao histórico de pagamentos de quotas e às faturas em formato digital.
+    \item \textbf{Perfil Individual Desportivo:} Foi pedida uma área pessoal onde o atleta possa acompanhar a evolução do peso, altura e estatísticas individuais ao longo da época. Foi também manifestado interesse numa biblioteca multimédia para os vídeos táticos partilhados pelo treinador e num espaço para o palmarés (prémios e distinções).
+\end{itemize}
+
+\verIA{sec:ia_entrevistas}
+
+
+\subsection{Questionário Online}\label{sec:rel_questionario}
+
+\subsubsection{Objetivo e Metodologia}
+
+Para complementar as entrevistas e a análise documental, foi feito um questionário online para recolher informação de mais pessoas e perceber quais eram as prioridades da maioria.
+
+O questionário foi criado no Google Forms e enviado para todos os membros do clube com email registado. As respostas foram recolhidas durante uma semana e foram obtidas 47 respostas válidas.
+
+\subsubsection{Estrutura do Questionário}
+
+O questionário foi organizado em quatro partes:
+
+\begin{enumerate}
+    \item \textbf{Perfil}: Tipo de utilizador, escalão etário, modalidade(s) praticada(s).
+
+    \item \textbf{Comunicação atual}: Como funciona a comunicação atual (WhatsApp, chamadas, presencial) e com que frequência há falhas de informação.
+
+    \item \textbf{Pagamentos}: Como é feito o pagamento de quotas, se há atrasos, e que métodos de pagamento preferem.
+
+    \item \textbf{Funcionalidades desejadas}: Lista de funcionalidades para priorizar (convocatórias, atestados, reserva de instalações, etc.) e espaço para sugestões adicionais.
+\end{enumerate}
+
+\verIA{sec:ia_questionario}
+
+
+
+\subsubsection{Análise dos Resultados}
+
+Os resultados confirmaram o que tinha sido dito nas entrevistas:
+
+\begin{itemize}
+    \item \textbf{87\%} dos inquiridos classificaram a comunicação atual como ``insuficiente'' ou ``muito insuficiente'';
+    \item \textbf{72\%} reportaram pelo menos uma situação nos últimos três meses em que falharam um compromisso por falta de informação atempada;
+    \item \textbf{91\%} manifestaram interesse em receber notificações automáticas sobre convocatórias e alterações de horário;
+    \item \textbf{65\%} indicaram preferência por pagamento de quotas através de referência Multibanco ou MB Way;
+    \item \textbf{78\%} dos encarregados de educação solicitaram acesso a um portal onde possam consultar a situação financeira e os documentos dos seus educandos.
+\end{itemize}
+
+Ao juntar estes dados com as entrevistas, foi possível definir uma ordem de prioridades para o desenvolvimento, com os módulos de comunicação e gestão financeira no topo.
+
+\subsubsection{Exemplo de Questão}
+
+Na figura seguinte é apresentado um exemplo de uma das questões que constavam no formulário enviado:
+
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth]{\includegraphics[width=0.9\textwidth]{forms.png}}
+    \caption{Exemplo de questão do questionário enviado aos \textit{stakeholders}}
+    \label{fig:forms-exemplo}
+\end{figure}
+
+\subsection{Síntese e Validação dos Requisitos Levantados}
+
+A combinação das três fontes de informação (documentos, entrevistas e questionário) permitiu ter uma visão completa das necessidades do sistema. Os requisitos foram reunidos num documento que foi apresentado à gerência para validar antes de avançar para a especificação formal.
+
+Nessa reunião foram discutidos os seguintes pontos:
+\begin{itemize}
+    \item Verificar se todas as áreas funcionais estavam cobertas;
+    \item Definir quais as funcionalidades mais urgentes;
+    \item Esclarecer dúvidas e requisitos que pareciam contraditórios;
+    \item Identificar limitações técnicas e financeiras que pudessem afetar o projeto.
+\end{itemize}
+
+A gerência aprovou o documento de requisitos e foi dada autorização para avançar para a especificação. As secções seguintes apresentam os requisitos identificados.
+
+\subsection{User Stories Representativas}\label{sec:user_stories}
+
+Antes da especificação formal, foi feito um resumo da informação das entrevistas e do questionário em \textit{user stories}, no formato \emph{``Como \textless papel\textgreater, quero \textless ação\textgreater, para \textless benefício\textgreater''}. As quinze \textit{stories} mais representativas, organizadas por perfil, são as seguintes:
+
+\paragraph{Atleta / Encarregado de Educação}
+\begin{itemize}
+    \item Como atleta, quero confirmar a minha disponibilidade para um jogo num clique, para que o treinador saiba com quem pode contar sem precisar de me ligar.
+    \item Como encarregado de educação com dois filhos no clube, quero pagar as duas quotas com uma única referência Multibanco, para evitar duplicações e atrasos.
+    \item Como atleta, quero receber um alerta 30 dias antes do meu atestado caducar, para não falhar competições por documentação atrasada.
+    \item Como encarregado de educação, quero ver num único ecrã o estado financeiro e clínico dos meus educandos, para acompanhar a vida desportiva deles sem ter de ir à secretaria.
+    \item Como atleta, quero registar uma queixa física a partir de casa, para que o treinador não me puxe num treino e me agrave a lesão.
+\end{itemize}
+
+\paragraph{Treinador}
+\begin{itemize}
+    \item Como treinador, quero ver imediatamente quais os atletas inaptos (atestado caducado, lesão, quotas em atraso), para não correr o risco de os incluir numa convocatória.
+    \item Como treinador, quero remarcar um treino a partir do telemóvel e que os atletas sejam avisados automaticamente, para não aparecerem no campo à hora errada.
+    \item Como treinador, quero registar as presenças no telemóvel durante o próprio treino, para não ter de copiar listas em papel mais tarde.
+    \item Como treinador, quero comparar atletas da mesma posição através de gráficos radar, para tomar decisões técnicas com base em dados objetivos.
+\end{itemize}
+
+\paragraph{Secretaria / Gerência}
+\begin{itemize}
+    \item Como funcionário da secretaria, quero ter uma fila única de aprovações pendentes (registos, atestados, documentos federativos), para não saltar entre ecrãs durante o dia.
+    \item Como gerente, quero exportar o ficheiro SAF-T com um clique no fim do mês, para cumprir as obrigações fiscais sem precisar de contabilista para isso.
+    \item Como gerente, quero ver \textit{dashboards} financeiros e desportivos exportáveis em PDF, para apresentar a potenciais patrocinadores em reuniões.
+    \item Como gerente, quero bloquear automaticamente atletas com mais de dois meses de quotas em atraso, para que a regra do clube seja aplicada de forma consistente.
+    \item Como funcionário da secretaria, quero validar um atestado médico submetido digitalmente sem ter de imprimir o ficheiro, para reduzir o trabalho de arquivo em papel.
+    \item Como gerente, quero gerir o calendário de reservas das instalações num único ecrã, para que duas equipas nunca apareçam no mesmo pavilhão à mesma hora.
+\end{itemize}
+
+Cada \textit{user story} está associada a um ou mais requisitos funcionais nas secções seguintes.
+
+\subsection{Norma de Especificação Adotada}
+
+Os requisitos seguintes foram especificados segundo as normas \textbf{IEEE 830-1998} e \textbf{ISO/IEC/IEEE 29148:2018}. Cada requisito tem um identificador único, prioridade, pré-condições, pós-condições e critérios de aceitação, e está ligado à sua origem (entrevista, documento ou questionário).
+
+\section{Requisitos Funcionais}\label{sec:requisitos_funcionais}
+
+\noindent\textit{Atalho: Saltar para \hyperref[sec:requisitos_nao_funcionais]{Requisitos Não-Funcionais} ou para o \hyperref[chap:especificacao_modelacao]{Próximo Capítulo (Modelação)}.}\par\medskip
+
+% ---------------------------------------------------------
+% REQUISITO 1
+% ---------------------------------------------------------
+O RF-01 é a base do sistema, pois suporta todos os outros módulos. Permite à gerência e à secretaria criar, editar e arquivar os perfis de todos os membros do clube, com os respetivos níveis de acesso.
+
+Ao criar ou editar um perfil, o sistema verifica se o email e o NIF já existem. Se já existirem, a operação é cancelada e é mostrado o erro. Se tudo estiver correto, o perfil é criado e as credenciais são enviadas por email. Quando um atleta ou funcionário sai do clube, o acesso é removido mas o histórico fica guardado por razões legais.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+
+\hline
+\caption{Especificação do Requisito Funcional: RF-01}
+\label{tab:rf-01} \\
+\endlastfoot
+
+\textbf{ID} & RF-01 \\ \hline
+\textbf{Nome do Requisito} & Gestão de Utilizadores e Perfis \\ \hline
+\textbf{Área do Sistema} & Gestão Global de Perfis \\ \hline
+\textbf{Ator Principal} & Atletas, Encarregados de Educação, Treinadores, Staff e Gerência \\ \hline
+\textbf{Descrição} & O sistema deve permitir a criação, edição e consulta de perfis para todos os intervenientes do clube. A visualização e edição das informações (pessoais, desportivas e médicas) devem ser controladas de forma dinâmica, dependendo estritamente do nível de acesso e do cargo (perfil de segurança) do utilizador autenticado. \\ \hline
+\textbf{Prioridade} & Alta \\ \hline
+\textbf{Origem} & Entrevista --- Gerência do CAP (Reunião 1) \\ \hline
+\textbf{Analista} & Tiago Martins \\ \hline
+\textbf{Pré-condições} & 1. O sistema de controlo de acessos baseado em papéis (RBAC - \textit{Role-Based Access Control}) tem de estar configurado. \newline 2. Para a visualização ou edição de perfis de terceiros, o utilizador tem de estar autenticado e possuir os privilégios necessários (ex: um Treinador tem de estar associado à equipa do Atleta que pretende consultar). \\ \hline
+\textbf{Pós-condições} & 1. Os dados do perfil são persistidos na base de dados com a devida encriptação em campos sensíveis (ex: passwords, dados médicos). \newline 2. É gerado um registo de auditoria (\textit{log}) interno documentando quem criou ou alterou o perfil e a respetiva data/hora. \newline 3. O perfil fica disponível ou restrito nas listagens globais do clube, conforme as regras de negócio associadas ao seu papel. \\ \hline
+\textbf{Critérios de Aceitação} & 1. O sistema deve garantir que um atleta/encarregado apenas consegue editar os seus próprios dados pessoais. \newline 2. A interface deve bloquear a visualização de dados financeiros (ex: quotas) aos Treinadores, limitando o acesso a esses campos estritamente à Gerência/Secretaria e ao próprio Atleta. \newline 3. A criação de contas com perfis de nível superior (Gerência, Treinadores) deve ser obrigatoriamente aprovada ou realizada por um Administrador do sistema. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+
+% ---------------------------------------------------------
+% REQUISITO 2
+% ---------------------------------------------------------
+O RF-02 define como os encarregados de educação se ligam aos perfis dos atletas menores. Esta funcionalidade foi pedida na entrevista com a gerência e no questionário, onde 78\% dos encarregados pediram um portal único para acompanhar a situação dos educandos.
+
+Para criar a ligação, os dois perfis têm de já existir e a associação tem de ser confirmada pela secretaria ou por um código do clube. Depois de ligados, as quotas dos educandos são geridas em conjunto, com uma única referência Multibanco/MBWay, e os avisos são enviados para o encarregado. Quando o atleta atingir a maioridade, a ligação pode ser removida.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+
+\hline
+\caption{Especificação do Requisito Funcional: RF-02}
+\label{tab:rf-02} \\
+\endlastfoot
+
+\textbf{ID} & RF-02 \\ \hline
+\textbf{Nome do Requisito} & Gestão de Perfis Parentais \\ \hline
+\textbf{Área do Sistema} & Gestão de Utilizadores e Perfis \\ \hline
+\textbf{Ator Principal} & Encarregado de Educação / Gerência \\ \hline
+\textbf{Descrição} & O sistema deve permitir a criação de um perfil de "Encarregado de Educação" e a sua associação formal a um ou múltiplos perfis de atletas (tipicamente menores de idade), centralizando a gestão de autorizações, acompanhamento desportivo e responsabilidades financeiras. \\ \hline
+\textbf{Prioridade} & Alta \\ \hline
+\textbf{Origem} & Questionário Online (47 respostas) + Entrevista Atleta \\ \hline
+\textbf{Analista} & Pedro Ferreira \\ \hline
+\textbf{Pré-condições} & 1. O perfil do Encarregado de Educação e os perfis dos respetivos atletas já se encontram criados no sistema. \newline 2. O processo de vinculação exige validação por parte da Secretaria/Gerência ou a introdução de um código/token de segurança único fornecido pelo clube para garantir a legitimidade da associação familiar. \\ \hline
+\textbf{Pós-condições} & 1. O Encarregado de Educação herda automaticamente as permissões de visualização e edição (quando aplicável) dos dados dos atletas associados. \newline 2. As contas correntes (quotas e pagamentos) dos vários educandos são consolidadas sob a responsabilidade financeira deste perfil parental. \newline 3. O sistema redireciona os alertas e notificações (ex: convocatórias, lesões, quotas em atraso) dos menores para os contactos do Encarregado de Educação. \\ \hline
+\textbf{Critérios de Aceitação} & 1. O sistema deve permitir que um encarregado de educação consulte a informação de vários educandos alternando entre eles de forma fluida na mesma interface. \newline 2. Deve ser possível gerar uma única referência de pagamento (MBWay/Multibanco) que englobe as quotas de todos os dependentes associados. \newline 3. Caso um atleta atinja a maioridade, o sistema deve permitir a desvinculação administrativa ou a transição de responsabilidades, caso seja solicitado. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+
+% ---------------------------------------------------------
+% REQUISITO 3
+% ---------------------------------------------------------
+O RF-03 resolve o problema mais referido pelos treinadores nas entrevistas: a dependência dos grupos de WhatsApp. Como esses grupos não têm garantias de leitura, já aconteceu metade dos atletas não ver a convocatória para o jogo do sábado. Este módulo cria um canal de mensagens dentro da plataforma, com histórico guardado na base de dados.
+
+Cada utilizador só vê os contactos da sua equipa. Um atleta só pode falar com os treinadores da sua equipa ou com a secretaria. O módulo permite conversas individuais e grupos criados pelos treinadores ou pela gerência, e suporta o envio de anexos pequenos para justificações ou táticas.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+
+\hline
+\caption{Especificação do Requisito Funcional: RF-03}
+\label{tab:rf-03} \\
+\endlastfoot
+
+\textbf{ID} & RF-03 \\ \hline
+\textbf{Nome do Requisito} & Sistema de Comunicação Interna (Chat) \\ \hline
+\textbf{Área do Sistema} & Comunicação e Notificações \\ \hline
+\textbf{Ator Principal} & Atletas, Encarregados de Educação, Treinadores e Gerência \\ \hline
+\textbf{Descrição} & O sistema deve disponibilizar um módulo centralizado de mensagens seguras que permita a comunicação direta (1-para-1) ou em grupo entre os vários intervenientes do clube, respeitando a sua estrutura hierárquica e desportiva. \\ \hline
+\textbf{Prioridade} & Alta \\ \hline
+\textbf{Origem} & Entrevista --- Treinador do CAP (Reunião 2) \\ \hline
+\textbf{Analista} & André Santos \\ \hline
+\textbf{Pré-condições} & 1. O utilizador tem de estar autenticado. \newline 2. O sistema de turmas/equipas tem de estar configurado para restringir a lista de contactos (ex: um atleta só pode iniciar conversa com os seus treinadores diretos ou com a secretaria, evitando spam global). \\ \hline
+\textbf{Pós-condições} & 1. A mensagem é armazenada de forma persistente e segura na base de dados, criando um histórico institucional e auditável. \newline 2. O destinatário (ou destinatários, no caso de grupos) recebe uma notificação imediata através da plataforma (e/ou push notification no telemóvel). \newline 3. O estado de leitura da mensagem é sincronizado entre os intervenientes. \\ \hline
+\textbf{Critérios de Aceitação} & 1. A interface deve apresentar a lista de contactos organizados logicamente (ex: "A minha Equipa", "Equipa Técnica", "Secretaria"). \newline 2. O sistema deve permitir que um treinador ou elemento da gerência crie grupos de conversação (ex: "Convocados Jogo Sábado"). \newline 3. O módulo deve suportar o envio de pequenos anexos (ex: imagens ou PDFs para justificações de faltas ou partilha de táticas). \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+
+% ---------------------------------------------------------
+% REQUISITO 4
+% ---------------------------------------------------------
+O RF-04 complementa o RF-03 com avisos automáticos gerados pelo sistema. Os casos mais comuns são: publicação de uma convocatória, alterações de horário ou local de treino, avisos de quotas a vencer e alertas de atestados a caducar. Para o utilizador receber o aviso basta ter o email ou telemóvel preenchido no perfil.
+
+A diferença para o RF-03 é que as notificações são automáticas e não precisam de intervenção humana, enquanto o chat é iniciado pelos utilizadores. Cada notificação fica registada para confirmar que foi enviada, o que evita disputas como ``ninguém me avisou''.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+
+\hline
+\caption{Especificação do Requisito Funcional: RF-04}
+\label{tab:rf-04} \\
+\endlastfoot
+
+\textbf{ID} & RF-04 \\ \hline
+\textbf{Nome do Requisito} & Motor de Notificações Automáticas \\ \hline
+\textbf{Área do Sistema} & Comunicação e Notificações \\ \hline
+\textbf{Ator Principal} & Atletas, Encarregados de Educação, Treinadores e Gerência \\ \hline
+\textbf{Descrição} & O sistema deve possuir um motor transversal capaz de gerar e enviar alertas automáticos (via push notification, email ou na própria plataforma) relativos a eventos críticos do clube, tais como alterações de horários de treinos, publicação de convocatórias, avisos de quotas em atraso e alertas de caducidade de exames médicos. \\ \hline
+\textbf{Prioridade} & Alta \\ \hline
+\textbf{Origem} & Questionário Online (47 respostas) \\ \hline
+\textbf{Analista} & Pedro Ferreira \\ \hline
+\textbf{Pré-condições} & 1. O utilizador tem de ter os seus dados de contacto (email/telefone) corretos no perfil e as permissões de notificação ativas na aplicação ou browser. \newline 2. Os gatilhos (eventos) têm de ocorrer no sistema (ex: um treinador altera a hora do treino, ou o servidor deteta que faltam 30 dias para um atestado caducar). \\ \hline
+\textbf{Pós-condições} & 1. A notificação é processada e despachada para os canais adequados de cada utilizador afetado. \newline 2. O sistema gera um registo (log) de auditoria comprovando que o aviso foi enviado com sucesso (essencial para evitar desculpas como "não fui avisado que o exame caducava"). \\ \hline
+\textbf{Critérios de Aceitação} & 1. Alterações de horários de treinos ou espaços físicos devem gerar uma notificação imediata (real-time) para a equipa correspondente. \newline 2. O sistema deve emitir alertas automáticos para a renovação do exame médico a 30 e a 15 dias da data de caducidade. \newline 3. O sistema deve enviar um lembrete automático e cordial aos encarregados de educação/atletas nos dias seguintes ao vencimento de uma quota não paga. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+
+% ---------------------------------------------------------
+% REQUISITO 5
+% ---------------------------------------------------------
+O RF-05 permite à gerência definir as modalidades do clube e gerir as épocas desportivas: abrir, transitar os atletas para os escalões certos e fechar com arquivo dos dados.
+
+Esta operação é restrita à gerência porque uma alteração pode afetar várias partes do sistema. No fecho de época, os registos de presenças, convocatórias e relatórios passam para modo de leitura. Ao desativar uma modalidade, o histórico fica guardado, apenas deixa de aparecer nos formulários de inscrição.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+
+\hline
+\caption{Especificação do Requisito Funcional: RF-05}
+\label{tab:rf-05} \\
+\endlastfoot
+
+\textbf{ID} & RF-05 \\ \hline
+\textbf{Nome do Requisito} & Gestão de Modalidades e Épocas \\ \hline
+\textbf{Área do Sistema} & Gestão Desportiva e Operacional \\ \hline
+\textbf{Ator Principal} & Gerência \\ \hline
+\textbf{Descrição} & O sistema deve permitir a criação, edição e inativação de modalidades desportivas oferecidas pelo clube, bem como a gestão completa do ciclo das épocas desportivas (abertura e fecho), automatizando a transição e a promoção dos atletas para os respetivos escalões etários no início de cada nova época. \\ \hline
+\textbf{Prioridade} & Alta \\ \hline
+\textbf{Origem} & Entrevista --- Gerência do CAP (Reunião 1) \\ \hline
+\textbf{Analista} & Tiago Martins \\ \hline
+\textbf{Pré-condições} & 1. O utilizador encontra-se autenticado com privilégios de nível de Gerência ou de Administrador do Sistema. \newline 2. Não existem dependências financeiras ou desportivas ativas a bloquear o encerramento da época anterior (ex: todos os jogos da época atual devem estar dados como concluídos). \\ \hline
+\textbf{Pós-condições} & 1. As novas modalidades e escalões ficam imediatamente disponíveis nos formulários de inscrição para atletas e encarregados de educação. \newline 2. No fecho de época, os registos de presenças, convocações e relatórios técnicos dessa época transitam para um estado de "apenas leitura" (histórico). \newline 3. O sistema recalcula as idades desportivas e aloca provisoriamente os atletas ativos aos escalões da nova época. \\ \hline
+\textbf{Critérios de Aceitação} & 1. A inativação de uma modalidade não deve apagar o histórico de dados desportivos ou financeiros do clube, devendo apenas ocultá-la de novas inscrições. \newline 2. O processo de transição de época deve apresentar à gerência uma listagem de pré-visualização das subidas de escalão antes da sua efetivação final na base de dados. \newline 3. O sistema deve permitir a configuração de escalões etários personalizados por modalidade (ex: Sub-15 no Futebol pode ter regras de idade diferentes de Cadetes na Natação). \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+
+% ---------------------------------------------------------
+% REQUISITO 6
+% ---------------------------------------------------------
+O RF-06 permite ao treinador ou à gerência criar, editar e cancelar treinos. Qualquer alteração tem de aparecer de imediato no calendário dos atletas. Este foi o problema mais referido pelo treinador na entrevista: como remarcava treinos por mensagem, muitos atletas nunca viam o aviso.
+
+O sistema bloqueia marcações que criem sobreposição de horários no mesmo espaço. Quando uma alteração ocorre com menos de 24 horas de antecedência, é enviada uma notificação automática a todos os envolvidos.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+
+\hline
+\caption{Especificação do Requisito Funcional: RF-06}
+\label{tab:rf-06} \\
+\endlastfoot
+
+\textbf{ID} & RF-06 \\ \hline
+\textbf{Nome do Requisito} & Planeamento de Horários e Treinos \\ \hline
+\textbf{Área do Sistema} & Gestão Desportiva e Operacional \\ \hline
+\textbf{Ator Principal} & Treinadores / Gerência (Criação) e Atletas / Encarregados de Educação (Consulta) \\ \hline
+\textbf{Descrição} & O sistema deve permitir aos treinadores ou membros da gerência criar, editar e cancelar sessões de treino. Qualquer marcação ou alteração efetuada deve refletir-se em tempo real nos calendários de consulta dos atletas afetados. \\ \hline
+\textbf{Prioridade} & Alta \\ \hline
+\textbf{Origem} & Entrevista --- Treinador do CAP (Reunião 2) \\ \hline
+\textbf{Analista} & André Santos \\ \hline
+\textbf{Pré-condições} & 1. O utilizador criador encontra-se autenticado com as permissões adequadas (Treinador associado à equipa ou Gerência). \newline 2. A época, a modalidade e a equipa/turma em questão encontram-se ativas. \newline 3. Os espaços físicos do clube (campos, pavilhões) já estão parametrizados na base de dados. \\ \hline
+\textbf{Pós-condições} & 1. A sessão de treino é persistida na base de dados, reservando automaticamente o espaço físico selecionado para aquele horário. \newline 2. O calendário individual na área dos atletas correspondentes é imediatamente atualizado. \newline 3. Caso a alteração ocorra num prazo curto (ex: menos de 24h), o sistema aciona o motor de notificações para alertar os envolvidos sobre a mudança. \\ \hline
+\textbf{Critérios de Aceitação} & 1. O formulário de marcação deve suportar a criação de eventos recorrentes (ex: treinos todas as terças e quintas às 19h00 durante toda a época). \newline 2. O sistema tem de bloquear ativamente a gravação se detetar uma sobreposição de horários no mesmo espaço físico com outra equipa. \newline 3. A interface de calendário dos atletas deve destacar visualmente (com cores ou ícones) os treinos que sofreram alterações recentes de horário ou local. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+
+% ---------------------------------------------------------
+% REQUISITO RF-07
+% ---------------------------------------------------------
+
+O RF-07 permite registar as presenças nos treinos de forma digital. Normalmente este registo é feito em papel, o que dificulta a análise da assiduidade ao longo da época.
+
+O sistema gera automaticamente a lista de atletas com base na equipa, e o treinador marca a presença ou falta de cada um num telemóvel ou tablet. O histórico fica disponível para o atleta e para os encarregados de educação.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Funcional: RF-07}
+\label{tab:rf-07} \\
+\endlastfoot
+\textbf{ID} & RF-07 \\ \hline
+\textbf{Nome do Requisito} & Gestão de Presenças e Faltas \\ \hline
+\textbf{Área do Sistema} & Gestão Desportiva e Operacional \\ \hline
+\textbf{Ator Principal} & Treinadores e Atletas/EE \\ \hline
+\textbf{Descrição} & O sistema deve permitir ao treinador realizar o registo digital da assiduidade de cada sessão de treino, marcando a presença ou falta de cada atleta convocado. As faltas devem ser categorizadas por tipologia (justificada ou injustificada) e o historial de assiduidade deve ser acessível tanto ao treinador como ao próprio atleta ou encarregado de educação. \\ \hline
+\textbf{Prioridade} & Alta \\ \hline
+\textbf{Origem} & Entrevista --- Treinador do CAP (Reunião 2) \\ \hline
+\textbf{Analista} & André Santos \\ \hline
+\textbf{Pré-condições} & 1. Autenticado com perfil de Treinador associado à equipa/turma. \newline 2. Sessão de treino criada e agendada no calendário. \newline 3. Atletas inscritos na modalidade e escalão corretos. \\ \hline
+\textbf{Pós-condições} & 1. Registo de assiduidade persistido e sessão passa a ``Realizada/Concluída''. \newline 2. Estatísticas de assiduidade recalculadas automaticamente em \textit{background}. \newline 3. Histórico visível na área pessoal do atleta e painéis gerenciais. \\ \hline
+\textbf{Critérios de Aceitação} & 1. Interface responsiva e otimizada para uso em telemóveis (lista com botões de alternância rápida). \newline 2. Sistema carrega automaticamente a lista de chamada. \newline 3. Atleta/encarregado visualiza motivo e tipologia de faltas. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RF-08
+% ---------------------------------------------------------
+
+O RF-08 permite ao treinador criar e enviar convocatórias para jogos ou eventos. O treinador seleciona os atletas de uma lista que já mostra quem está impedido (lesão, suspensão, indisponibilidade). Os atletas recebem uma notificação e podem confirmar ou recusar, sendo obrigatório justificar em caso de recusa. O treinador tem um painel com o estado de cada convocado em tempo real.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Funcional: RF-08}
+\label{tab:rf-08} \\
+\endlastfoot
+\textbf{ID} & RF-08 \\ \hline
+\textbf{Nome do Requisito} & Gestão de Convocatórias e Disponibilidade \\ \hline
+\textbf{Área do Sistema} & Gestão Desportiva e Operacional \\ \hline
+\textbf{Ator Principal} & Treinadores, Atletas e EE \\ \hline
+\textbf{Descrição} & O sistema deve permitir ao treinador criar e divulgar listas de convocatória para eventos desportivos (jogos, torneios, concentrações), permitindo que cada atleta ou encarregado de educação confirme ou recuse a disponibilidade através da plataforma, com indicação obrigatória do motivo em caso de recusa. \\ \hline
+\textbf{Prioridade} & Alta \\ \hline
+\textbf{Origem} & Entrevista --- Treinador do CAP (Reunião 2) \\ \hline
+\textbf{Analista} & André Santos \\ \hline
+\textbf{Pré-condições} & 1. Autenticado com perfil de Treinador. \newline 2. Evento desportivo criado no calendário com data, hora e local. \newline 3. Atletas selecionáveis pertencem ao plantel da equipa. \\ \hline
+\textbf{Pós-condições} & 1. Lista de convocados persistida na BD. \newline 2. Motor de notificações envia alerta imediato. \newline 3. Respostas de disponibilidade acessíveis em painel de controlo em tempo real. \\ \hline
+\textbf{Critérios de Aceitação} & 1. Seleção de atletas por lista ou filtros, visualizando impedimentos. \newline 2. Interface com botões de ação claros e motivo obrigatório se negativo. \newline 3. \textit{Dashboard} com confirmados, ausentes e pendentes. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RF-09
+% ---------------------------------------------------------
+
+O RF-09 permite ao treinador partilhar planos de treino e recursos táticos com os atletas, sem depender de canais informais. O treinador faz o \textit{upload} de vídeos, PDFs ou imagens e associa-os a sessões ou épocas. Os atletas da equipa acedem ao conteúdo em modo de leitura, e o acesso é separado por equipa para garantir que os dados táticos ficam protegidos.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Funcional: RF-09}
+\label{tab:rf-09} \\
+\endlastfoot
+\textbf{ID} & RF-09 \\ \hline
+\textbf{Nome do Requisito} & Planos de Treino e Recursos Táticos \\ \hline
+\textbf{Área do Sistema} & Gestão Desportiva e Operacional \\ \hline
+\textbf{Ator Principal} & Treinadores e Atletas \\ \hline
+\textbf{Descrição} & O sistema deve permitir ao treinador criar e partilhar planos de treino estruturados e recursos táticos multimédia (vídeos de análise, esquemas táticos em PDF, imagens) com os atletas da sua equipa, organizando esses conteúdos por sessão ou época desportiva. \\ \hline
+\textbf{Prioridade} & Média \\ \hline
+\textbf{Origem} & Entrevista --- Treinador do CAP (Reunião 2) \\ \hline
+\textbf{Analista} & André Santos \\ \hline
+\textbf{Pré-condições} & 1. Treinador autenticado e associado à equipa. \newline 2. Módulo de armazenamento configurado com espaço disponível. \\ \hline
+\textbf{Pós-condições} & 1. Plano/ficheiro armazenado e associado à equipa ou sessão. \newline 2. Atletas com acesso imediato em modo leitura. \newline 3. Notificação opcional enviada aos atletas. \\ \hline
+\textbf{Critérios de Aceitação} & 1. \textit{Upload} aceita MP4, PDF, imagens com limite de tamanho. \newline 2. Associação direta a sessão agendada. \newline 3. Isolamento de informação entre equipas. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RF-10
+% ---------------------------------------------------------
+
+O RF-10 permite registar eventos de jogo (golos, cartões, substituições) e ocorrências disciplinares. O sistema atualiza automaticamente as estatísticas do atleta e bloqueia a sua inclusão em convocatórias se houver uma suspensão ativa. Cada atleta só vê os seus próprios registos, enquanto a equipa técnica e a gerência têm acesso ao plantel todo.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Funcional: RF-10}
+\label{tab:rf-10} \\
+\endlastfoot
+\textbf{ID} & RF-10 \\ \hline
+\textbf{Nome do Requisito} & Registo de Ocorrências e Disciplina \\ \hline
+\textbf{Área do Sistema} & Gestão Desportiva e Operacional \\ \hline
+\textbf{Ator Principal} & Treinadores/Gerência e Atletas/EE \\ \hline
+\textbf{Descrição} & O sistema deve permitir o registo estruturado de ocorrências no contexto desportivo, distinguindo entre eventos de jogo (golos, assistências, cartões, substituições) e ocorrências disciplinares (comportamentos antidesportivos, sanções federativas). As ocorrências devem alimentar automaticamente as estatísticas individuais e podem gerar suspensões que bloqueiam o atleta em convocatórias futuras. \\ \hline
+\textbf{Prioridade} & Média \\ \hline
+\textbf{Origem} & Análise Documental (Relatório Oficial de Jogo) \\ \hline
+\textbf{Analista} & Daniel Parente \\ \hline
+\textbf{Pré-condições} & 1. Autenticado com privilégios necessários. \newline 2. Partida/competição criada no calendário. \newline 3. Atleta visado com perfil ativo. \\ \hline
+\textbf{Pós-condições} & 1. Ocorrência guardada no histórico do atleta. \newline 2. Estatísticas de desempenho atualizadas. \newline 3. Suspensão disciplinar bloqueia inclusão em convocatórias. \\ \hline
+\textbf{Critérios de Aceitação} & 1. Distinção clara entre ``Eventos de Jogo'' e ``Ocorrências Disciplinares''. \newline 2. Atleta/EE vê apenas as suas próprias ocorrências. \newline 3. Sanção grave permite anexar relatório PDF. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RF-11
+% ---------------------------------------------------------
+
+O RF-11 trata da gestão do Exame Médico Desportivo. O atestado é obrigatório para competições oficiais, por isso a sua gestão é importante. O atleta ou encarregado faz o \textit{upload} do documento, que fica pendente de aprovação pela secretaria. São enviados alertas antes da data de validade e, se caducar sem renovação, o sistema muda o estado do atleta para ``Inapto'' e bloqueia a sua inclusão em convocatórias.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Funcional: RF-11}
+\label{tab:rf-11} \\
+\endlastfoot
+\textbf{ID} & RF-11 \\ \hline
+\textbf{Nome do Requisito} & Gestão do Exame Médico Desportivo \\ \hline
+\textbf{Área do Sistema} & Saúde e Bem-Estar \\ \hline
+\textbf{Ator Principal} & Atletas/EE e Gerência \\ \hline
+\textbf{Descrição} & O sistema deve centralizar a gestão do Exame Médico Desportivo (EMD), permitindo o \textit{upload} seguro do certificado médico, o controlo da data de validade e a emissão de alertas proativos de renovação. O EMD é um requisito obrigatório federativo sem o qual o atleta não pode participar em competições oficiais. \\ \hline
+\textbf{Prioridade} & Alta (Requisito legal e federativo obrigatório) \\ \hline
+\textbf{Origem} & Análise Documental (Atestado Médico Desportivo) \\ \hline
+\textbf{Analista} & Tiago Martins \\ \hline
+\textbf{Pré-condições} & 1. Utilizador autenticado. \newline 2. Perfil base do atleta criado na BD. \\ \hline
+\textbf{Pós-condições} & 1. Documento armazenado de forma segura e encriptada (RGPD). \newline 2. Estado do atleta: ``Pendente de Validação'' --- após aprovação --- ``Apto''. \newline 3. Alertas automáticos para datas de caducidade programados. \\ \hline
+\textbf{Critérios de Aceitação} & 1. Formulário aceita PDF, JPG, PNG com limite de 5MB. \newline 2. Notificações a 30 e 15 dias antes de caducidade. \newline 3. Se data ultrapassada sem nova submissão válida, estado muda para ``Inapto'', bloqueando convocatórias. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RF-12
+% ---------------------------------------------------------
+
+O RF-12 permite ao atleta ou encarregado reportar uma lesão ou queixa física. O treinador recebe uma notificação imediata e o atleta fica destacado nas listas do plantel. O sistema impede que o treinador inclua um atleta lesionado numa convocatória enquanto o estado ``Lesionado'' estiver ativo.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Funcional: RF-12}
+\label{tab:rf-12} \\
+\endlastfoot
+\textbf{ID} & RF-12 \\ \hline
+\textbf{Nome do Requisito} & Gestão de Lesões e Recuperação \\ \hline
+\textbf{Área do Sistema} & Saúde e Bem-Estar \\ \hline
+\textbf{Ator Principal} & Atletas/EE e Gerência \\ \hline
+\textbf{Descrição} & O sistema deve disponibilizar um canal de registo e comunicação de lesões e indisponibilidades físicas dos atletas, permitindo ao atleta ou encarregado de educação reportar uma queixa, ao departamento médico gerir o processo de recuperação e ao treinador ter visibilidade imediata sobre a disponibilidade do plantel. \\ \hline
+\textbf{Prioridade} & Alta \\ \hline
+\textbf{Origem} & Entrevista --- Treinador do CAP (Reunião 2) \\ \hline
+\textbf{Analista} & André Santos \\ \hline
+\textbf{Pré-condições} & 1. Utilizador autenticado. \newline 2. Atleta com perfil ativo e integrado no plantel. \\ \hline
+\textbf{Pós-condições} & 1. Estado do atleta atualizado para ``Lesionado'' ou ``Condicionado'' na BD. \newline 2. Notificação imediata ao treinador e fisioterapeuta. \newline 3. Atleta destacado visualmente nas listas de plantel. \\ \hline
+\textbf{Critérios de Aceitação} & 1. Formulário de queixa com zona do corpo, nível de dor e descrição. \newline 2. Vista ``Zona de Lesionados'' exclusiva para Treinadores e Médicos. \newline 3. Bloqueio/alerta se treinador tenta incluir atleta ``Lesionado'' em convocatória. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RF-13
+% ---------------------------------------------------------
+
+O RF-13 permite registar e acompanhar os dados físicos dos atletas ao longo das épocas (peso, altura, IMC, frequência cardíaca). O sistema mostra a evolução em gráficos filtráveis por período. Esta informação é confidencial e só o atleta, o encarregado e os técnicos ligados à equipa podem aceder.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Funcional: RF-13}
+\label{tab:rf-13} \\
+\endlastfoot
+\textbf{ID} & RF-13 \\ \hline
+\textbf{Nome do Requisito} & Acompanhamento Físico e Evolução de Métricas \\ \hline
+\textbf{Área do Sistema} & Saúde e Bem-Estar \\ \hline
+\textbf{Ator Principal} & Atletas/EE e Treinadores/Dept.\ Médico \\ \hline
+\textbf{Descrição} & O sistema deve permitir o registo periódico e o acompanhamento longitudinal dos dados antropométricos e biométricos dos atletas (peso, altura, IMC, frequência cardíaca de repouso), gerando representações gráficas da evolução ao longo das épocas desportivas para apoio às decisões da equipa técnica e médica. \\ \hline
+\textbf{Prioridade} & Média \\ \hline
+\textbf{Origem} & Entrevista --- Atleta do CAP (Reunião 3) \\ \hline
+\textbf{Analista} & Pedro Ferreira \\ \hline
+\textbf{Pré-condições} & 1. Utilizador (treinador, médico ou atleta) autenticado. \newline 2. Perfil do atleta ativo. \\ \hline
+\textbf{Pós-condições} & 1. Novos dados anexados ao processo do atleta com data de registo. \newline 2. Métricas derivadas (IMC) recalculadas e gráficos atualizados. \newline 3. Histórico disponível para equipa técnica. \\ \hline
+\textbf{Critérios de Aceitação} & 1. Gráficos de linhas filtráveis por período. \newline 2. Acesso estritamente confidencial. \newline 3. Validação de dados (impede valores negativos/irrealistas). \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RF-14
+% ---------------------------------------------------------
+
+O RF-14 centraliza a entrega de documentos de identificação necessários para as federações e seguros desportivos. Os atletas ou encarregados fazem o \textit{upload} dos documentos (CC, Passaporte, fotos) diretamente na plataforma. A secretaria valida ou rejeita cada documento. Toda a informação é encriptada e os treinadores não têm acesso a estes dados.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Funcional: RF-14}
+\label{tab:rf-14} \\
+\endlastfoot
+\textbf{ID} & RF-14 \\ \hline
+\textbf{Nome do Requisito} & Gestão Documental e Federativa \\ \hline
+\textbf{Área do Sistema} & Saúde e Bem-Estar \\ \hline
+\textbf{Ator Principal} & Atletas/EE (Upload) e Gerência (Processamento) \\ \hline
+\textbf{Descrição} & O sistema deve permitir o carregamento (\textit{upload}) seguro de cópias digitais de documentos de identificação oficiais (Cartão de Cidadão, Passaporte, fotos tipo passe), centralizando a informação necessária para os processos de filiação nas federações desportivas e ativação de apólices de seguro. \\ \hline
+\textbf{Prioridade} & Alta (Obrigatório para competições oficiais) \\ \hline
+\textbf{Origem} & Entrevista --- Gerência do CAP (Reunião 1) \\ \hline
+\textbf{Analista} & Tiago Martins \\ \hline
+\textbf{Pré-condições} & 1. Utilizador autenticado. \newline 2. Perfil base do atleta criado e associado a modalidade que exige inscrição federativa. \\ \hline
+\textbf{Pós-condições} & 1. Ficheiros armazenados de forma encriptada (RGPD). \newline 2. Secretaria recebe alerta de novos documentos pendentes. \newline 3. Estado do atleta: ``A aguardar validação da Secretaria''. \\ \hline
+\textbf{Critérios de Aceitação} & 1. Limitar ficheiros a PDF, JPG, PNG com máx. 5MB. \newline 2. Acesso restrito à Gerência e remetente (bloqueado a Treinadores e Staff). \newline 3. Secretaria pode validar ou rejeitar, gerando notificação automática. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RF-15
+% ---------------------------------------------------------
+
+O RF-15 disponibiliza painéis com dados desportivos. Cada tipo de utilizador vê informação diferente: o atleta vê a sua própria evolução, o treinador compara métricas do plantel e a gerência vê o panorama geral do clube. Os dados são apresentados em modo de leitura, com filtros por período, e a gerência pode exportar para PDF ou Excel.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Funcional: RF-15}
+\label{tab:rf-15} \\
+\endlastfoot
+\textbf{ID} & RF-15 \\ \hline
+\textbf{Nome do Requisito} & Painéis de Desempenho (Dashboards) \\ \hline
+\textbf{Área do Sistema} & Análise e Desempenho \\ \hline
+\textbf{Ator Principal} & Atletas/EE, Treinadores e Gerência \\ \hline
+\textbf{Descrição} & O sistema deve gerar painéis de visualização gráfica (\textit{dashboards}) dinâmicos baseados no histórico de dados. Os atletas consultam o seu próprio desempenho, os treinadores acedem a comparações métricas do seu plantel (ex: gráficos radar) e a gerência visualiza o panorama global desportivo do clube. \\ \hline
+\textbf{Prioridade} & Média \\ \hline
+\textbf{Origem} & Entrevista --- Gerência do CAP (Reunião 1) \\ \hline
+\textbf{Analista} & Tiago Martins \\ \hline
+\textbf{Pré-condições} & 1. Utilizador autenticado. \newline 2. Sistema possui dados acumulados suficientes para gerar representações estatísticas. \\ \hline
+\textbf{Pós-condições} & 1. Sistema compila dados e renderiza gráficos e tabelas ajustados ao nível de acesso. \newline 2. Dados apresentados em modo \textit{read-only}. \\ \hline
+\textbf{Critérios de Aceitação} & 1. Isolamento de informação (atleta vê apenas as suas estatísticas). \newline 2. Filtros temporais (últimos 30 dias, época atual, etc.). \newline 3. Gerência pode exportar para PDF ou Excel. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RF-16
+% ---------------------------------------------------------
+
+O RF-16 permite ao treinador registar avaliações técnicas dos atletas e definir objetivos individuais com prazos. O atleta e o encarregado podem ver as avaliações e objetivos que lhes dizem respeito, sem acesso ao que é de outros atletas do plantel.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Funcional: RF-16}
+\label{tab:rf-16} \\
+\endlastfoot
+\textbf{ID} & RF-16 \\ \hline
+\textbf{Nome do Requisito} & Avaliação Qualitativa e Objetivos \\ \hline
+\textbf{Área do Sistema} & Análise e Desempenho \\ \hline
+\textbf{Ator Principal} & Treinadores (Registo) e Atletas/EE (Consulta) \\ \hline
+\textbf{Descrição} & O sistema deve permitir à equipa técnica o registo de avaliações qualitativas (notas, relatórios técnicos) após treinos ou jogos, bem como a definição e acompanhamento de objetivos individuais de progressão para cada atleta da sua equipa. \\ \hline
+\textbf{Prioridade} & Média \\ \hline
+\textbf{Origem} & Entrevista --- Treinador do CAP (Reunião 2) \\ \hline
+\textbf{Analista} & André Santos \\ \hline
+\textbf{Pré-condições} & 1. Autenticado com perfil de Treinador. \newline 2. Atleta a avaliar inscrito e integrado no plantel. \\ \hline
+\textbf{Pós-condições} & 1. Relatório/objetivo persistido e anexado ao processo desportivo. \newline 2. Atleta/EE tem acesso de leitura na área pessoal. \newline 3. Notificação informando de nova avaliação/objetivo. \\ \hline
+\textbf{Critérios de Aceitação} & 1. Formulário com pontuações rápidas (escalas/estrelas) e texto livre. \newline 2. Objetivos com \textit{deadlines} e estados (``Em curso'', ``Atingido'', ``Não Atingido''). \newline 3. Total privacidade (atleta não vê avaliações de colegas). \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RF-17
+% ---------------------------------------------------------
+
+O RF-17 trata da gestão das quotas e pagamentos. O sistema gera referências Multibanco e MBWay automaticamente, regista os pagamentos na conta do sócio e emite a fatura em PDF. Se um atleta tiver mais de dois meses de quotas em atraso, o sistema bloqueia automaticamente a sua inclusão em convocatórias.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Funcional: RF-17}
+\label{tab:rf-17} \\
+\endlastfoot
+\textbf{ID} & RF-17 \\ \hline
+\textbf{Nome do Requisito} & Gestão de Quotas e Pagamentos \\ \hline
+\textbf{Área do Sistema} & Tesouraria e Contabilidade \\ \hline
+\textbf{Ator Principal} & Atletas/Encarregados de Educação (Pagamento) e Tesouraria/Gerência (Gestão) \\ \hline
+\textbf{Descrição} & O sistema deve incluir um motor financeiro integrado para a gestão de contas correntes, permitindo a geração de referências de pagamento automáticas (Multibanco, MBWay), a emissão de recibos e a monitorização de valores em atraso. \\ \hline
+\textbf{Prioridade} & Alta (Crítico para a sustentabilidade do clube) \\ \hline
+\textbf{Origem} & Análise Documental (Fatura/Recibo de Quota) \\ \hline
+\textbf{Analista} & Pedro Ferreira \\ \hline
+\textbf{Pré-condições} & 1. Utilizador autenticado. \newline 2. Integração com \textit{gateways} de pagamento externos (SIBS, Ifthenpay) configurada e ativa. \newline 3. Plano de pagamentos previamente definido pela gerência. \\ \hline
+\textbf{Pós-condições} & 1. Transação averbada automaticamente na conta corrente do utilizador. \newline 2. Fatura/recibo em PDF disponibilizado para \textit{download}. \newline 3. Suspensões desportivas levantadas se dívida regularizada. \\ \hline
+\textbf{Critérios de Aceitação} & 1. Perfil parental consolida quotas de vários educandos. \newline 2. Bloqueio automático (mais de 2 meses de quotas em atraso). \newline 3. Vista ``Devedores'' em tempo real com motor de notificações. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RF-18
+% ---------------------------------------------------------
+
+O RF-18 dá à gerência uma visão centralizada de toda a atividade financeira do clube: quotas, salários, patrocínios e despesas com fornecedores. Os dados aparecem em gráficos e podem ser exportados para PDF ou Excel. O acesso é restrito à gerência e à tesouraria.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Funcional: RF-18}
+\label{tab:rf-18} \\
+\endlastfoot
+\textbf{ID} & RF-18 \\ \hline
+\textbf{Nome do Requisito} & Contabilidade Global do Clube \\ \hline
+\textbf{Área do Sistema} & Tesouraria e Contabilidade \\ \hline
+\textbf{Ator Principal} & Gerência/Tesouraria \\ \hline
+\textbf{Descrição} & O sistema deve disponibilizar painéis de controlo (\textit{dashboards}) financeiros avançados para a gerência, permitindo a gestão e visualização centralizada de todas as despesas e receitas, incluindo contratos (vencimentos da equipa técnica e \textit{staff}), patrocínios e pagamentos a fornecedores (água, eletricidade, transportes). \\ \hline
+\textbf{Prioridade} & Alta \\ \hline
+\textbf{Origem} & Entrevista --- Gerência do CAP (Reunião 1) \\ \hline
+\textbf{Analista} & Tiago Martins \\ \hline
+\textbf{Pré-condições} & 1. Autenticado com perfil restrito de topo (Gerência, Tesouraria ou Administração). \newline 2. Movimentos financeiros registados na BD. \\ \hline
+\textbf{Pós-condições} & 1. Sistema agrega dados e gera relatórios de balanço em tempo real. \newline 2. Dados exportáveis (PDF ou Excel). \\ \hline
+\textbf{Critérios de Aceitação} & 1. Gráficos circulares/barras comparando rendimentos vs. gastos. \newline 2. Registo de faturas de fornecedores com alertas de data limite. \newline 3. Acesso estritamente bloqueado a Atletas, EE e Treinadores. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RF-19
+% ---------------------------------------------------------
+
+O RF-19 trata da obrigação legal de comunicar as receitas à Autoridade Tributária através do ficheiro SAF-T. O sistema gera o ficheiro XML automaticamente com base nas transações registadas, assina cada fatura com RSA e mostra um relatório de erros antes de gerar o ficheiro final. O acesso é restrito à gerência e à contabilidade.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Funcional: RF-19}
+\label{tab:rf-19} \\
+\endlastfoot
+\textbf{ID} & RF-19 \\ \hline
+\textbf{Nome do Requisito} & Conformidade Fiscal (Exportação SAF-T) \\ \hline
+\textbf{Área do Sistema} & Tesouraria e Contabilidade \\ \hline
+\textbf{Ator Principal} & Gerência/Tesouraria/Contabilista \\ \hline
+\textbf{Descrição} & O sistema deve garantir o cumprimento das obrigações legais através da geração e exportação de ficheiros de faturação normalizados (como o formato SAF-T), permitindo a comunicação das receitas do clube (quotas, \textit{merchandising}, alugueres) à Autoridade Tributária. \\ \hline
+\textbf{Prioridade} & Alta (Obrigatório por lei) \\ \hline
+\textbf{Origem} & Entrevista --- Gerência do CAP (Reunião 1) \\ \hline
+\textbf{Analista} & Daniel Parente \\ \hline
+\textbf{Pré-condições} & 1. Autenticado com perfil de topo financeiro. \newline 2. Dados fiscais do clube configurados (NIF, morada, série de faturação). \newline 3. Recibos/faturas emitidos e validados no período a exportar. \\ \hline
+\textbf{Pós-condições} & 1. Sistema compila transações e gera ficheiro XML conforme Finanças. \newline 2. Ficheiro disponível para \textit{download} seguro. \newline 3. Registo de auditoria interno da extração. \\ \hline
+\textbf{Critérios de Aceitação} & 1. Seleção precisa do intervalo temporal. \newline 2. Validação prévia com relatório de erros (anomalias). \newline 3. Acesso estritamente restrito a perfis financeiros autorizados. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RF-20
+% ---------------------------------------------------------
+
+O RF-20 resolve o problema de conflitos de agendamento nos espaços do clube. Na entrevista com a gerência foi referido um caso em que duas equipas foram ao mesmo pavilhão à mesma hora. O módulo disponibiliza um calendário onde treinadores e gerência podem reservar espaços, e o sistema bloqueia marcações em duplicado. Para alugueres externos, a tesouraria é notificada para emitir a fatura.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Funcional: RF-20}
+\label{tab:rf-20} \\
+\endlastfoot
+\textbf{ID} & RF-20 \\ \hline
+\textbf{Nome do Requisito} & Gestão de Espaços Físicos \\ \hline
+\textbf{Área do Sistema} & Logística, Infraestruturas e Equipamentos \\ \hline
+\textbf{Ator Principal} & Gerência e Treinadores \\ \hline
+\textbf{Descrição} & O sistema deve disponibilizar um calendário unificado para a gestão e reserva dos espaços físicos do clube (campos, pavilhões, balneários, ginásios), garantindo a alocação correta para os treinos/jogos e permitindo o registo e controlo de alugueres a entidades externas. \\ \hline
+\textbf{Prioridade} & Alta \\ \hline
+\textbf{Origem} & Entrevista --- Gerência do CAP (Reunião 1) \\ \hline
+\textbf{Analista} & Tiago Martins \\ \hline
+\textbf{Pré-condições} & 1. Autenticado com permissões de gestão de horários (Treinador ou Gerência). \newline 2. Espaços físicos e características parametrizados no sistema. \\ \hline
+\textbf{Pós-condições} & 1. Reserva registada e refletida imediatamente no calendário global. \newline 2. Espaço vinculado à sessão da equipa. \newline 3. Notificação à tesouraria para faturação de aluguer externo. \\ \hline
+\textbf{Critérios de Aceitação} & 1. Bloqueio proativo de dupla marcação. \newline 2. Calendário com vista diária/semanal/mensal com códigos de cores. \newline 3. Gerência define períodos de inatividade (obras/manutenção). \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RF-21
+% ---------------------------------------------------------
+
+O RF-21 permite agendar e registar as intervenções de manutenção nas instalações. Durante uma manutenção, o espaço fica bloqueado para novas reservas e os treinadores afetados recebem uma notificação. Os custos são registados e integrados na contabilidade.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Funcional: RF-21}
+\label{tab:rf-21} \\
+\endlastfoot
+\textbf{ID} & RF-21 \\ \hline
+\textbf{Nome do Requisito} & Manutenção de Infraestruturas \\ \hline
+\textbf{Área do Sistema} & Logística, Infraestruturas e Equipamentos \\ \hline
+\textbf{Ator Principal} & Gerência/Staff (Manutenção) \\ \hline
+\textbf{Descrição} & O sistema deve permitir o agendamento e o registo de intervenções de manutenção preventivas e curativas nas infraestruturas do clube (ex: tratamento de relvados, afinação de iluminação, reparação de balneários), articulando essas ações com a disponibilidade do calendário. \\ \hline
+\textbf{Prioridade} & Média \\ \hline
+\textbf{Origem} & Entrevista --- Gerência do CAP (Reunião 1) \\ \hline
+\textbf{Analista} & Tiago Martins \\ \hline
+\textbf{Pré-condições} & 1. Autenticado com perfil Gerência ou \textit{Staff} de manutenção. \newline 2. Espaços físicos parametrizados no sistema. \\ \hline
+\textbf{Pós-condições} & 1. Registo guardado no histórico do espaço físico. \newline 2. Bloqueio automático de novas reservas durante a manutenção. \newline 3. Notificação a treinadores/equipas afetados. \\ \hline
+\textbf{Critérios de Aceitação} & 1. Estados de intervenção (``Agendada'', ``Em curso'', ``Concluída''). \newline 2. Integração com contabilidade para registo de custos (faturas/orçamentos). \newline 3. Bloqueio visualmente distinto no calendário. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RF-22
+% ---------------------------------------------------------
+
+O RF-22 centraliza a gestão do inventário e do fardamento do clube. Os atletas podem encomendar e pagar fardamento diretamente na plataforma, com o pagamento registado na sua conta. A gerência e os treinadores controlam o stock com alertas de nível mínimo e distinção entre material de venda e material de treino.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Funcional: RF-22}
+\label{tab:rf-22} \\
+\endlastfoot
+\textbf{ID} & RF-22 \\ \hline
+\textbf{Nome do Requisito} & Gestão de Stock e Loja \\ \hline
+\textbf{Área do Sistema} & Logística, Infraestruturas e Equipamentos \\ \hline
+\textbf{Ator Principal} & Gerência/Treinadores (Controlo) e Atletas/Encarregados de Educação (Encomendas) \\ \hline
+\textbf{Descrição} & O sistema deve disponibilizar um módulo de loja interna e gestão de inventário, permitindo aos atletas encomendar e pagar fardamento através da plataforma. Simultaneamente, permite à gerência e aos treinadores controlar o \textit{stock} existente e gerir a requisição de material desportivo (bolas, coletes, cones) para o dia a dia. \\ \hline
+\textbf{Prioridade} & Média \\ \hline
+\textbf{Origem} & Questionário Online (47 respostas) \\ \hline
+\textbf{Analista} & Pedro Ferreira \\ \hline
+\textbf{Pré-condições} & 1. Utilizador autenticado com o perfil adequado. \newline 2. Catálogo de produtos e fardamento parametrizado no sistema com preços e níveis de \textit{stock} definidos. \\ \hline
+\textbf{Pós-condições} & 1. Encomenda do atleta gera movimento na conta corrente e referência de pagamento/recibo. \newline 2. \textit{Stock} atualizado (deduzido). \newline 3. Gerência/rouparia notificada. \\ \hline
+\textbf{Critérios de Aceitação} & 1. Interface da loja intuitiva com tamanhos e preço final. \newline 2. Alerta de \textit{stock} mínimo. \newline 3. Distinção entre ``Material de Venda'' e ``Material de Treino''. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RF-23
+% ---------------------------------------------------------
+
+O RF-23 permite à gerência criar e gerir eventos extra-desportivos como galas, jantares ou torneios solidários. A gerência define a lotação, o prazo e o custo. Os membros inscrevem-se diretamente na plataforma, que gera automaticamente a referência de pagamento quando necessário. O sistema bloqueia novas inscrições quando a lotação ou o prazo são atingidos.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Funcional: RF-23}
+\label{tab:rf-23} \\
+\endlastfoot
+\textbf{ID} & RF-23 \\ \hline
+\textbf{Nome do Requisito} & Gestão de Eventos Extra-desportivos \\ \hline
+\textbf{Área do Sistema} & Logística, Infraestruturas e Equipamentos \\ \hline
+\textbf{Ator Principal} & Gerência (Organização) e Todos os Utilizadores (Inscrição) \\ \hline
+\textbf{Descrição} & O sistema deve permitir a criação, divulgação e gestão de inscrições para eventos extra-desportivos promovidos pelo clube (ex: galas de fim de época, jantares de Natal, torneios solidários), centralizando a confirmação de presenças e a cobrança de eventuais ingressos. \\ \hline
+\textbf{Prioridade} & Baixa (Complementar) \\ \hline
+\textbf{Origem} & Questionário Online (47 respostas) \\ \hline
+\textbf{Analista} & Pedro Ferreira \\ \hline
+\textbf{Pré-condições} & 1. Autenticado com perfil de Gerência. \newline 2. Módulos de Notificações (RF-04) e Pagamentos (RF-17) operacionais. \\ \hline
+\textbf{Pós-condições} & 1. Evento visível no calendário global para públicos-alvo selecionados. \newline 2. Inscrição gera adição à lista de presenças e referência de pagamento. \newline 3. Painel de controlo em tempo real com inscritos e receitas. \\ \hline
+\textbf{Critérios de Aceitação} & 1. Formulário define lotação, data limite, público-alvo e custo. \newline 2. Bloqueio automático quando lotação/data atingida. \newline 3. Exportação da lista de inscritos (PDF ou Excel). \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+\section{Requisitos Não-Funcionais}\label{sec:requisitos_nao_funcionais}
+
+\noindent\textit{Atalho: Saltar para o \hyperref[chap:especificacao_modelacao]{Próximo Capítulo (Modelação)}.}\par\medskip
+
+% ---------------------------------------------------------
+% REQUISITO RNF-01
+% ---------------------------------------------------------
+
+O RNF-01 define os requisitos de segurança para os dados mais sensíveis do sistema. O CAP guarda dados de saúde, documentos de identificação e informações financeiras, pelo que é obrigatório proteger bem estes dados.
+
+Toda a comunicação tem de ser feita sobre HTTPS, as passwords têm de ser guardadas com algoritmos de \textit{hashing} seguros (como bcrypt ou Argon2) e os ficheiros de saúde e identificação têm de ser encriptados antes de ser guardados.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Não Funcional: RNF-01}
+\label{tab:rnf-01} \\
+\endlastfoot
+\textbf{ID} & RNF-01 \\ \hline
+\textbf{Nome do Requisito} & Proteção de Dados Sensíveis (Encriptação) \\ \hline
+\textbf{Categoria} & Segurança e Privacidade (RGPD) \\ \hline
+\textbf{Descrição} & O sistema deve aplicar encriptação rigorosa a toda a informação sensível, tanto em repouso como em trânsito, protegendo dados de saúde, documentos de identificação e credenciais de acesso de todos os utilizadores da plataforma. \\ \hline
+\textbf{Prioridade} & Alta (Crítico/Legal) \\ \hline
+\textbf{Origem} & Equipa de Desenvolvimento \\ \hline
+\textbf{Analista} & Daniel Parente \\ \hline
+\textbf{Critério de Verificação} & HTTPS forçado em todas as comunicações; palavras-passe armazenadas com \textit{hashing} forte (bcrypt ou Argon2); ficheiros de saúde e identificação encriptados no \textit{storage}. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RNF-02
+% ---------------------------------------------------------
+
+O RNF-02 define como o sistema tem de cumprir o RGPD. Como o sistema guarda dados de menores, dados de saúde e dados financeiros, o cumprimento do RGPD é obrigatório por lei.
+
+A plataforma tem de pedir consentimento explícito, dar ao utilizador a possibilidade de ver, exportar e apagar os seus dados, e garantir que os dados de menores são tratados com autorização. Em caso de incidente, os registos de auditoria têm de permitir cumprir as obrigações de notificação do RGPD.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Não Funcional: RNF-02}
+\label{tab:rnf-02} \\
+\endlastfoot
+\textbf{ID} & RNF-02 \\ \hline
+\textbf{Nome do Requisito} & Conformidade Legal e RGPD \\ \hline
+\textbf{Categoria} & Segurança e Privacidade (RGPD) \\ \hline
+\textbf{Descrição} & O sistema deve cumprir integralmente o RGPD, implementando gestão de consentimentos, o direito ao esquecimento e proteção reforçada para dados de menores, garantindo que o tratamento de dados pessoais é lícito, transparente e limitado à finalidade declarada. \\ \hline
+\textbf{Prioridade} & Alta (Crítico/Legal) \\ \hline
+\textbf{Origem} & Equipa de Desenvolvimento + Entrevista Gerência \\ \hline
+\textbf{Analista} & Tiago Martins \\ \hline
+\textbf{Critério de Verificação} & \textit{Checkboxes} de consentimento não pré-preenchidas; exportação estruturada de dados (portabilidade); anonimização irreversível disponível mediante pedido do titular. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RNF-03
+% ---------------------------------------------------------
+
+O RNF-03 define o sistema de controlo de acessos baseado em papéis (RBAC). Como há vários tipos de utilizadores (atletas, encarregados, treinadores, staff, gerência), é importante que cada um só veja e faça o que lhe corresponde.
+
+O RBAC é aplicado no servidor e na interface. No servidor, os pedidos sem permissão são rejeitados. Na interface, os menus e botões sem autorização ficam ocultos. Horizontalmente, um treinador de uma modalidade não pode ver informações de outra equipa.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Não Funcional: RNF-03}
+\label{tab:rnf-03} \\
+\endlastfoot
+\textbf{ID} & RNF-03 \\ \hline
+\textbf{Nome do Requisito} & Controlo de Acessos (RBAC) \\ \hline
+\textbf{Categoria} & Segurança e Privacidade (RGPD) \\ \hline
+\textbf{Descrição} & O sistema deve implementar um modelo de controlo de acesso baseado em papéis (RBAC) com privilégios explícitos por cargo, garantindo que cada utilizador acede apenas às funcionalidades e dados correspondentes ao seu perfil, tanto ao nível vertical (hierarquia) como horizontal (equipa/modalidade). \\ \hline
+\textbf{Prioridade} & Alta \\ \hline
+\textbf{Origem} & Entrevista --- Gerência do CAP (Reunião 1) \\ \hline
+\textbf{Analista} & Tiago Martins \\ \hline
+\textbf{Critério de Verificação} & Resposta HTTP 403 para qualquer acesso sem permissões via API; interface oculta menus e botões sem autorização; isolamento horizontal por equipa verificável em testes de penetração. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RNF-04
+% ---------------------------------------------------------
+
+O RNF-04 define que a interface deve funcionar bem em dispositivos móveis. Como muitos utilizadores vão usar a plataforma no telemóvel (treinadores no campo, atletas em movimento), é importante que a experiência seja boa em ecrãs pequenos.
+
+A interface deve ser desenhada primeiro para telemóvel e depois adaptada para ecrãs maiores. Os botões e elementos interativos têm de ter um tamanho adequado para interação por toque.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Não Funcional: RNF-04}
+\label{tab:rnf-04} \\
+\endlastfoot
+\textbf{ID} & RNF-04 \\ \hline
+\textbf{Nome do Requisito} & Design Responsivo (Mobile-First) \\ \hline
+\textbf{Categoria} & Usabilidade e Experiência de Utilização \\ \hline
+\textbf{Descrição} & A interface da plataforma deve ser desenvolvida segundo uma abordagem \textit{mobile-first}, garantindo que todos os ecrãs e funcionalidades se reorganizam e adaptam de forma fluida a dispositivos de diferentes dimensões, desde smartphones até monitores de secretária. \\ \hline
+\textbf{Prioridade} & Média \\ \hline
+\textbf{Origem} & Questionário Online (47 respostas) \\ \hline
+\textbf{Analista} & Pedro Ferreira \\ \hline
+\textbf{Critério de Verificação} & A interface reorganiza-se corretamente em ecrãs pequenos (320px--768px); elementos de interação com dimensões mínimas adequadas para toque (48x48dp); ausência de \textit{scroll} horizontal não intencional em dispositivos móveis. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RNF-05
+% ---------------------------------------------------------
+
+O RNF-05 define que a interface tem de ser fácil de usar para pessoas com diferentes níveis de experiência com tecnologia, desde jovens atletas até encarregados de educação menos habituados.
+
+O sistema deve dar feedback imediato após cada ação (mensagens de confirmação ou erro), qualquer funcionalidade deve estar acessível em no máximo três cliques e a interface deve cumprir os critérios de acessibilidade WCAG em termos de contraste de cores.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Não Funcional: RNF-05}
+\label{tab:rnf-05} \\
+\endlastfoot
+\textbf{ID} & RNF-05 \\ \hline
+\textbf{Nome do Requisito} & Interface Intuitiva e Acessibilidade \\ \hline
+\textbf{Categoria} & Usabilidade e Experiência de Utilização \\ \hline
+\textbf{Descrição} & A plataforma deve apresentar uma curva de aprendizagem reduzida, com navegação clara e \textit{feedback} imediato após cada interação, sendo inclusiva para utilizadores com diferentes níveis de literacia digital. A interface deve cumprir os critérios de acessibilidade mínimos definidos pelas normas WCAG. \\ \hline
+\textbf{Prioridade} & Média \\ \hline
+\textbf{Origem} & Questionário Online (47 respostas) \\ \hline
+\textbf{Analista} & Pedro Ferreira \\ \hline
+\textbf{Critério de Verificação} & \textit{Toasts}/alertas de \textit{feedback} imediatos após cada ação; qualquer funcionalidade principal acessível em no máximo 3 cliques; rácio de contraste de cores conforme WCAG 2.1 nível AA. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RNF-06
+% ---------------------------------------------------------
+
+O RNF-06 define os tempos de resposta que o sistema deve cumprir. Uma aplicação lenta desmotiva os utilizadores, principalmente quando é necessário agir rapidamente, como marcar presenças ou confirmar convocatórias.
+
+Os valores definidos são: chamadas à API em no máximo 500ms, páginas principais em menos de 3 segundos em rede 4G, e dashboards em menos de 5 segundos.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Não Funcional: RNF-06}
+\label{tab:rnf-06} \\
+\endlastfoot
+\textbf{ID} & RNF-06 \\ \hline
+\textbf{Nome do Requisito} & Tempos de Resposta Rápidos (Performance) \\ \hline
+\textbf{Categoria} & Desempenho e Escalabilidade \\ \hline
+\textbf{Descrição} & O sistema deve garantir tempos de carregamento curtos para as ações rotineiras, assegurando uma experiência de utilização fluida mesmo em condições de conectividade móvel, o que é essencial dado o contexto operacional em campo de muitos utilizadores da plataforma. \\ \hline
+\textbf{Prioridade} & Alta \\ \hline
+\textbf{Origem} & Equipa de Desenvolvimento \\ \hline
+\textbf{Analista} & Daniel Parente \\ \hline
+\textbf{Critério de Verificação} & Chamadas à API de ações rotineiras concluídas em $\leq$500ms; páginas principais carregadas em $<$3s em rede 4G; \textit{dashboards} renderizados em $<$5s. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RNF-07
+% ---------------------------------------------------------
+
+O RNF-07 define a capacidade do sistema para lidar com picos de acessos. No início de uma época ou quando saem resultados, pode haver muitos utilizadores ao mesmo tempo.
+
+O sistema deve suportar no mínimo 100 utilizadores em simultâneo sem degradar o desempenho. A base de dados deve ter índices adequados para as consultas mais frequentes e a infraestrutura deve permitir escalar os recursos quando necessário.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Não Funcional: RNF-07}
+\label{tab:rnf-07} \\
+\endlastfoot
+\textbf{ID} & RNF-07 \\ \hline
+\textbf{Nome do Requisito} & Suporte a Picos de Acesso (Escalabilidade) \\ \hline
+\textbf{Categoria} & Desempenho e Escalabilidade \\ \hline
+\textbf{Descrição} & A arquitetura do sistema deve ser capaz de lidar com aumentos súbitos de tráfego (ex: início de época, abertura de inscrições) sem degradação percetível do serviço, suportando picos de utilização simultânea através de escalonamento automático de recursos. \\ \hline
+\textbf{Prioridade} & Média \\ \hline
+\textbf{Origem} & Equipa de Desenvolvimento \\ \hline
+\textbf{Analista} & Daniel Parente \\ \hline
+\textbf{Critério de Verificação} & Sistema suporta $\geq$100 utilizadores simultâneos sem degradação de desempenho; base de dados otimizada com índices nas colunas de filtragem frequente; infraestrutura \textit{cloud} com escalonamento automático configurado. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RNF-08
+% ---------------------------------------------------------
+
+O RNF-08 define os objetivos de disponibilidade do sistema. Como o clube usa a plataforma para gerir treinos, convocatórias e pagamentos de forma contínua, paragens inesperadas causam problemas.
+
+O sistema deve ter uma disponibilidade mínima de 99,9\% por ano (o que corresponde a menos de 9 horas de paragem por ano). Qualquer manutenção planeada deve ser comunicada com 24 horas de antecedência e deve haver monitorização em tempo real com alertas automáticos.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Não Funcional: RNF-08}
+\label{tab:rnf-08} \\
+\endlastfoot
+\textbf{ID} & RNF-08 \\ \hline
+\textbf{Nome do Requisito} & Alta Disponibilidade (Uptime) \\ \hline
+\textbf{Categoria} & Disponibilidade e Fiabilidade \\ \hline
+\textbf{Descrição} & O sistema deve estar disponível de forma contínua, minimizando paragens não planeadas, de modo a garantir que as operações do clube não sejam interrompidas por falhas da plataforma em momentos críticos da atividade desportiva e administrativa. \\ \hline
+\textbf{Prioridade} & Alta \\ \hline
+\textbf{Origem} & Entrevista --- Gerência do CAP (Reunião 1) \\ \hline
+\textbf{Analista} & Tiago Martins \\ \hline
+\textbf{Critério de Verificação} & \textit{Uptime} mínimo de 99,9\% anual; manutenção programada comunicada com 24h de antecedência; sistema de monitorização em tempo real com alertas automáticos para falhas. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RNF-09
+% ---------------------------------------------------------
+
+O RNF-09 define a política de cópias de segurança. Como a plataforma centraliza dados desportivos, financeiros e de saúde, perder esses dados seria muito grave.
+
+O sistema deve fazer backups automáticos diários da base de dados e dos ficheiros, guardados num local diferente do servidor principal, encriptados. Em caso de falha grave, o sistema deve ser recuperado em no máximo 4 horas.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Não Funcional: RNF-09}
+\label{tab:rnf-09} \\
+\endlastfoot
+\textbf{ID} & RNF-09 \\ \hline
+\textbf{Nome do Requisito} & Cópias de Segurança (Backups) \\ \hline
+\textbf{Categoria} & Disponibilidade e Fiabilidade \\ \hline
+\textbf{Descrição} & O sistema deve realizar cópias de segurança automáticas e periódicas da base de dados e de todos os ficheiros armazenados, guardando-as num local distinto do servidor principal, de forma encriptada e em conformidade com os requisitos legais de proteção de dados. \\ \hline
+\textbf{Prioridade} & Alta \\ \hline
+\textbf{Origem} & Equipa de Desenvolvimento \\ \hline
+\textbf{Analista} & Daniel Parente \\ \hline
+\textbf{Critério de Verificação} & \textit{Backups} automáticos diários verificáveis; ficheiros armazenados de forma encriptada em localização geográfica distinta; Objetivo de Tempo de Recuperação (RTO) máximo de 4 horas. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RNF-10
+% ---------------------------------------------------------
+
+O RNF-10 define os requisitos técnicos para a integração com sistemas de pagamento externos. Aceitar pagamentos via Multibanco e MBWay é importante para os sócios e reduz o trabalho da tesouraria.
+
+A integração é feita com as APIs de operadores como Ifthenpay, SIBS ou Easypay. A geração de uma referência tem de ser feita em menos de 3 segundos e os callbacks de confirmação de pagamento têm de ser processados automaticamente, sem intervenção manual.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Não Funcional: RNF-10}
+\label{tab:rnf-10} \\
+\endlastfoot
+\textbf{ID} & RNF-10 \\ \hline
+\textbf{Nome do Requisito} & Integração com Gateways de Pagamento \\ \hline
+\textbf{Categoria} & Integração e Interoperabilidade \\ \hline
+\textbf{Descrição} & O sistema deve estabelecer uma ligação robusta via API com processadores de pagamento externos (Ifthenpay, SIBS, Easypay) para a geração de referências Multibanco/MBWay e para o processamento fiável de \textit{callbacks} de confirmação de pagamento. \\ \hline
+\textbf{Prioridade} & Alta \\ \hline
+\textbf{Origem} & Análise Documental (Fatura/Recibo de Quota) \\ \hline
+\textbf{Analista} & Pedro Ferreira \\ \hline
+\textbf{Critério de Verificação} & Referência de pagamento gerada em $\leq$3 segundos; \textit{callbacks} do \textit{gateway} processados e conta corrente atualizada automaticamente; testes de integração com ambiente de \textit{sandbox} do operador. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RNF-11
+% ---------------------------------------------------------
+
+O RNF-11 define os formatos de exportação que o sistema deve suportar para comunicar com sistemas externos. A plataforma deve gerar ficheiros SAF-T para as Finanças, Excel/CSV para relatórios e PDF para documentos como faturas e relatórios. Os ficheiros SAF-T têm de passar na validação da Autoridade Tributária e os ficheiros de texto têm de usar codificação UTF-8.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Não Funcional: RNF-11}
+\label{tab:rnf-11} \\
+\endlastfoot
+\textbf{ID} & RNF-11 \\ \hline
+\textbf{Nome do Requisito} & Exportação de Dados e Normalização \\ \hline
+\textbf{Categoria} & Integração e Interoperabilidade \\ \hline
+\textbf{Descrição} & O sistema deve suportar a geração e exportação de ficheiros em formatos universais (SAF-T XML, Excel, CSV, PDF), garantindo a interoperabilidade com sistemas externos utilizados por contabilistas, federações desportivas e outros intervenientes da organização. \\ \hline
+\textbf{Prioridade} & Alta \\ \hline
+\textbf{Origem} & Entrevista --- Gerência do CAP (Reunião 1) \\ \hline
+\textbf{Analista} & Tiago Martins \\ \hline
+\textbf{Critério de Verificação} & Ficheiro SAF-T passa na validação do validador oficial da AT; Excel/CSV exportados em codificação UTF-8; PDF gerado com logótipo do clube, paginação e formatação adequada para impressão. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RNF-12
+% ---------------------------------------------------------
+
+O RNF-12 define como o código deve ser organizado para ser fácil de manter e de expandir. Um sistema mal organizado torna-se difícil de alterar sem quebrar o que já funciona.
+
+O código deve seguir os princípios de \textit{Clean Architecture} ou MVC, com separação clara entre as camadas de apresentação, lógica de negócio e acesso a dados. Desta forma, é possível adicionar novas funcionalidades sem afetar o que já existe.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Não Funcional: RNF-12}
+\label{tab:rnf-12} \\
+\endlastfoot
+\textbf{ID} & RNF-12 \\ \hline
+\textbf{Nome do Requisito} & Arquitetura Modular e Escalável \\ \hline
+\textbf{Categoria} & Manutenibilidade e Auditoria \\ \hline
+\textbf{Descrição} & O código da plataforma deve ser desenvolvido com \textit{Clean Architecture} ou padrão MVC, com separação clara de responsabilidades em camadas lógicas, de modo a permitir a adição de novas funcionalidades (modalidades, escalões, integrações) sem comprometer a estabilidade do sistema existente. \\ \hline
+\textbf{Prioridade} & Alta \\ \hline
+\textbf{Origem} & Equipa de Desenvolvimento \\ \hline
+\textbf{Analista} & Daniel Parente \\ \hline
+\textbf{Critério de Verificação} & Código documentado e organizado em camadas lógicas distintas; adição de novo escalão ou modalidade realizável sem modificar lógica de negócio existente; ausência de dependências circulares entre módulos. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}
+
+% ---------------------------------------------------------
+% REQUISITO RNF-13
+% ---------------------------------------------------------
+
+O RNF-13 define a obrigação de manter registos de todas as ações críticas na plataforma. Estes registos são úteis para resolver disputas, identificar problemas e provar conformidade com as leis.
+
+Cada registo deve conter o ID do utilizador, a data e hora, o IP de origem, a descrição da ação e o ID do recurso afetado. Os logs não podem ser editados nem eliminados por nenhum utilizador, nem mesmo por administradores.
+
+{\small
+\rowcolors{2}{rowblue}{white}
+\begin{xltabular}{\textwidth}{|l|X|}
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endfirsthead
+\multicolumn{2}{c}{{\tablename\ \thetable{} -- Continuação}} \\
+\hline
+\rowcolor{headerblue}\textcolor{white}{\textbf{Campo}} & \textcolor{white}{\textbf{Descrição}} \\ \hline
+\endhead
+\hline \multicolumn{2}{|r|}{\textit{Continua na próxima página...}} \\ \hline \endfoot
+\hline
+\caption{Especificação do Requisito Não Funcional: RNF-13}
+\label{tab:rnf-13} \\
+\endlastfoot
+\textbf{ID} & RNF-13 \\ \hline
+\textbf{Nome do Requisito} & Registos de Auditoria (Logs) \\ \hline
+\textbf{Categoria} & Manutenibilidade e Auditoria \\ \hline
+\textbf{Descrição} & O sistema deve manter um registo persistente de todas as ações críticas (autenticações, operações financeiras, eliminação de dados, submissão de documentos, alterações de privilégios), garantindo a rastreabilidade completa das operações para fins de auditoria interna e conformidade legal. \\ \hline
+\textbf{Prioridade} & Alta \\ \hline
+\textbf{Origem} & Equipa de Desenvolvimento \\ \hline
+\textbf{Analista} & Daniel Parente \\ \hline
+\textbf{Critério de Verificação} & Cada \textit{log} contém: ID do utilizador, \textit{timestamp} com fuso horário, IP de origem, descrição da ação e ID do recurso afetado; \textit{logs} não editáveis nem elimináveis por nenhum perfil de utilizador; retenção mínima de 5 anos. \\
+\end{xltabular}
+}
+\rowcolors{2}{white}{white}

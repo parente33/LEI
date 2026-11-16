@@ -1,0 +1,76 @@
+\chapter{Introdução}
+
+\section{Enquadramento e Objetivos do Trabalho}
+
+Este relatório documenta o desenvolvimento de um sistema de software para a gestão de um clube desportivo, feito no âmbito da unidade curricular de Laboratórios de Informática IV. O projeto foi desenvolvido com recurso a ferramentas de inteligência artificial generativa, mas com validação da equipa em todas as fases.
+
+O objetivo é desenvolver uma aplicação web para o Clube Amigos de Polvoreira (CAP) e documentar como a inteligência artificial foi usada ao longo do processo, mostrando o que foi gerado pelos modelos e o que foi decidido pela equipa.
+
+Os objetivos específicos incluem:
+\begin{itemize}
+    \item Fazer o levantamento de requisitos, usando rascunhos de IA que depois foram corrigidos pela equipa;
+    \item Desenhar a arquitetura do sistema e criar diagramas UML;
+    \item Desenvolver uma aplicação que inclua as áreas desportiva, clínica, financeira e administrativa;
+    \item Registar como foram usadas as ferramentas de IA, mostrando onde foram úteis e onde foi preciso intervir;
+    \item Garantir que o sistema é funcional e seguro para ser usado no clube.
+\end{itemize}
+
+\section{Large Language Models na Engenharia de Software}
+
+\subsection{Contextualização}
+
+Os \textit{Large Language Models} (LLMs) são modelos de linguagem treinados com grandes quantidades de texto e código \cite{vaswani2017}. Nos últimos anos, ferramentas como o GitHub Copilot e o Google Gemini passaram a ser usadas no desenvolvimento de software, tanto para gerar código como para apoiar a documentação.
+
+Neste projeto, os LLMs foram usados como assistentes. Cada vez que foi usado um modelo, o pedido e a resposta foram registados nas caixas azuis ao longo do relatório. O restante texto é da responsabilidade da equipa.
+
+\subsection{Riscos Observados}
+
+Durante o projeto foram identificados alguns problemas no uso destes modelos. As respostas são mais genéricas quando não se dá contexto suficiente sobre as restrições do CAP (RGPD, SAF-T, equipa pequena). Por vezes os modelos referem APIs ou padrões que não existem, o que se chama ``alucinação''. Também se notou que quando se pede ao modelo várias secções seguidas, o texto fica uniforme demais e perde naturalidade.
+
+\subsection{Abordagem Adotada neste Projeto}
+
+Para evitar estes problemas, a equipa sempre reviu o que os modelos produziram. As caixas azuis ao longo do relatório mostram o pedido feito e a resposta recebida, e o texto a seguir explica o que ficou e o que foi alterado. As tarefas delegadas ao modelo foram:
+
+\begin{itemize}
+    \item Gerar primeiras versões de tabelas de requisitos, que depois foram comparadas com as entrevistas ao clube;
+    \item Propor esqueletos de diagramas UML, desenhados manualmente em PlantUML e draw.io;
+    \item Sugerir opções arquiteturais com prós e contras, usadas como ponto de partida para as decisões da equipa;
+    \item Redigir resumos ou listas de pontos a validar com a gerência e a secretaria do CAP.
+\end{itemize}
+
+Em todas as situações, a equipa reviu o que foi gerado, comparou com a documentação oficial das tecnologias \cite{efcore2023, nextjs2024, postgresql2024} e corrigiu o que estava errado ou pouco claro antes de usar no projeto.
+
+\section{Medidas de Sucesso}
+
+Para avaliar se o sistema está a funcionar bem, foram definidos os seguintes indicadores a observar durante o primeiro ano:
+
+\begin{itemize}
+    \item \textbf{Comunicação}: Redução dos casos de atletas que faltam a eventos por falta de informação, comparando com os registos da época anterior.
+    \item \textbf{Pagamento de quotas}: Aumento da percentagem de pagamentos feitos dentro do prazo, com a introdução de MBWay e Referência Multibanco.
+    \item \textbf{Atestados médicos}: Eliminação de situações em que atletas participam com atestados caducados, graças ao bloqueio automático do sistema.
+    \item \textbf{Trabalho administrativo}: Redução do tempo da secretaria em tarefas de arquivo e introdução manual de dados.
+    \item \textbf{Satisfação}: Obter uma avaliação positiva (acima de 4 em 5) num inquérito feito a atletas e encarregados após a primeira época.
+\end{itemize}
+
+\section{Estrutura do Relatório}
+O relatório está organizado em sete capítulos, seguindo as fases do ciclo de desenvolvimento de software \cite{sommerville2015}:
+
+\begin{itemize}
+    \item \textbf{Capítulo 1 --- Introdução}: Apresenta os objetivos do trabalho, o papel dos LLMs e a estrutura do relatório.
+
+    \item \textbf{Capítulo 2 --- Definição e Caracterização do Sistema}: Apresenta o caso de estudo do CAP, a motivação, a análise de viabilidade e o plano de trabalho.
+
+    \item \textbf{Capítulo 3 --- Levantamento e Análise de Requisitos}: Descreve os métodos de recolha e apresenta os requisitos funcionais e não funcionais.
+
+    \item \textbf{Capítulo 4 --- Especificação e Modelação do Software}: Apresenta as decisões de arquitetura e os diagramas do sistema (domínio, classes, componentes, casos de uso, sequência, etc.).
+
+    \item \textbf{Capítulo 5 --- Implementação da Aplicação}: Descreve a implementação das três camadas do sistema, com exemplos de código.
+
+    \item \textbf{Capítulo 6 --- Documentação da Utilização de IA Generativa}: Regista como foram usados os modelos de linguagem ao longo do projeto.
+
+    \item \textbf{Capítulo 7 --- Conclusão}: Resume o trabalho feito, apresenta uma análise crítica e identifica melhorias futuras.
+\end{itemize}
+
+%==========================================================================
+% CAPÍTULO 2 - DEFINIÇÃO E CARACTERIZAÇÃO DO SISTEMA
+%==========================================================================
