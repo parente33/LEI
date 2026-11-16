@@ -1,0 +1,3 @@
+/home/parente33/3ano/2sem/CG/TPs/TP4/code/build/CMakeFiles/class4.dir
+/home/parente33/3ano/2sem/CG/TPs/TP4/code/build/CMakeFiles/edit_cache.dir
+/home/parente33/3ano/2sem/CG/TPs/TP4/code/build/CMakeFiles/rebuild_cache.dir
