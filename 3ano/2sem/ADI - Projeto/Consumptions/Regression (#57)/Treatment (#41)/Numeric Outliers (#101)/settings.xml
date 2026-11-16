@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.knime.org/2008/09/XMLConfig" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.knime.org/2008/09/XMLConfig http://www.knime.org/XMLConfig_2008_09.xsd" key="settings.xml">
+    <entry key="node_file" type="xstring" value="settings.xml"/>
+    <config key="flow_stack"/>
+    <config key="internal_node_subsettings">
+        <entry key="memory_policy" type="xstring" value="CacheSmallInMemory"/>
+    </config>
+    <config key="model">
+        <config key="outlier-list">
+            <entry key="filter-type" type="xstring" value="STANDARD"/>
+            <config key="included_names">
+                <entry key="array-size" type="xint" value="8"/>
+                <entry key="0" type="xstring" value="relative_humidity_2m (%)"/>
+                <entry key="1" type="xstring" value="apparent_temperature (°C)"/>
+                <entry key="2" type="xstring" value="rain (mm)"/>
+                <entry key="3" type="xstring" value="cloud_cover (%)"/>
+                <entry key="4" type="xstring" value="surface_pressure (hPa)"/>
+                <entry key="5" type="xstring" value="wind_speed_10m (km/h)"/>
+                <entry key="6" type="xstring" value="wind_direction_10m (°)"/>
+                <entry key="7" type="xstring" value="terrestrial_radiation (W/m²)"/>
+            </config>
+            <config key="excluded_names">
+                <entry key="array-size" type="xint" value="13"/>
+                <entry key="0" type="xstring" value="Very High Voltage (kWh)"/>
+                <entry key="1" type="xstring" value="High Voltage (kWh)"/>
+                <entry key="2" type="xstring" value="Medium Voltage (kWh)"/>
+                <entry key="3" type="xstring" value="Low Voltage (kWh)"/>
+                <entry key="4" type="xstring" value="Total (kWh)"/>
+                <entry key="5" type="xstring" value="Diffuse_Radiation"/>
+                <entry key="6" type="xstring" value="Direct_Radiation"/>
+                <entry key="7" type="xstring" value="Year"/>
+                <entry key="8" type="xstring" value="Month (Number)"/>
+                <entry key="9" type="xstring" value="Day of Month"/>
+                <entry key="10" type="xstring" value="Hour"/>
+                <entry key="11" type="xstring" value="Is_Weekend"/>
+                <entry key="12" type="xstring" value="Season"/>
+            </config>
+            <entry key="enforce_option" type="xstring" value="EnforceInclusion"/>
+            <config key="name_pattern">
+                <entry key="pattern" type="xstring" value=""/>
+                <entry key="caseSensitive" type="xboolean" value="true"/>
+                <entry key="excludeMatching" type="xboolean" value="false"/>
+                <entry key="type" type="xstring" value="Wildcard"/>
+            </config>
+            <config key="datatype">
+                <config key="typelist"/>
+            </config>
+        </config>
+        <entry key="iqr-scalar" type="xdouble" value="1.5"/>
+        <entry key="use-heuristic" type="xstring" value="false"/>
+        <entry key="estimation-type" type="xstring" value="R_6"/>
+        <entry key="update-domain" type="xboolean" value="false"/>
+        <entry key="detection-option" type="xstring" value="All outliers"/>
+        <entry key="outlier-treatment" type="xstring" value="Replace outlier values"/>
+        <entry key="replacement-strategy" type="xstring" value="Closest permitted value"/>
+        <entry key="use-groups" type="xboolean" value="false"/>
+        <config key="groups-list">
+            <entry key="filter-type" type="xstring" value="STANDARD"/>
+            <config key="included_names">
+                <entry key="array-size" type="xint" value="0"/>
+            </config>
+            <config key="excluded_names">
+                <entry key="array-size" type="xint" value="22"/>
+                <entry key="0" type="xstring" value="Very High Voltage (kWh)"/>
+                <entry key="1" type="xstring" value="High Voltage (kWh)"/>
+                <entry key="2" type="xstring" value="Medium Voltage (kWh)"/>
+                <entry key="3" type="xstring" value="Low Voltage (kWh)"/>
+                <entry key="4" type="xstring" value="Total (kWh)"/>
+                <entry key="5" type="xstring" value="relative_humidity_2m (%)"/>
+                <entry key="6" type="xstring" value="apparent_temperature (°C)"/>
+                <entry key="7" type="xstring" value="rain (mm)"/>
+                <entry key="8" type="xstring" value="cloud_cover (%)"/>
+                <entry key="9" type="xstring" value="surface_pressure (hPa)"/>
+                <entry key="10" type="xstring" value="wind_speed_10m (km/h)"/>
+                <entry key="11" type="xstring" value="Diffuse_Radiation"/>
+                <entry key="12" type="xstring" value="Direct_Radiation"/>
+                <entry key="13" type="xstring" value="wind_direction_10m (°)"/>
+                <entry key="14" type="xstring" value="terrestrial_radiation (W/m²)"/>
+                <entry key="15" type="xstring" value="Consumptions"/>
+                <entry key="16" type="xstring" value="Year"/>
+                <entry key="17" type="xstring" value="Month (Number)"/>
+                <entry key="18" type="xstring" value="Day of Month"/>
+                <entry key="19" type="xstring" value="Hour"/>
+                <entry key="20" type="xstring" value="Is_Weekend"/>
+                <entry key="21" type="xstring" value="Season"/>
+            </config>
+            <entry key="enforce_option" type="xstring" value="EnforceInclusion"/>
+            <config key="name_pattern">
+                <entry key="pattern" type="xstring" value=""/>
+                <entry key="caseSensitive" type="xboolean" value="true"/>
+                <entry key="excludeMatching" type="xboolean" value="false"/>
+                <entry key="type" type="xstring" value="Wildcard"/>
+            </config>
+            <config key="datatype">
+                <config key="typelist"/>
+            </config>
+        </config>
+        <entry key="memory-policy" type="xboolean" value="false"/>
+    </config>
+    <config key="variables"/>
+    <entry key="customDescription" type="xstring" isnull="true" value=""/>
+    <entry key="state" type="xstring" value="EXECUTED"/>
+    <entry key="factory" type="xstring" value="org.knime.base.node.stats.outlier.handler.NumericOutliersNodeFactory"/>
+    <entry key="node-name" type="xstring" value="Numeric Outliers"/>
+    <entry key="node-bundle-name" type="xstring" value="KNIME Statistic Nodes"/>
+    <entry key="node-bundle-symbolic-name" type="xstring" value="org.knime.stats"/>
+    <entry key="node-bundle-vendor" type="xstring" value="KNIME AG, Zurich, Switzerland"/>
+    <entry key="node-bundle-version" type="xstring" value="5.9.0.v202511130857"/>
+    <entry key="node-feature-name" type="xstring" value="KNIME Statistics Nodes"/>
+    <entry key="node-feature-symbolic-name" type="xstring" value="org.knime.features.stats.feature.group"/>
+    <entry key="node-feature-vendor" type="xstring" value="KNIME AG, Zurich, Switzerland"/>
+    <entry key="node-feature-version" type="xstring" value="5.9.0.v202511130857"/>
+    <config key="factory_settings"/>
+    <entry key="name" type="xstring" value="Numeric Outliers"/>
+    <entry key="hasContent" type="xboolean" value="true"/>
+    <entry key="isInactive" type="xboolean" value="false"/>
+    <config key="ports">
+        <config key="port_1">
+            <entry key="index" type="xint" value="1"/>
+            <entry key="port_spec_class" type="xstring" value="org.knime.core.data.DataTableSpec"/>
+            <entry key="port_object_class" type="xstring" value="org.knime.core.node.BufferedDataTable"/>
+            <entry key="port_object_summary" type="xstring" value="Rows: 8413, Cols: 22"/>
+            <entry key="port_dir_location" type="xstring" value="port_1"/>
+        </config>
+        <config key="port_2">
+            <entry key="index" type="xint" value="2"/>
+            <entry key="port_spec_class" type="xstring" value="org.knime.core.data.DataTableSpec"/>
+            <entry key="port_object_class" type="xstring" value="org.knime.core.node.BufferedDataTable"/>
+            <entry key="port_object_summary" type="xstring" value="Rows: 8, Cols: 5"/>
+            <entry key="port_dir_location" type="xstring" value="port_2"/>
+        </config>
+        <config key="port_3">
+            <entry key="index" type="xint" value="3"/>
+            <entry key="port_spec_class" type="xstring" value="org.knime.base.algorithms.outlier.NumericOutliersPortObjectSpec"/>
+            <entry key="port_object_class" type="xstring" value="org.knime.base.algorithms.outlier.NumericOutliersPortObject"/>
+            <entry key="port_object_summary" type="xstring" value="Outlier treatment for columns: &quot;relative_humidity_2m (%)&quot;, &quot;apparent_temperature (°C)&quot;, &quot;rain (mm)&quot;,  ... &lt;5 more&gt;"/>
+            <entry key="port_spec_location" type="xstring" value="spec/spec.zip"/>
+            <entry key="port_object_location" type="xstring" value="object/portobject.zip"/>
+            <entry key="port_dir_location" type="xstring" value="port_3"/>
+        </config>
+    </config>
+    <config key="filestores">
+        <entry key="file_store_location" type="xstring" isnull="true" value=""/>
+        <entry key="file_store_id" type="xstring" value="03568ade-6791-490e-af75-5aab8fc416f1"/>
+    </config>
+</config>
